@@ -1,10 +1,10 @@
 {
-  "title": "Blog by John Doe",
-  "url": "https://lumen.alxshelepenok.com",
-  "subtitle": "Pellentesque odio nisi, euismod in, pharetra a, ultricies in, diam. Sed arcu.",
+  "title": "A blog by Alberto Arena",
+  "url": "https://albertoarena.it",
+  "subtitle": "Senior Full Stack Developer.",
   "copyright": "© All rights reserved.",
-  "googleAnalyticsId": "UA-73379983-2",
-  "disqusShortname": "",
+  "googleAnalyticsId": "G-PJGZWDSK4K",
+  "disqusShortname": "albertoarena-it",
   "postsLimit": 4,
   "pathPrefix": "/",
   "menu": [
@@ -15,24 +15,20 @@
     {
       "label": "About me",
       "path": "/pages/about"
-    },
-    {
-      "label": "Contact me",
-      "path": "/pages/contacts"
     }
   ],
   "author": {
-    "name": "John Doe",
+    "name": "Alberto Arena",
     "photo": "/photo.jpg",
-    "bio": "Pellentesque odio nisi, euismod in, pharetra a, ultricies in, diam. Sed arcu.",
+    "bio": "Senior Full Stack Developer",
     "contacts": {
       "rss": "",
       "email": "",
-      "github": "alxshelepenok/gatsby-starter-lumen",
+      "github": "albertoarena",
       "facebook": "#",
       "telegram": "#",
-      "twitter": "#",
-      "linkedin": "#",
+      "twitter": "alberto_arena",
+      "linkedin": "alberto-arena-ba44a624",
       "instagram": "#",
       "mastodon": "#",
       "line": "",

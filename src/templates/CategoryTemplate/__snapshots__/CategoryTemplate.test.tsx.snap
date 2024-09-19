@@ -13,12 +13,12 @@ exports[`CategoryTemplate renders correctly 1`] = `
             <a
               href="/"
             >
-              John Doe
+              Alberto Arena
             </a>
           </h2>
         </div>
         <p>
-          Pellentesque odio nisi, euismod in, pharetra a, ultricies in, diam. Sed arcu.
+          Senior Full Stack Developer
         </p>
       </div>
       <nav>
@@ -35,13 +35,6 @@ exports[`CategoryTemplate renders correctly 1`] = `
               href="/pages/about"
             >
               About Me
-            </a>
-          </li>
-          <li>
-            <a
-              href="/pages/contacts"
-            >
-              Contact Me
             </a>
           </li>
         </ul>

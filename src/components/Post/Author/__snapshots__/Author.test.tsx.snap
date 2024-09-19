@@ -3,16 +3,16 @@
 exports[`Author renders correctly 1`] = `
 <div>
   <p>
-    Pellentesque odio nisi, euismod in, pharetra a, ultricies in, diam. Sed arcu.
+    Senior Full Stack Developer
     <a
-      href="https://www.twitter.com/#"
+      href="https://www.linkedin.com/in/undefined"
       rel="noopener noreferrer"
       target="_blank"
     >
       <strong>
-        John Doe
+        Alberto Arena
       </strong>
-       on Twitter
+       on LinkedIn
     </a>
   </p>
 </div>

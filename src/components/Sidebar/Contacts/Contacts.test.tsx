@@ -16,7 +16,7 @@ describe("Contacts", () => {
   test("renders a list of non-empty contacts", () => {
     const contacts = {
       ...mocks.contacts,
-      github: "alxshelepenok/gatsby-starter-lumen",
+      github: "albertoarena/albertoarena.it",
     };
     const props = { contacts };
     const tree = testUtils

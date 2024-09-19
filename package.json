@@ -1,19 +1,22 @@
 {
-  "name": "gatsby-starter-lumen",
-  "version": "1.6.271",
-  "description": "A constantly evolving and thoughtful architecture for creating static blogs with Gatsby",
+  "name": "albertoarena.it",
+  "version": "1.0.0",
+  "description": "A personal blog based on Gatsby Starter Lumen.",
   "keywords": [
     "gatsby",
     "graphql",
     "react",
-    "blog"
+    "blog",
+    "theme"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/alxshelepenok/gatsby-starter-lumen.git"
+    "url": "https://github.com/albertoarena/albertoarena.it"
   },
   "license": "MIT",
-  "author": "Alexander Shelepenok <alxshelepenok@gmail.com>",
+  "authors": [
+    "Alberto Arena <arena.alberto@gmail.com>"
+  ],
   "scripts": {
     "build": "npm run clean && gatsby build",
     "clean": "rimraf .cache public",
@@ -146,5 +149,6 @@
   },
   "engines": {
     "node": ">=18"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

@@ -1,13 +1,46 @@
 ---
 title: "About me"
 template: "page"
-socialImage: "./notebook.jpg"
+socialImage: "./photo.jpg"
 ---
 
-Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
+<figure class="float-right" style="width: 240px">
+	<img src="/photo.jpg" alt="Alberto Arena's photo">
+</figure>
 
-![Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi.](/notebook.jpg)
+My name is Alberto Arena, and I'm Italian. I lived and worked in UK for 4 years, until I was finally back to the sunny
+Mediterranean sea in Sicily. I can see the
+wonderful [Strait of Messina](https://it.wikipedia.org/wiki/File:Strait_of_Messina_from_Dinnammare.jpg) from my study
+window: that sight makes my days easier.
 
-_Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi._
+I am a visionary pragmatist who loves coding (I apologise for the oxymoron!). I've been working as a Web developer
+since 2005.
 
-Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus
+At the time being, I code mostly in **PHP** (Laravel, WordPress) and **Javascript** (lot of vanilla, VueJs).
+
+You can follow me on [X, formerly Twitter](https://x.com/alberto_arena), or view
+my [LinkedIn profile](https://www.linkedin.com/in/alberto-arena-ba44a624/).
+
+## Background and interests
+
+My first approach to programming world was in 1985, when I started coding with my glorious Commodore 64! I can still
+remember a program I wrote: it plotted all planets of solar system as "sprites". It was a start that led me
+later to work with different languages like C and C++, Clipper, Delphi and finally PHP and Javascript.
+
+I have a background of 9 years in C++ and Delphi, when I implemented data entry applications and ICR/OCR software using
+Borland products. Good old days! Now my daily work is different, but I didn't lose my passion, and the desire to learn
+new things.
+
+<figure class="float-right" style="width: 240px">
+	<img src="midleton-distillery-collection.jpg" alt="Midleton Distillery Collection">
+</figure>
+
+I'm currently working as lead developer of [Midleton Distillery Collection](https://midletondistillerycollection.com/),
+the official shop for Ireland's finest and best loved whiskey brands (Jameson, Redbreast, Midleton Very Rare, Powers,
+Spot Whiskeys, Method & Madness and Knappogue Castle).
+
+I have several personal interests, including reading, guitar, constructed languages, and hand-made dioramas.
+
+## Portfolio
+
+You can see some of [my projects on LinkedIn](https://www.linkedin.com/in/alberto-arena-ba44a624/details/projects/).
