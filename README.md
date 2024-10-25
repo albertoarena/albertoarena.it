@@ -6,6 +6,8 @@ A personal blog based on [Gatsby Starter Lumen](https://github.com/alxshelepenok
 
 - [Gatsby](https://www.gatsbyjs.com/) framework
 - [Gatsby Starter Lumen](https://github.com/alxshelepenok/gatsby-starter-lumen) template
+- Cookie
+  banner: [gatsby-plugin-google-gtag-cookieconsent](https://github.com/astoiccoder/gatsby-plugin-google-gtag-cookieconsent)
 
 ## License
 

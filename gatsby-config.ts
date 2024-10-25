@@ -2,6 +2,8 @@ import path from "path";
 
 import config from "./content/config.json";
 import * as types from "./internal/gatsby/types";
+// @ts-ignore
+import { cookieConsentConfig } from "./cookie-consent-config";
 
 export default {
   pathPrefix: config.pathPrefix,
@@ -119,15 +121,6 @@ export default {
     "gatsby-transformer-sharp",
     "gatsby-plugin-sharp",
     {
-      resolve: "gatsby-plugin-google-gtag",
-      options: {
-        trackingIds: [config.googleAnalyticsId],
-        pluginConfig: {
-          head: true,
-        },
-      },
-    },
-    {
       resolve: "gatsby-plugin-sitemap",
       options: {
         query: `
@@ -199,5 +192,18 @@ export default {
     "gatsby-plugin-catch-links",
     "gatsby-plugin-optimize-svgs",
     "gatsby-plugin-sass",
+    {
+      resolve: "gatsby-plugin-google-gtag-cookieconsent",
+      options: {
+        cookieConsentConfig: cookieConsentConfig,
+        enableForAllEnvironments: true, // you can enable it for all environments in order to test it locally
+        googleGtagPluginConfig: {
+          trackingIds: [config.googleAnalyticsId],
+          pluginConfig: {
+            head: true,
+          },
+        },
+      },
+    },
   ],
 };
