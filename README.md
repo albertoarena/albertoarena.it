@@ -2,11 +2,16 @@
 
 A personal blog based on [Gatsby Starter Lumen](https://github.com/alxshelepenok/gatsby-starter-lumen).
 
+## Credits
+
+- [Gatsby](https://www.gatsbyjs.com/) framework
+- [Gatsby Starter Lumen](https://github.com/alxshelepenok/gatsby-starter-lumen) template
+
 ## License
 
 The MIT License (MIT)
 
-Copyright (c) 2016-2024 Alexander Shelepenok
+Copyright (c) 2024 Alberto Arena
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
