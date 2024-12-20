@@ -35,6 +35,8 @@ php artisan make:event-sourcing-domain MODEL --domain=DOMAIN
 In this blog post, I'll walk you through how to use this package, explain its key features, and provide practical
 examples to help you integrate event sourcing into your Laravel projects efficiently.
 
+👉 [Check out the package on GitHub!](https://github.com/albertoarena/laravel-event-sourcing-generator)
+
 ## Understanding the command
 
 The primary command provided by this package is:
