@@ -128,9 +128,16 @@ p {
 }
 
 blockquote {
+  border: 1px dashed var(--color-prism-background);
+  color: var(--color-primary);
   font-style: italic;
+  opacity: 1;
   padding: 0;
   text-align: center;
+}
+
+blockquote:hover {
+  border-color: var(--color-primary);
 }
 
 figure {
