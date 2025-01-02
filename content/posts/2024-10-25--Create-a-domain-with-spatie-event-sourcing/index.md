@@ -239,7 +239,7 @@ supported. You can find the [list at this link](https://github.com/albertoarena/
 
 Update migrations cannot yet be used, but only create migrations.
 
-Finally, the package will need to be properly tested with PHP 8.3 and released for that version.
+Finally, the package will need to be properly tested with PHP 8.3 and released for that version. [(*)](#notes)
 
 ## Conclusion
 
@@ -256,3 +256,7 @@ If you're ready to streamline your development workflow and dive into event sour
 
 Feel free to star the repository, report issues, or contribute to its development. Your feedback and contributions are
 invaluable for improving the package and making it even more powerful for Laravel developers worldwide.
+
+## Notes
+
+On December 31, 2024, I have added support to PHP 8.3.
