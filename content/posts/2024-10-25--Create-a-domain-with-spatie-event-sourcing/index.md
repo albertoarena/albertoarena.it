@@ -237,9 +237,13 @@ app/
 Some Bluepoint column types are not yet
 supported. You can find the [list at this link](https://github.com/albertoarena/laravel-event-sourcing-generator/blob/main/docs/migrations.md#unsupported-column-types).
 
-Update migrations cannot yet be used, but only create migrations.
+~Update migrations cannot yet be used, but only create migrations.~
 
-Finally, the package will need to be properly tested with PHP 8.3 and released for that version. [(*)](#notes)
+👉 **_Hey, this is available now!_** [(*)](#notes)
+
+~Finally, the package will need to be properly tested with PHP 8.3 and released for that version.~
+
+👉 **_I did it!_**  [(*)](#notes)
 
 ## Conclusion
 
@@ -260,3 +264,5 @@ invaluable for improving the package and making it even more powerful for Larave
 ## Notes
 
 On December 31, 2024, I have added support to PHP 8.3.
+
+On February 16, 2025, I have added support for update migrations. 👉 [Read documentation here](https://github.com/albertoarena/laravel-event-sourcing-generator/blob/main/docs/migrations.md#generate-a-domain-using-update-migration).
