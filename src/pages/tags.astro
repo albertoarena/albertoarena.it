@@ -1,0 +1,31 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../components/Layout.astro";
+
+const posts = await getCollection("posts");
+const tagMap = new Map<string, number>();
+
+posts.filter((post) => !post.data.draft).forEach((post) => {
+    const tags = post.data.tags || [];
+    tags.forEach((tag) => {
+        tagMap.set(tag, (tagMap.get(tag) || 0) + 1);
+    });
+});
+
+const tags = [...tagMap.entries()]
+    .sort((a, b) => b[1] - a[1]);
+---
+
+<Layout title="Tags">
+    <h1 class="text-3xl font-bold mb-8">Tags</h1>
+    <div class="flex flex-wrap gap-3">
+        {tags.map(([tag, count]) => (
+            <a
+                href={`/tag/${tag.toLowerCase().replace(/\s+/g, '-')}`}
+                class="px-3 py-1 bg-gray-100 dark:bg-dark-cloud rounded-full text-sm hover:bg-secondary hover:text-white transition-colors"
+            >
+                #{tag} <span class="opacity-75">({count})</span>
+            </a>
+        ))}
+    </div>
+</Layout>

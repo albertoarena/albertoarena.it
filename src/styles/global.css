@@ -1,0 +1,189 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white text-dark antialiased;
+    @apply dark:bg-dark-paper dark:text-white;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  /* Prose dark mode overrides for better contrast */
+  .dark .prose,
+  .dark .prose-invert {
+    --tw-prose-body: #e5e7eb;
+    --tw-prose-headings: #ffffff;
+    --tw-prose-lead: #d1d5db;
+    --tw-prose-links: hsl(220, 100%, 68%);
+    --tw-prose-bold: #ffffff;
+    --tw-prose-counters: #9ca3af;
+    --tw-prose-bullets: #9ca3af;
+    --tw-prose-hr: #4b5563;
+    --tw-prose-quotes: #d1d5db;
+    --tw-prose-quote-borders: hsl(220, 100%, 68%);
+    --tw-prose-captions: #9ca3af;
+    --tw-prose-code: #ffffff;
+    --tw-prose-pre-code: #e5e7eb;
+    --tw-prose-pre-bg: #1f2937;
+    --tw-prose-th-borders: #4b5563;
+    --tw-prose-td-borders: #374151;
+    /* Override prose-invert variables too */
+    --tw-prose-invert-body: #e5e7eb;
+    --tw-prose-invert-headings: #ffffff;
+    --tw-prose-invert-lead: #d1d5db;
+    --tw-prose-invert-links: hsl(220, 100%, 68%);
+    --tw-prose-invert-bold: #ffffff;
+    --tw-prose-invert-counters: #9ca3af;
+    --tw-prose-invert-bullets: #9ca3af;
+    --tw-prose-invert-hr: #4b5563;
+    --tw-prose-invert-quotes: #d1d5db;
+    --tw-prose-invert-quote-borders: hsl(220, 100%, 68%);
+    --tw-prose-invert-captions: #9ca3af;
+    --tw-prose-invert-code: #ffffff;
+    --tw-prose-invert-pre-code: #e5e7eb;
+    --tw-prose-invert-pre-bg: #1f2937;
+    --tw-prose-invert-th-borders: #4b5563;
+    --tw-prose-invert-td-borders: #374151;
+  }
+
+  .dark .prose p,
+  .dark .prose li,
+  .dark .prose span,
+  .dark .prose td,
+  .dark .prose th {
+    color: #e5e7eb !important;
+  }
+
+  .dark .prose strong,
+  .dark .prose b {
+    color: #ffffff !important;
+  }
+
+  .dark .prose h1,
+  .dark .prose h2,
+  .dark .prose h3,
+  .dark .prose h4,
+  .dark .prose h5,
+  .dark .prose h6 {
+    color: #ffffff !important;
+  }
+
+  .dark .prose a {
+    color: hsl(220, 100%, 68%) !important;
+  }
+
+  .dark .prose a:hover {
+    color: hsl(31, 92%, 62%) !important;
+  }
+
+  /* Skip to content link */
+  .skip-to-content {
+    @apply absolute left-0 top-0 z-50 bg-primary text-white px-4 py-2;
+    transform: translateY(-100%);
+    transition: transform 0.2s ease;
+  }
+
+  .skip-to-content:focus {
+    transform: translateY(0);
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-white-cloud dark:bg-dark;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-dark-cloud;
+  }
+
+  /* Code block enhancements */
+  pre {
+    @apply relative;
+  }
+
+  pre code {
+    @apply block overflow-x-auto;
+  }
+
+  .code-block-wrapper {
+    @apply relative;
+  }
+
+  .copy-code-button {
+    @apply absolute top-2 right-2 p-2 rounded bg-dark-cloud/50 text-white opacity-0 transition-opacity;
+  }
+
+  .code-block-wrapper:hover .copy-code-button {
+    @apply opacity-100;
+  }
+
+  /* Float classes for images in prose */
+  figure.float-right {
+    float: right;
+    @apply ml-6 mb-4;
+  }
+
+  figure.float-left {
+    float: left;
+    @apply mr-6 mb-4;
+  }
+
+  /* Focus states */
+  a:focus-visible,
+  button:focus-visible {
+    @apply outline-2 outline-primary outline-offset-2;
+  }
+}
+
+@layer components {
+  /* Link hover effect */
+  .link-underline {
+    @apply relative;
+  }
+
+  .link-underline::after {
+    content: '';
+    @apply absolute left-0 bottom-0 w-0 h-0.5 bg-secondary transition-all duration-200;
+  }
+
+  .link-underline:hover::after {
+    @apply w-full;
+  }
+}
+
+@layer utilities {
+  /* View transition animations */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.15s;
+  }
+
+  /* Fade animation for page transitions */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

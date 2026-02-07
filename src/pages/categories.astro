@@ -1,0 +1,31 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../components/Layout.astro";
+
+const posts = await getCollection("posts");
+const categoryMap = new Map<string, number>();
+
+posts.filter((post) => !post.data.draft).forEach((post) => {
+    const category = post.data.category;
+    if (category) {
+        categoryMap.set(category, (categoryMap.get(category) || 0) + 1);
+    }
+});
+
+const categories = [...categoryMap.entries()]
+    .sort((a, b) => b[1] - a[1]);
+---
+
+<Layout title="Categories">
+    <h1 class="text-3xl font-bold mb-8">Categories</h1>
+    <div class="flex flex-wrap gap-4">
+        {categories.map(([category, count]) => (
+            <a
+                href={`/category/${category.toLowerCase().replace(/\s+/g, '-')}`}
+                class="px-4 py-2 bg-gray-100 dark:bg-dark-cloud rounded-lg hover:bg-primary hover:text-white transition-colors"
+            >
+                {category} <span class="text-sm opacity-75">({count})</span>
+            </a>
+        ))}
+    </div>
+</Layout>

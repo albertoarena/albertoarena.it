@@ -1,0 +1,141 @@
+---
+import { ViewTransitions } from 'astro:transitions';
+import { siteConfig } from '@/utils/config';
+import '@/styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  article?: boolean;
+}
+
+const { 
+  title = siteConfig.title, 
+  description = siteConfig.subtitle,
+  image = siteConfig.author.photo,
+  article = false
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const socialImageURL = new URL(image, Astro.site);
+---
+
+<!doctype html>
+<html lang="en" class="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={siteConfig.title} href="/rss.xml" />
+    
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={siteConfig.author.name} />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={socialImageURL} />
+    <meta property="og:site_name" content={siteConfig.title} />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageURL} />
+    <meta name="twitter:creator" content={`@${siteConfig.author.contacts.twitter}`} />
+    
+    <!-- Theme color -->
+    <meta name="theme-color" content="#5eb3ff" />
+    
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content={siteConfig.title} />
+    
+    <!-- Theme script (prevent flash) -->
+    <script is:inline>
+      function applyTheme() {
+        const theme = (() => {
+          if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+            return localStorage.getItem('theme');
+          }
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
+          }
+          return 'light';
+        })();
+
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+        } else {
+          document.documentElement.classList.add('light');
+          document.documentElement.classList.remove('dark');
+        }
+      }
+
+      // Apply theme immediately
+      applyTheme();
+
+      // Re-apply after View Transitions swap
+      document.addEventListener('astro:after-swap', applyTheme);
+
+      // Also handle before swap to prevent flash
+      document.addEventListener('astro:before-swap', (event) => {
+        const theme = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        event.newDocument.documentElement.classList.toggle('dark', theme === 'dark');
+        event.newDocument.documentElement.classList.toggle('light', theme === 'light');
+      });
+    </script>
+
+    <ViewTransitions />
+  </head>
+  <body class="min-h-screen">
+    <a href="#main-content" class="skip-to-content">Skip to content</a>
+    
+    <slot />
+    
+    <!-- Cookie Consent & Analytics -->
+    <script is:inline define:vars={{ gaId: siteConfig.googleAnalyticsId }}>
+      function loadGoogleAnalytics() {
+        if (document.getElementById('ga-script')) return;
+        
+        const script = document.createElement('script');
+        script.id = 'ga-script';
+        script.async = true;
+        script.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+        document.head.appendChild(script);
+        
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', gaId);
+      }
+      
+      if (localStorage.getItem('cookieConsent') === 'accepted') {
+        loadGoogleAnalytics();
+      }
+      
+      window.acceptCookies = function() {
+        localStorage.setItem('cookieConsent', 'accepted');
+        loadGoogleAnalytics();
+        document.getElementById('cookie-consent')?.remove();
+      };
+      
+      window.declineCookies = function() {
+        localStorage.setItem('cookieConsent', 'declined');
+        document.getElementById('cookie-consent')?.remove();
+      };
+    </script>
+  </body>
+</html>

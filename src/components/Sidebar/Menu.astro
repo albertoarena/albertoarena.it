@@ -1,0 +1,31 @@
+---
+import { siteConfig } from '@/utils/config';
+
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="mt-6" aria-label="Main navigation">
+  <ul class="flex flex-wrap justify-center lg:justify-start gap-4">
+    {siteConfig.menu.map((item) => {
+      const isActive = currentPath === item.path || 
+        (item.path === '/' && currentPath.match(/^\/page\/\d+$/));
+      
+      return (
+        <li>
+          <a 
+            href={item.path}
+            class:list={[
+              'text-sm font-medium transition-colors link-underline',
+              isActive 
+                ? 'text-primary' 
+                : 'text-gray hover:text-primary'
+            ]}
+            aria-current={isActive ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+</nav>

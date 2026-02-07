@@ -1,0 +1,16 @@
+---
+import FeedItem from './FeedItem.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  posts: CollectionEntry<'posts'>[];
+}
+
+const { posts } = Astro.props;
+---
+
+<div class="space-y-12">
+  {posts.map((post) => (
+    <FeedItem post={post} />
+  ))}
+</div>

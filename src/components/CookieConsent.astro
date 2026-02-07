@@ -1,0 +1,47 @@
+---
+
+---
+
+<div 
+  id="cookie-consent"
+  class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-white dark:bg-dark border-t border-white-cloud dark:border-dark-cloud shadow-lg transform transition-transform duration-300"
+  role="dialog"
+  aria-labelledby="cookie-consent-title"
+  aria-describedby="cookie-consent-description"
+>
+  <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="text-sm text-dark dark:text-white">
+      <p id="cookie-consent-description">
+        This website uses cookies to analyze traffic and improve your experience.
+      </p>
+    </div>
+    <div class="flex gap-3 flex-shrink-0">
+      <button
+        onclick="declineCookies()"
+        class="px-4 py-2 text-sm text-gray hover:text-dark dark:hover:text-white transition-colors"
+      >
+        Decline
+      </button>
+      <button
+        onclick="acceptCookies()"
+        class="px-4 py-2 text-sm bg-primary text-white rounded hover:bg-secondary transition-colors"
+      >
+        Accept
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function initCookieConsent() {
+    const consent = localStorage.getItem('cookieConsent');
+    const banner = document.getElementById('cookie-consent');
+    
+    if (consent || !banner) {
+      banner?.remove();
+    }
+  }
+  
+  initCookieConsent();
+  document.addEventListener('astro:after-swap', initCookieConsent);
+</script>

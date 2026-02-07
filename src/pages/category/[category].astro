@@ -1,0 +1,34 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../components/Layout.astro";
+import PostCard from "../../components/PostCard.astro";
+
+export async function getStaticPaths() {
+    const posts = await getCollection("posts");
+    const categories = [...new Set(posts.map((post) => post.data.category).filter(Boolean))];
+
+    return categories.map((category) => ({
+        params: { category: category.toLowerCase().replace(/\s+/g, '-') },
+        props: {
+            category,
+            posts: posts
+                .filter((post) => post.data.category === category && !post.data.draft)
+                .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+        },
+    }));
+}
+
+const { category, posts } = Astro.props;
+---
+
+<Layout title={`Category: ${category}`}>
+    <h1 class="text-3xl font-bold mb-4">
+        Category: <span class="text-primary">{category}</span>
+    </h1>
+    <p class="text-gray-600 dark:text-gray-400 mb-8">
+        {posts.length} {posts.length === 1 ? 'post' : 'posts'} in this category
+    </p>
+    <div class="space-y-10">
+        {posts.map((post) => <PostCard post={post} />)}
+    </div>
+</Layout>

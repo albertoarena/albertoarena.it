@@ -1,34 +1,46 @@
-# albertoarena.it
+# Astro Starter Kit: Basics
 
-A personal blog based on [Gatsby Starter Lumen](https://github.com/alxshelepenok/gatsby-starter-lumen).
+```sh
+npm create astro@latest -- --template basics
+```
 
-## Credits
+> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
 
-- [Gatsby](https://www.gatsbyjs.com/) framework
-- [Gatsby Starter Lumen](https://github.com/alxshelepenok/gatsby-starter-lumen) template
-- Cookie
-  banner: [gatsby-plugin-google-gtag-cookieconsent](https://github.com/astoiccoder/gatsby-plugin-google-gtag-cookieconsent)
+## 🚀 Project Structure
 
-## License
+Inside of your Astro project, you'll see the following folders and files:
 
-The MIT License (MIT)
+```text
+/
+├── public/
+│   └── favicon.svg
+├── src
+│   ├── assets
+│   │   └── astro.svg
+│   ├── components
+│   │   └── Welcome.astro
+│   ├── layouts
+│   │   └── Layout.astro
+│   └── pages
+│       └── index.astro
+└── package.json
+```
 
-Copyright (c) 2024 Alberto Arena
+To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+## 🧞 Commands
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+All commands are run from the root of the project, from a terminal:
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+| Command                   | Action                                           |
+| :------------------------ | :----------------------------------------------- |
+| `npm install`             | Installs dependencies                            |
+| `npm run dev`             | Starts local dev server at `localhost:4321`      |
+| `npm run build`           | Build your production site to `./dist/`          |
+| `npm run preview`         | Preview your build locally, before deploying     |
+| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
+| `npm run astro -- --help` | Get help using the Astro CLI                     |
+
+## 👀 Want to learn more?
+
+Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).

@@ -1,0 +1,17 @@
+---
+import Layout from "../components/Layout.astro";
+import { getCollection } from "astro:content";
+import PostCard from "../components/PostCard.astro";
+import { siteConfig } from "../utils/config";
+
+const posts = await getCollection("posts");
+const sortedPosts = posts
+	.filter((post) => !post.data.draft)
+	.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<Layout title={siteConfig.title} isIndex={true}>
+	<div class="space-y-10">
+		{sortedPosts.map((post) => <PostCard post={post} />)}
+	</div>
+</Layout>

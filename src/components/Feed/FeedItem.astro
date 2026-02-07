@@ -1,0 +1,80 @@
+---
+import { formatDate, getReadingTime, getCategorySlug } from '@/utils/helpers';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+}
+
+const { post } = Astro.props;
+const { title, date, category, description } = post.data;
+const { Content } = await post.render();
+
+// Calculate reading time from the raw markdown content
+const readingTime = getReadingTime(post.body);
+
+// Determine the post URL
+const slug = post.data.slug?.replace(/^\/posts\//, '') || post.id;
+const postUrl = `/posts/${slug}`;
+---
+
+<article class="pb-12 border-b border-white-cloud dark:border-dark-cloud last:border-b-0">
+  <header>
+    <div class="flex items-center gap-3 text-sm text-gray mb-3">
+      <time datetime={date.toISOString()}>
+        {formatDate(date)}
+      </time>
+      {category && (
+        <>
+          <span aria-hidden="true">•</span>
+          <a 
+            href={`/category/${getCategorySlug(category)}`}
+            class="hover:text-primary transition-colors"
+          >
+            {category}
+          </a>
+        </>
+      )}
+      <span aria-hidden="true">•</span>
+      <span>{readingTime}</span>
+    </div>
+    
+    <h2 class="text-2xl font-semibold mb-3">
+      <a 
+        href={postUrl}
+        class="text-dark dark:text-white hover:text-primary transition-colors"
+      >
+        {title}
+      </a>
+    </h2>
+  </header>
+  
+  {description && (
+    <p class="text-gray leading-relaxed mb-4">
+      {description}
+    </p>
+  )}
+  
+  <footer>
+    <a 
+      href={postUrl}
+      class="inline-flex items-center text-primary hover:text-secondary transition-colors font-medium"
+    >
+      Read more
+      <svg 
+        class="w-4 h-4 ml-1" 
+        fill="none" 
+        stroke="currentColor" 
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path 
+          stroke-linecap="round" 
+          stroke-linejoin="round" 
+          stroke-width="2" 
+          d="M17 8l4 4m0 0l-4 4m4-4H3"
+        />
+      </svg>
+    </a>
+  </footer>
+</article>

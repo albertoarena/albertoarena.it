@@ -1,0 +1,23 @@
+---
+import Author from './Author.astro';
+import Menu from './Menu.astro';
+import Contacts from './Contacts.astro';
+import Copyright from './Copyright.astro';
+import ThemeSwitcher from '@/components/ThemeSwitcher.astro';
+
+interface Props {
+  isIndex?: boolean;
+}
+
+const { isIndex = false } = Astro.props;
+---
+
+<div class="pb-6 lg:pb-0 border-b border-white-cloud dark:border-dark-cloud lg:border-b-0">
+  <Author isIndex={isIndex} />
+  <Menu />
+  <Contacts />
+  <div class="flex items-center justify-between mt-6">
+    <Copyright />
+    <ThemeSwitcher />
+  </div>
+</div>

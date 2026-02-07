@@ -1,0 +1,29 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Sidebar from '@/components/Sidebar/Sidebar.astro';
+import CookieConsent from '@/components/CookieConsent.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  article?: boolean;
+  isIndex?: boolean;
+}
+
+const { title, description, image, article = false, isIndex = false } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} image={image} article={article}>
+  <div class="max-w-6xl mx-auto px-4 py-8 lg:py-12">
+    <div class="lg:flex lg:gap-12">
+      <aside class="lg:w-72 lg:flex-shrink-0 mb-8 lg:mb-0 lg:sticky lg:top-8 lg:self-start">
+        <Sidebar isIndex={isIndex} />
+      </aside>
+      <main id="main-content" class="flex-1 min-w-0 animate-fade-in">
+        <slot />
+      </main>
+    </div>
+  </div>
+  <CookieConsent />
+</BaseLayout>

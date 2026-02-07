@@ -1,0 +1,38 @@
+---
+import { siteConfig } from '@/utils/config';
+
+interface Props {
+  isIndex?: boolean;
+}
+
+const { isIndex = false } = Astro.props;
+const { author } = siteConfig;
+---
+
+<div class="text-center lg:text-left">
+  <a href="/" class="inline-block">
+    <img 
+      src={author.photo} 
+      alt={author.name}
+      width="96"
+      height="96"
+      class="w-24 h-24 rounded-full mx-auto lg:mx-0 border-2 border-white-cloud dark:border-dark-cloud hover:border-primary transition-colors"
+    />
+  </a>
+  
+  {isIndex ? (
+    <h1 class="mt-4 text-xl font-semibold">
+      <a href="/" class="text-dark dark:text-white hover:text-primary transition-colors">
+        {author.name}
+      </a>
+    </h1>
+  ) : (
+    <h2 class="mt-4 text-xl font-semibold">
+      <a href="/" class="text-dark dark:text-white hover:text-primary transition-colors">
+        {author.name}
+      </a>
+    </h2>
+  )}
+  
+  <p class="mt-2 text-gray">{author.bio}</p>
+</div>

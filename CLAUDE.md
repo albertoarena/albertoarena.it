@@ -3,48 +3,44 @@
 ## Development Commands
 
 ```bash
-yarn start        # Development server (cleans cache first)
-yarn build        # Production build
-yarn test         # Run Jest tests
-yarn test:watch   # Watch mode for tests
-yarn lint         # Check TypeScript and SCSS formatting
-yarn format       # Auto-fix formatting
+npm run dev       # Development server
+npm run build     # Production build
+npm run preview   # Preview production build
 ```
 
 ## Architecture
 
-- **Framework**: Gatsby 5 static site generator with React 18 and TypeScript
-- **Content**: Markdown files with YAML frontmatter
-- **Styling**: SCSS modules
-- **Site Config**: `/content/config.json`
+- **Framework**: Astro 5 static site generator with Tailwind CSS
+- **Content**: Markdown files with YAML frontmatter in content collections
+- **Styling**: Tailwind CSS with @tailwindcss/typography plugin
+- **Site Config**: `/src/utils/config.ts`
 
 ## Content Structure
 
 ### Posts
-Location: `/content/posts/YYYY-MM-DD--Post-Title/index.md`
+Location: `/src/content/posts/[slug]/index.md`
 
 Frontmatter fields:
 - `title`, `date`, `template` (required)
 - `draft`, `slug`, `category`, `tags`, `description`, `socialImage` (optional)
 
 ### Pages
-Location: `/content/pages/`
+Location: `/src/content/pages/[slug]/index.md`
 
 ## Key Directories
 
-- `/src/components/` - React components
-- `/src/templates/` - Page templates (post, page, category, tag, index)
-- `/src/hooks/` - Custom React hooks
-- `/internal/gatsby/` - Build configuration (node creation, page generation)
+- `/src/components/` - Astro components
+- `/src/layouts/` - Page layouts (BaseLayout, PostLayout)
+- `/src/pages/` - Page routes
+- `/src/content/` - Content collections (posts, pages)
+- `/src/styles/` - Global CSS
+- `/src/utils/` - Utility functions and config
+- `/public/` - Static assets
 
 ## Path Aliases
 
-Use these import aliases:
-- `@/components`
-- `@/hooks`
-- `@/utils`
-- `@/types`
-- `@/constants`
+Use these import aliases (configured in tsconfig.json):
+- `@/*` → `./src/*`
 
 ## Git Commit Conventions
 
