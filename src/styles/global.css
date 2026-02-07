@@ -81,6 +81,12 @@
     color: hsl(31, 92%, 62%) !important;
   }
 
+  /* Fix time element styling in dark mode */
+  .dark time {
+    color: #e5e7eb !important;
+    text-decoration: none !important;
+  }
+
   /* Skip to content link */
   .skip-to-content {
     @apply absolute left-0 top-0 z-50 bg-primary text-white px-4 py-2;

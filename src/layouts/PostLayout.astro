@@ -23,7 +23,7 @@ const categorySlug = post.data.category?.toLowerCase().replace(/\s+/g, '-');
         <header class="mb-8 not-prose">
             <h1 class="text-3xl lg:text-4xl font-bold mb-4 text-dark dark:text-white">{post.data.title}</h1>
             <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-300">
-                <time datetime={post.data.date.toISOString()}>
+                <time datetime={post.data.date.toISOString()} class="text-gray-600 dark:text-gray-200 no-underline" style="text-decoration: none !important;">
                     {formattedDate}
                 </time>
                 {post.data.category && (
