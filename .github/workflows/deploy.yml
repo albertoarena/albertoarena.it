@@ -1,0 +1,91 @@
+name: 🚀 Deploy to Netsons
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 🧩 Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ⚙️ Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # 📦 Install dependencies and patch Rollup
+      - name: Install dependencies and fix Rollup
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install
+          npm install rollup@4.22.4 --save-dev --force
+          npm install @rollup/rollup-linux-x64-gnu --save-dev --force || true
+
+      # 🏗️ Build Astro site
+      - name: Build Astro site
+        run: npm run build
+
+      # 🪶 Copy server-side files (.htaccess)
+      - name: Copy server files
+        run: |
+          cp public/.htaccess dist/.htaccess || true
+
+      # 🚀 Deploy via FTP to Netsons
+      - name: Deploy to Netsons
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          port: ${{ secrets.FTP_PORT || 21 }}
+          local-dir: ./dist/
+          server-dir: /public_html/
+          protocol: ftp
+          state-name: .ftp-deploy-sync-state.json
+          dangerous-clean-slate: false
+          exclude: |
+            **/.DS_Store
+            **/.git*
+            .github/**
+            docs/**
+
+      # 🔍 Verify deployment success
+      - name: Verify deployment success
+        run: |
+          echo "⏳ Waiting 15 seconds for deployment to settle..."
+          sleep 15
+
+          echo "🌐 Checking https://albertoarena.it/"
+          RESPONSE=$(curl -s -o /tmp/site.html -w "%{http_code} %{time_total}\n" https://albertoarena.it/)
+          STATUS=$(echo "$RESPONSE" | awk '{print $1}')
+          TIME=$(echo "$RESPONSE" | awk '{print $2}')
+
+          TITLE=$(grep -o '<title>[^<]*</title>' /tmp/site.html | sed 's/<\/\?title>//g' | head -n 1)
+
+          echo "HTTP Status: $STATUS"
+          echo "Response Time: ${TIME}s"
+          echo "Page Title: \"$TITLE\""
+
+          if [ "$STATUS" != "200" ]; then
+            echo "❌ Deployment failed — site returned HTTP $STATUS"
+            exit 1
+          fi
+
+          if grep -q "Alberto Arena" /tmp/site.html; then
+            echo "✅ Text verification passed — 'Alberto Arena' found in homepage"
+          else
+            echo "⚠️ Homepage loaded, but text 'Alberto Arena' not found!"
+            echo "Here's a snippet of the downloaded HTML for debugging:"
+            head -n 30 /tmp/site.html
+            exit 1
+          fi
+
+          echo "🎉 Deployment verified successfully — all checks passed!"
