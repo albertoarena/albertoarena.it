@@ -31,13 +31,15 @@ I have a background of 9 years in C++ and Delphi, when I implemented data entry 
 Borland products. Good old days! Now my daily work is different, but I didn't lose my passion, and the desire to learn
 new things.
 
+I'm currently working as **Senior Software Engineer** at [SafariOffice](https://safarioffice.com/), a Netherlands-based company.
+
 <figure class="float-right" style="width: 240px">
 	<img src="/images/pages/about/midleton-distillery-collection.jpg" alt="Midleton Distillery Collection">
 </figure>
 
-I'm currently working as lead developer of [Midleton Distillery Collection](https://midletondistillerycollection.com/),
+One of my most notable past projects was the [Midleton Distillery Collection](https://midletondistillerycollection.com/),
 the official shop for Ireland's finest and best loved whiskey brands (Jameson, Redbreast, Midleton Very Rare, Powers,
-Spot Whiskeys, Method & Madness and Knappogue Castle).
+Spot Whiskeys, Method & Madness and Knappogue Castle), where I worked as lead developer from 2021 to 2024.
 
 I have several personal interests, including reading, guitar, constructed languages, and hand-made dioramas.
 
