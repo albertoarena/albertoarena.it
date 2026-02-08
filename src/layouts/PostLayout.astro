@@ -2,6 +2,7 @@
 import Layout from "../components/Layout.astro";
 import type { CollectionEntry } from "astro:content";
 import { siteConfig } from "../utils/config";
+import DisqusComments from "../components/DisqusComments.astro";
 
 interface Props {
     post: CollectionEntry<"posts">;
@@ -16,6 +17,7 @@ const formattedDate = post.data.date.toLocaleDateString('en-US', {
 });
 
 const categorySlug = post.data.category?.toLowerCase().replace(/\s+/g, '-');
+const postUrl = `${siteConfig.url}/posts/${post.slug}`;
 ---
 
 <Layout title={post.data.title} description={post.data.description} article={true}>
@@ -67,5 +69,11 @@ const categorySlug = post.data.category?.toLowerCase().replace(/\s+/g, '-');
                 </div>
             </div>
         </div>
+
+        <DisqusComments
+            url={postUrl}
+            identifier={post.slug}
+            title={post.data.title}
+        />
     </article>
 </Layout>

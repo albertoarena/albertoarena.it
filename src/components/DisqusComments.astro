@@ -1,0 +1,54 @@
+---
+import { siteConfig } from "../utils/config";
+
+interface Props {
+    url: string;
+    identifier: string;
+    title: string;
+}
+
+const { url, identifier, title } = Astro.props;
+const shortname = siteConfig.disqusShortname;
+---
+
+<div id="disqus_thread" class="mt-12 pt-6 border-t border-gray-200 dark:border-dark-cloud"></div>
+
+<script is:inline define:vars={{ shortname, url, identifier, title }}>
+    var disqus_config = function () {
+        this.page.url = url;
+        this.page.identifier = identifier;
+        this.page.title = title;
+    };
+
+    function loadDisqus() {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://' + shortname + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    }
+
+    function resetDisqus() {
+        if (typeof DISQUS !== 'undefined') {
+            DISQUS.reset({
+                reload: true,
+                config: disqus_config
+            });
+        } else {
+            loadDisqus();
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', loadDisqus);
+    } else {
+        loadDisqus();
+    }
+
+    document.addEventListener('astro:after-swap', resetDisqus);
+</script>
+
+<noscript>
+    <p class="text-gray-600 dark:text-gray-300">
+        Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" class="text-primary hover:underline">comments powered by Disqus.</a>
+    </p>
+</noscript>
