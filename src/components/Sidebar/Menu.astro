@@ -16,8 +16,8 @@ const currentPath = Astro.url.pathname;
             href={item.path}
             class:list={[
               'text-sm font-medium transition-colors link-underline',
-              isActive 
-                ? 'text-primary' 
+              isActive
+                ? 'text-primary after:w-full after:bg-primary'
                 : 'text-gray hover:text-primary'
             ]}
             aria-current={isActive ? 'page' : undefined}

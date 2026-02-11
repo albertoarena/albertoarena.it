@@ -1,0 +1,18 @@
+---
+import Layout from '../components/Layout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { projects } from '../data/projects';
+---
+
+<Layout title="Projects">
+  <h1 class="text-3xl lg:text-4xl font-bold mb-2 text-dark dark:text-white">
+    Projects
+  </h1>
+  <p class="text-gray mb-10">
+    Open source tools and professional work.
+  </p>
+
+  <div class="grid gap-6">
+    {projects.map((project) => <ProjectCard project={project} />)}
+  </div>
+</Layout>

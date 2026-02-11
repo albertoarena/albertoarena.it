@@ -8,6 +8,7 @@ export const siteConfig = {
   postsLimit: 4,
   menu: [
     { label: 'Articles', path: '/' },
+    { label: 'Projects', path: '/projects' },
     { label: 'About me', path: '/pages/about' }
   ],
   author: {

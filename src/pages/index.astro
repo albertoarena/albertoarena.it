@@ -11,7 +11,13 @@ const sortedPosts = posts
 ---
 
 <Layout title={siteConfig.title} isIndex={true}>
-	<div class="space-y-10">
+	<section class="mb-12 pb-8 border-b border-white-cloud dark:border-dark-cloud">
+		<p class="text-lg text-gray leading-relaxed">
+			Thoughts on software engineering, architecture patterns, and the tools I build.
+		</p>
+	</section>
+
+	<div class="space-y-10 animate-stagger">
 		{sortedPosts.map((post) => <PostCard post={post} />)}
 	</div>
 </Layout>
