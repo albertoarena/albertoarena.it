@@ -5,7 +5,7 @@ export const siteConfig = {
   copyright: '© All rights reserved.',
   googleAnalyticsId: 'G-PJGZWDSK4K',
   disqusShortname: 'albertoarena-it',
-  postsLimit: 4,
+  postsLimit: 6,
   menu: [
     { label: 'Articles', path: '/' },
     { label: 'Projects', path: '/projects' },

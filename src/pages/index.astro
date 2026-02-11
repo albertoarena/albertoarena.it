@@ -2,12 +2,17 @@
 import Layout from "../components/Layout.astro";
 import { getCollection } from "astro:content";
 import PostCard from "../components/PostCard.astro";
+import Pagination from "../components/Pagination.astro";
 import { siteConfig } from "../utils/config";
 
 const posts = await getCollection("posts");
 const sortedPosts = posts
 	.filter((post) => !post.data.draft)
 	.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const { postsLimit } = siteConfig;
+const totalPages = Math.ceil(sortedPosts.length / postsLimit);
+const pagePosts = sortedPosts.slice(0, postsLimit);
 ---
 
 <Layout title={siteConfig.title} isIndex={true}>
@@ -18,6 +23,8 @@ const sortedPosts = posts
 	</section>
 
 	<div class="space-y-10 animate-stagger">
-		{sortedPosts.map((post) => <PostCard post={post} />)}
+		{pagePosts.map((post) => <PostCard post={post} />)}
 	</div>
+
+	<Pagination currentPage={1} totalPages={totalPages} />
 </Layout>

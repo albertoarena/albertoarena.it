@@ -1,0 +1,47 @@
+---
+import Layout from "../../components/Layout.astro";
+import { getCollection } from "astro:content";
+import PostCard from "../../components/PostCard.astro";
+import Pagination from "../../components/Pagination.astro";
+import { siteConfig } from "../../utils/config";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts");
+  const sortedPosts = posts
+    .filter((post) => !post.data.draft)
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+  const { postsLimit } = siteConfig;
+  const totalPages = Math.ceil(sortedPosts.length / postsLimit);
+
+  // Generate pages 2+ only (page 1 is the homepage)
+  return Array.from({ length: totalPages - 1 }, (_, i) => {
+    const pageNum = i + 2;
+    const start = (pageNum - 1) * postsLimit;
+    return {
+      params: { page: String(pageNum) },
+      props: {
+        pagePosts: sortedPosts.slice(start, start + postsLimit),
+        currentPage: pageNum,
+        totalPages,
+      },
+    };
+  });
+}
+
+const { pagePosts, currentPage, totalPages } = Astro.props;
+---
+
+<Layout title={`Articles - Page ${currentPage}`} isIndex={true}>
+  <section class="mb-12 pb-8 border-b border-white-cloud dark:border-dark-cloud">
+    <p class="text-lg text-gray leading-relaxed">
+      Thoughts on software engineering, architecture patterns, and the tools I build.
+    </p>
+  </section>
+
+  <div class="space-y-10 animate-stagger">
+    {pagePosts.map((post) => <PostCard post={post} />)}
+  </div>
+
+  <Pagination currentPage={currentPage} totalPages={totalPages} />
+</Layout>
