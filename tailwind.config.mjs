@@ -85,8 +85,10 @@ export default {
               color: theme('colors.white'),
             },
             code: {
-              backgroundColor: theme('colors.dark-cloud'),
-              color: theme('colors.white'),
+              backgroundColor: 'hsl(220, 17%, 22%)',
+              color: '#e5e7eb',
+              padding: '0.25rem 0.5rem',
+              borderRadius: '0.25rem',
             },
             blockquote: {
               color: theme('colors.gray'),

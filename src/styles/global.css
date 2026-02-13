@@ -81,6 +81,12 @@
     color: hsl(31, 92%, 62%) !important;
   }
 
+  /* Fix inline code styling in dark mode */
+  .dark .prose code:not(pre code) {
+    background-color: hsl(220, 17%, 22%) !important;
+    color: #e5e7eb !important;
+  }
+
   /* Fix time element styling in dark mode */
   .dark time {
     color: #e5e7eb !important;

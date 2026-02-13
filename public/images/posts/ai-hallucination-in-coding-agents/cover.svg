@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:0.3"/>
+      <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:0.15"/>
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0.3"/>
+    </linearGradient>
+    <linearGradient id="line-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:0"/>
+      <stop offset="20%" style="stop-color:#3b82f6;stop-opacity:0.6"/>
+      <stop offset="80%" style="stop-color:#8b5cf6;stop-opacity:0.6"/>
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Subtle grid pattern -->
+  <g opacity="0.06" stroke="#94a3b8" stroke-width="0.5">
+    <line x1="0" y1="0" x2="0" y2="630"/><line x1="60" y1="0" x2="60" y2="630"/>
+    <line x1="120" y1="0" x2="120" y2="630"/><line x1="180" y1="0" x2="180" y2="630"/>
+    <line x1="240" y1="0" x2="240" y2="630"/><line x1="300" y1="0" x2="300" y2="630"/>
+    <line x1="360" y1="0" x2="360" y2="630"/><line x1="420" y1="0" x2="420" y2="630"/>
+    <line x1="480" y1="0" x2="480" y2="630"/><line x1="540" y1="0" x2="540" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/><line x1="660" y1="0" x2="660" y2="630"/>
+    <line x1="720" y1="0" x2="720" y2="630"/><line x1="780" y1="0" x2="780" y2="630"/>
+    <line x1="840" y1="0" x2="840" y2="630"/><line x1="900" y1="0" x2="900" y2="630"/>
+    <line x1="960" y1="0" x2="960" y2="630"/><line x1="1020" y1="0" x2="1020" y2="630"/>
+    <line x1="1080" y1="0" x2="1080" y2="630"/><line x1="1140" y1="0" x2="1140" y2="630"/>
+    <line x1="0" y1="60" x2="1200" y2="60"/><line x1="0" y1="120" x2="1200" y2="120"/>
+    <line x1="0" y1="180" x2="1200" y2="180"/><line x1="0" y1="240" x2="1200" y2="240"/>
+    <line x1="0" y1="300" x2="1200" y2="300"/><line x1="0" y1="360" x2="1200" y2="360"/>
+    <line x1="0" y1="420" x2="1200" y2="420"/><line x1="0" y1="480" x2="1200" y2="480"/>
+    <line x1="0" y1="540" x2="1200" y2="540"/>
+  </g>
+
+  <!-- Glow effect behind the brain -->
+  <ellipse cx="600" cy="280" rx="200" ry="160" fill="url(#glow)"/>
+
+  <!-- Brain outline - left hemisphere -->
+  <path d="M540 220 C520 200, 500 210, 495 235 C490 250, 500 270, 510 275 C500 285, 495 300, 500 315 C505 335, 525 345, 540 340 C545 355, 560 365, 580 360 C590 370, 600 370, 600 360"
+    stroke="#3b82f6" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.9"/>
+
+  <!-- Brain outline - right hemisphere -->
+  <path d="M660 220 C680 200, 700 210, 705 235 C710 250, 700 270, 690 275 C700 285, 705 300, 700 315 C695 335, 675 345, 660 340 C655 355, 640 365, 620 360 C610 370, 600 370, 600 360"
+    stroke="#8b5cf6" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.9"/>
+
+  <!-- Brain center line -->
+  <line x1="600" y1="200" x2="600" y2="365" stroke="#64748b" stroke-width="1" opacity="0.4"/>
+
+  <!-- Code brackets around brain -->
+  <text x="430" y="300" font-family="monospace" font-size="80" fill="#3b82f6" opacity="0.25">{</text>
+  <text x="720" y="300" font-family="monospace" font-size="80" fill="#8b5cf6" opacity="0.25">}</text>
+
+  <!-- Floating "hallucination" particles - scattered dots -->
+  <circle cx="480" cy="230" r="3" fill="#f87171" opacity="0.6"/>
+  <circle cx="520" cy="195" r="2" fill="#f87171" opacity="0.4"/>
+  <circle cx="710" cy="240" r="3" fill="#f87171" opacity="0.6"/>
+  <circle cx="680" cy="200" r="2" fill="#f87171" opacity="0.5"/>
+  <circle cx="550" cy="340" r="2.5" fill="#f87171" opacity="0.5"/>
+  <circle cx="650" cy="345" r="2" fill="#f87171" opacity="0.4"/>
+  <circle cx="460" cy="290" r="2" fill="#fbbf24" opacity="0.4"/>
+  <circle cx="740" cy="300" r="2" fill="#fbbf24" opacity="0.4"/>
+
+  <!-- Warning triangle -->
+  <g transform="translate(600, 420)" opacity="0.7">
+    <polygon points="0,-18 16,14 -16,14" fill="none" stroke="#fbbf24" stroke-width="2"/>
+    <text x="0" y="10" font-family="sans-serif" font-size="18" fill="#fbbf24" text-anchor="middle" font-weight="bold">!</text>
+  </g>
+
+  <!-- Decorative line -->
+  <rect x="200" y="470" width="800" height="1.5" fill="url(#line-fade)" rx="1"/>
+
+  <!-- Title text -->
+  <text x="600" y="520" font-family="system-ui, -apple-system, sans-serif" font-size="32" fill="#f1f5f9" text-anchor="middle" font-weight="600" letter-spacing="0.5">
+    AI Hallucination in Coding Agents
+  </text>
+
+  <!-- Subtitle -->
+  <text x="600" y="560" font-family="system-ui, -apple-system, sans-serif" font-size="16" fill="#94a3b8" text-anchor="middle" letter-spacing="1">
+    When your AI writes confident nonsense
+  </text>
+</svg>

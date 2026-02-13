@@ -11,7 +11,8 @@ const postsCollection = defineCollection({
     category: z.string().optional(),
     tags: z.array(z.string()).optional(),
     description: z.string().optional(),
-    socialImage: z.string().optional()
+    socialImage: z.string().optional(),
+    cover: z.string().optional()
   })
 });
 
