@@ -31,7 +31,7 @@ const postUrl = `${siteConfig.url}/posts/${post.slug}`;
                 {post.data.category && (
                     <a
                         href={`/category/${categorySlug}`}
-                        class="px-2 py-1 bg-gray-100 dark:bg-dark-cloud text-gray-700 dark:text-gray-200 rounded hover:text-primary transition-colors"
+                        class="px-2 py-1 bg-primary/10 dark:bg-dark-cloud text-primary dark:text-gray-200 rounded font-medium hover:bg-primary/20 transition-colors"
                     >
                         {post.data.category}
                     </a>
