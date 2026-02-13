@@ -1,7 +1,7 @@
 export const siteConfig = {
   title: 'A blog by Alberto Arena',
   url: 'https://albertoarena.it',
-  subtitle: 'Senior Full Stack Developer.',
+  subtitle: 'Senior Software Engineer.',
   copyright: '© All rights reserved.',
   googleAnalyticsId: 'G-PJGZWDSK4K',
   disqusShortname: 'albertoarena-it',
@@ -14,7 +14,7 @@ export const siteConfig = {
   author: {
     name: 'Alberto Arena',
     photo: '/photo.jpg',
-    bio: 'Senior Full Stack Developer',
+    bio: 'Senior Software Engineer',
     contacts: {
       github: 'albertoarena',
       twitter: 'alberto_arena',
