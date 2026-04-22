@@ -3,7 +3,8 @@ export const siteConfig = {
   url: 'https://albertoarena.it',
   subtitle: 'Senior Software Engineer.',
   copyright: '© All rights reserved.',
-  googleAnalyticsId: 'G-PJGZWDSK4K',
+  gtmContainerId: 'GTM-XXXXXXX',
+  googleAnalyticsId: 'G-PJGZWDSK4K', // managed via GTM, kept for reference
   disqusShortname: 'albertoarena-it',
   postsLimit: 6,
   menu: [

@@ -2,46 +2,72 @@
 
 ---
 
-<div 
+<div
   id="cookie-consent"
-  class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-white dark:bg-dark border-t border-white-cloud dark:border-dark-cloud shadow-lg transform transition-transform duration-300"
+  class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-white dark:bg-dark border-t border-white-cloud dark:border-dark-cloud shadow-lg"
   role="dialog"
   aria-labelledby="cookie-consent-title"
   aria-describedby="cookie-consent-description"
 >
-  <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+  <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
     <div class="text-sm text-dark dark:text-white">
-      <p id="cookie-consent-description">
-        This website uses cookies to analyze traffic and improve your experience.
+      <p id="cookie-consent-title" class="font-semibold mb-1">We use cookies</p>
+      <p id="cookie-consent-description" class="text-gray-600 dark:text-gray-400">
+        We use analytics cookies to understand how you use this site and improve your experience.
+        No advertising or profiling cookies are used.
+        <a href="/pages/privacy-policy" class="underline hover:text-primary transition-colors ml-1">Privacy Policy</a>
       </p>
     </div>
     <div class="flex gap-3 flex-shrink-0">
       <button
-        onclick="declineCookies()"
+        id="decline-cookies"
         class="px-4 py-2 text-sm text-gray hover:text-dark dark:hover:text-white transition-colors"
+        aria-label="Decline analytics cookies"
       >
         Decline
       </button>
       <button
-        onclick="acceptCookies()"
+        id="accept-cookies"
         class="px-4 py-2 text-sm bg-primary text-white rounded hover:bg-secondary transition-colors"
+        aria-label="Accept analytics cookies"
       >
-        Accept
+        Accept analytics
       </button>
     </div>
   </div>
 </div>
 
 <script>
+  function gtag(...args: unknown[]) {
+    (window as Window & { dataLayer?: unknown[] }).dataLayer = (window as Window & { dataLayer?: unknown[] }).dataLayer || [];
+    ((window as Window & { dataLayer?: unknown[] }).dataLayer as unknown[]).push(args);
+  }
+
   function initCookieConsent() {
     const consent = localStorage.getItem('cookieConsent');
     const banner = document.getElementById('cookie-consent');
-    
-    if (consent || !banner) {
+
+    if (consent) {
       banner?.remove();
+      if (consent === 'accepted') {
+        gtag('consent', 'update', { analytics_storage: 'granted' });
+      }
+      return;
     }
+
+    document.getElementById('accept-cookies')?.addEventListener('click', () => {
+      gtag('consent', 'update', { analytics_storage: 'granted' });
+      localStorage.setItem('cookieConsent', 'accepted');
+      banner?.remove();
+    });
+
+    document.getElementById('decline-cookies')?.addEventListener('click', () => {
+      gtag('consent', 'update', { analytics_storage: 'denied' });
+      localStorage.setItem('cookieConsent', 'declined');
+      banner?.remove();
+    });
   }
-  
+
   initCookieConsent();
   document.addEventListener('astro:after-swap', initCookieConsent);
 </script>
