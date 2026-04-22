@@ -33,11 +33,6 @@ jobs:
       - name: Build Astro site
         run: npm run build
 
-      # 🪶 Copy server-side files (.htaccess)
-      - name: Copy server files
-        run: |
-          cp public/.htaccess dist/.htaccess || true
-
       # 🚀 Deploy via FTP to Netsons
       - name: Deploy to Netsons
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
