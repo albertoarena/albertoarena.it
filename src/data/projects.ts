@@ -12,6 +12,17 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    name: 'Claude Laravel Event Sourcing',
+    description:
+      'Claude Code skill that designs and generates event-sourced Laravel domains via a two-gate workflow: domain modelling conversation and ADR approval before any code is written.',
+    tech: ['Laravel', 'PHP', 'Event Sourcing', 'AI', 'Claude'],
+    github: 'https://github.com/albertoarena/claude-laravel-event-sourcing',
+    postSlug: 'ai-laravel-event-sourcing',
+    status: 'active',
+    featured: true,
+    year: '2026',
+  },
+  {
     name: 'Codemetry',
     description:
       'Git repository analysis tool that converts version control history into meaningful quality metrics with daily indicators.',
