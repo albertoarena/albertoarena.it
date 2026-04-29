@@ -104,18 +104,21 @@ const socialImageURL = new URL(image, Astro.site);
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag(){ dataLayer.push(arguments); }
+      // Restore prior consent immediately so returning users aren't blocked
+      var _priorConsent = localStorage.getItem('cookieConsent');
       gtag('consent', 'default', {
-        analytics_storage: 'denied',
+        analytics_storage: _priorConsent === 'accepted' ? 'granted' : 'denied',
         ad_storage: 'denied',
         ad_user_data: 'denied',
         ad_personalization: 'denied',
-        wait_for_update: 500,
+        wait_for_update: _priorConsent ? 0 : 500,
       });
     </script>
 
     <!-- Google Tag Manager -->
     <script is:inline define:vars={{ gtmId: siteConfig.gtmContainerId }}>
-      if (gtmId) {
+      if (gtmId && !window._gtmLoaded) {
+        window._gtmLoaded = true;
         (function(w,d,s,l,i){
           w[l]=w[l]||[];
           w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
@@ -126,6 +129,17 @@ const socialImageURL = new URL(image, Astro.site);
           f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer',gtmId);
       }
+
+      // Push page_view on each SPA navigation (View Transitions)
+      document.addEventListener('astro:after-swap', function() {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: 'page_view',
+          page_location: window.location.href,
+          page_path: window.location.pathname,
+          page_title: document.title,
+        });
+      });
     </script>
   </head>
   <body class="min-h-screen">
