@@ -33,8 +33,62 @@ jobs:
       - name: Build Astro site
         run: npm run build
 
-      # 🚀 Deploy via FTP to Netsons
+      # 🚀 Deploy via FTP to Netsons (with retry on transient timeout)
       - name: Deploy to Netsons
+        id: deploy1
+        continue-on-error: true
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          port: ${{ secrets.FTP_PORT || 21 }}
+          local-dir: ./dist/
+          server-dir: /public_html/
+          protocol: ftp
+          state-name: .ftp-deploy-sync-state.json
+          dangerous-clean-slate: false
+          exclude: |
+            **/.DS_Store
+            **/.git*
+            .github/**
+            docs/**
+
+      - name: Wait before retry
+        if: steps.deploy1.outcome == 'failure'
+        run: |
+          echo "⚠️ FTP deploy failed (attempt 1), retrying in 30s..."
+          sleep 30
+
+      - name: Deploy to Netsons (retry 2)
+        id: deploy2
+        if: steps.deploy1.outcome == 'failure'
+        continue-on-error: true
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          port: ${{ secrets.FTP_PORT || 21 }}
+          local-dir: ./dist/
+          server-dir: /public_html/
+          protocol: ftp
+          state-name: .ftp-deploy-sync-state.json
+          dangerous-clean-slate: false
+          exclude: |
+            **/.DS_Store
+            **/.git*
+            .github/**
+            docs/**
+
+      - name: Wait before retry
+        if: steps.deploy2.outcome == 'failure'
+        run: |
+          echo "⚠️ FTP deploy failed (attempt 2), retrying in 60s..."
+          sleep 60
+
+      - name: Deploy to Netsons (retry 3)
+        if: steps.deploy2.outcome == 'failure'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
