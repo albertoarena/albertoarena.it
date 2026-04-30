@@ -128,18 +128,18 @@ const socialImageURL = new URL(image, Astro.site);
           j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
           f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer',gtmId);
-      }
 
-      // Push page_view on each SPA navigation (View Transitions)
-      document.addEventListener('astro:after-swap', function() {
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-          event: 'page_view',
-          page_location: window.location.href,
-          page_path: window.location.pathname,
-          page_title: document.title,
+        // Push page_view on each SPA navigation (View Transitions) — registered once
+        document.addEventListener('astro:after-swap', function() {
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            event: 'page_view',
+            page_location: window.location.href,
+            page_path: window.location.pathname,
+            page_title: document.title,
+          });
         });
-      });
+      }
     </script>
   </head>
   <body class="min-h-screen">
