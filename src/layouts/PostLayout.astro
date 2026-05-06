@@ -20,7 +20,7 @@ const categorySlug = post.data.category?.toLowerCase().replace(/\s+/g, '-');
 const postUrl = `${siteConfig.url}/posts/${post.slug}`;
 ---
 
-<Layout title={post.data.title} description={post.data.description} article={true}>
+<Layout title={post.data.title} description={post.data.description} image={post.data.socialImage} article={true}>
     <article class="prose dark:prose-invert max-w-none">
         <header class="mb-8 not-prose">
             <h1 class="text-3xl lg:text-4xl font-bold mb-4 text-dark dark:text-white">{post.data.title}</h1>
