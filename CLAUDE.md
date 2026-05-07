@@ -24,6 +24,22 @@ Frontmatter fields:
 - `title`, `date`, `template` (required)
 - `draft`, `slug`, `category`, `tags`, `description`, `socialImage` (optional)
 
+### Images
+
+Always resize and compress images before committing. Large files slow page loads and break social card crawlers.
+
+- **Social images** (`socialImage`): 1200×630 px, < 1 MB (JPEG quality 85)
+- **Content/accessory images**: max 1200 px wide, < 200 KB (WebP preferred, or JPEG quality 80-85)
+
+Quick resize with ImageMagick:
+```bash
+# Social image
+magick input.jpg -resize 1200x630^ -gravity center -extent 1200x630 -quality 85 output.jpg
+
+# Content image (preserve aspect ratio, cap width)
+magick input.jpg -resize 1200x\> -quality 82 output.webp
+```
+
 ### Pages
 Location: `/src/content/pages/[slug]/index.md`
 
