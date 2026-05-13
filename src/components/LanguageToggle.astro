@@ -1,0 +1,37 @@
+---
+interface Props {
+  currentLang: 'en' | 'it';
+  englishUrl: string;
+  italianUrl: string;
+}
+
+const { currentLang, englishUrl, italianUrl } = Astro.props;
+---
+
+<div class="flex items-center gap-2 text-sm mb-6 not-prose">
+  <span class="text-gray-500 dark:text-gray-400">Read in:</span>
+  <a
+    href={englishUrl}
+    class:list={[
+      'px-2 py-1 rounded font-medium transition-colors',
+      currentLang === 'en'
+        ? 'bg-primary text-white'
+        : 'text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary'
+    ]}
+    aria-current={currentLang === 'en' ? 'page' : undefined}
+  >
+    English
+  </a>
+  <a
+    href={italianUrl}
+    class:list={[
+      'px-2 py-1 rounded font-medium transition-colors',
+      currentLang === 'it'
+        ? 'bg-primary text-white'
+        : 'text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary'
+    ]}
+    aria-current={currentLang === 'it' ? 'page' : undefined}
+  >
+    Italiano
+  </a>
+</div>

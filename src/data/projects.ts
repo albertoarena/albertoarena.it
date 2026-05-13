@@ -12,6 +12,18 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    name: 'Laravel Netsons Deploy',
+    description:
+      'GitHub Actions deployment workflow for Laravel on Netsons shared hosting, supporting both FTP and git clone strategies with zero-downtime release switching.',
+    tech: ['Laravel', 'PHP', 'GitHub Actions', 'Deploy'],
+    github: 'https://github.com/albertoarena/laravel-netsons-deploy',
+    url: 'https://albertoarena.github.io/laravel-netsons-deploy/',
+    postSlug: 'laravel-netsons-deploy',
+    status: 'active',
+    featured: true,
+    year: '2026',
+  },
+  {
     name: 'Claude Laravel Event Sourcing',
     description:
       'Claude Code skill that designs and generates event-sourced Laravel domains via a two-gate workflow: domain modelling conversation and ADR approval before any code is written.',

@@ -8,13 +8,19 @@ interface Props {
   description?: string;
   image?: string;
   article?: boolean;
+  lang?: 'en' | 'it';
+  hreflangEn?: string;
+  hreflangIt?: string;
 }
 
-const { 
-  title = siteConfig.title, 
+const {
+  title = siteConfig.title,
   description = siteConfig.subtitle,
   image = siteConfig.author.photo,
-  article = false
+  article = false,
+  lang = 'en',
+  hreflangEn,
+  hreflangIt,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -22,12 +28,19 @@ const socialImageURL = new URL(image, Astro.site);
 ---
 
 <!doctype html>
-<html lang="en" class="light">
+<html lang={lang} class="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="canonical" href={canonicalURL} />
+    {hreflangEn && hreflangIt && (
+      <>
+        <link rel="alternate" hreflang="en" href={hreflangEn} />
+        <link rel="alternate" hreflang="it" href={hreflangIt} />
+        <link rel="alternate" hreflang="x-default" href={hreflangEn} />
+      </>
+    )}
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="alternate" type="application/rss+xml" title={siteConfig.title} href="/rss.xml" />
     

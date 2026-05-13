@@ -5,7 +5,7 @@ import Layout from "../components/Layout.astro";
 const posts = await getCollection("posts");
 const categoryMap = new Map<string, number>();
 
-posts.filter((post) => !post.data.draft).forEach((post) => {
+posts.filter((post) => !post.data.draft && (post.data.lang ?? 'en') === 'en').forEach((post) => {
     const category = post.data.category;
     if (category) {
         categoryMap.set(category, (categoryMap.get(category) || 0) + 1);

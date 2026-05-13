@@ -1,0 +1,38 @@
+---
+import { getCollection } from "astro:content";
+import PostLayout from "../../../layouts/PostLayout.astro";
+
+export async function getStaticPaths() {
+    const allPosts = await getCollection("posts");
+    const englishPosts = allPosts.filter((p) => (p.data.lang ?? 'en') === 'en');
+    const translatedSlugs = new Set(
+        allPosts
+            .filter((p) => p.data.lang === 'it')
+            .map((p) => p.data.translationOf)
+            .filter(Boolean)
+    );
+
+    return englishPosts.map((post) => ({
+        params: { slug: post.slug },
+        props: {
+            post,
+            hasItalian: translatedSlugs.has(post.slug),
+        },
+    }));
+}
+
+const { post, hasItalian } = Astro.props;
+const { Content } = await post.render();
+
+const englishPath = `/posts/${post.slug}/`;
+const italianPath = `/posts/${post.slug}/it/`;
+---
+
+<PostLayout
+    post={post}
+    lang="en"
+    englishUrl={hasItalian ? englishPath : undefined}
+    italianUrl={hasItalian ? italianPath : undefined}
+>
+    <Content />
+</PostLayout>

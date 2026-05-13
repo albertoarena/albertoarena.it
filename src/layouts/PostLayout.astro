@@ -3,26 +3,54 @@ import Layout from "../components/Layout.astro";
 import type { CollectionEntry } from "astro:content";
 import { siteConfig } from "../utils/config";
 import DisqusComments from "../components/DisqusComments.astro";
+import LanguageToggle from "../components/LanguageToggle.astro";
 
 interface Props {
     post: CollectionEntry<"posts">;
+    lang?: 'en' | 'it';
+    englishUrl?: string;
+    italianUrl?: string;
+    disqusSlug?: string;
 }
 
-const { post } = Astro.props;
+const { post, lang = 'en', englishUrl, italianUrl, disqusSlug } = Astro.props;
 
-const formattedDate = post.data.date.toLocaleDateString('en-US', {
+const locale = lang === 'it' ? 'it-IT' : 'en-US';
+const formattedDate = post.data.date.toLocaleDateString(locale, {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
 });
 
 const categorySlug = post.data.category?.toLowerCase().replace(/\s+/g, '-');
-const postUrl = `${siteConfig.url}/posts/${post.slug}`;
+
+// Disqus always uses the English post's slug and URL so both languages share one thread
+const canonicalEnglishSlug = disqusSlug ?? post.slug;
+const disqusPostUrl = `${siteConfig.url}/posts/${canonicalEnglishSlug}/`;
+
+const hasTranslation = !!(englishUrl && italianUrl);
+const hreflangEn = englishUrl ? `${siteConfig.url}${englishUrl}` : undefined;
+const hreflangIt = italianUrl ? `${siteConfig.url}${italianUrl}` : undefined;
 ---
 
-<Layout title={post.data.title} description={post.data.description} image={post.data.socialImage} article={true}>
+<Layout
+    title={post.data.title}
+    description={post.data.description}
+    image={post.data.socialImage}
+    article={true}
+    lang={lang}
+    hreflangEn={hreflangEn}
+    hreflangIt={hreflangIt}
+>
     <article class="prose dark:prose-invert max-w-none">
         <header class="mb-8 not-prose">
+            {hasTranslation && (
+                <LanguageToggle
+                    currentLang={lang}
+                    englishUrl={englishUrl!}
+                    italianUrl={italianUrl!}
+                />
+            )}
             <h1 class="text-3xl lg:text-4xl font-bold mb-4 text-dark dark:text-white">{post.data.title}</h1>
             <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-300">
                 <time datetime={post.data.date.toISOString()} class="text-gray-600 dark:text-gray-200 no-underline" style="text-decoration: none !important;">
@@ -71,8 +99,8 @@ const postUrl = `${siteConfig.url}/posts/${post.slug}`;
         </div>
 
         <DisqusComments
-            url={postUrl}
-            identifier={post.slug}
+            url={disqusPostUrl}
+            identifier={canonicalEnglishSlug}
             title={post.data.title}
         />
     </article>

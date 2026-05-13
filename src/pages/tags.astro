@@ -5,7 +5,7 @@ import Layout from "../components/Layout.astro";
 const posts = await getCollection("posts");
 const tagMap = new Map<string, number>();
 
-posts.filter((post) => !post.data.draft).forEach((post) => {
+posts.filter((post) => !post.data.draft && (post.data.lang ?? 'en') === 'en').forEach((post) => {
     const tags = post.data.tags || [];
     tags.forEach((tag) => {
         tagMap.set(tag, (tagMap.get(tag) || 0) + 1);

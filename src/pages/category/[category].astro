@@ -5,13 +5,14 @@ import PostCard from "../../components/PostCard.astro";
 
 export async function getStaticPaths() {
     const posts = await getCollection("posts");
-    const categories = [...new Set(posts.map((post) => post.data.category).filter(Boolean))];
+    const englishPosts = posts.filter((post) => (post.data.lang ?? 'en') === 'en');
+    const categories = [...new Set(englishPosts.map((post) => post.data.category).filter(Boolean))];
 
     return categories.map((category) => ({
         params: { category: category.toLowerCase().replace(/\s+/g, '-') },
         props: {
             category,
-            posts: posts
+            posts: englishPosts
                 .filter((post) => post.data.category === category && !post.data.draft)
                 .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
         },
