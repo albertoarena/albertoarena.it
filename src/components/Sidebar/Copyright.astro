@@ -2,4 +2,10 @@
 import { siteConfig } from '@/utils/config';
 ---
 
-<p class="text-xs text-gray">{siteConfig.copyright}</p>
+<div class="text-xs text-gray">
+  <p>{siteConfig.copyright}</p>
+  <p>
+    <a href="/pages/privacy-policy" class="hover:underline">Privacy Policy</a>
+    &nbsp;·&nbsp;<a href="/pages/credits" class="hover:underline">Credits</a>
+  </p>
+</div>
