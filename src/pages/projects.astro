@@ -2,6 +2,9 @@
 import Layout from '../components/Layout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import { projects } from '../data/projects';
+
+const professionalProjects = projects.filter((p) => p.status === 'professional');
+const personalProjects = projects.filter((p) => p.status !== 'professional');
 ---
 
 <Layout title="Projects">
@@ -12,7 +15,32 @@ import { projects } from '../data/projects';
     Open source tools and professional work.
   </p>
 
-  <div class="grid gap-6">
-    {projects.map((project) => <ProjectCard project={project} />)}
-  </div>
+  <section class="mb-12">
+    <h2 class="text-xl font-semibold text-dark dark:text-white mb-6 pb-2 border-b border-white-cloud dark:border-dark-cloud">
+      Professional Work
+    </h2>
+    <div class="grid gap-6">
+      {professionalProjects.map((project) => <ProjectCard project={project} />)}
+    </div>
+    <p class="mt-6 text-sm text-gray">
+      View more on my
+      <a
+        href="https://www.linkedin.com/in/alberto-arena-ba44a624/details/projects/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hover:text-primary transition-colors underline underline-offset-2"
+      >
+        LinkedIn profile
+      </a>.
+    </p>
+  </section>
+
+  <section>
+    <h2 class="text-xl font-semibold text-dark dark:text-white mb-6 pb-2 border-b border-white-cloud dark:border-dark-cloud">
+      Personal Projects
+    </h2>
+    <div class="grid gap-6">
+      {personalProjects.map((project) => <ProjectCard project={project} />)}
+    </div>
+  </section>
 </Layout>

@@ -8,6 +8,8 @@ export interface Project {
   status: 'active' | 'maintained' | 'archived' | 'professional';
   featured?: boolean;
   year: string;
+  company?: { name: string; url?: string };
+  role?: string;
 }
 
 export const projects: Project[] = [
@@ -66,6 +68,7 @@ export const projects: Project[] = [
     status: 'professional',
     featured: true,
     year: '2025–Present',
+    company: { name: 'SafariOffice', url: 'https://www.safarioffice.com/' },
   },
   {
     name: 'Midleton Distillery Collection',
@@ -76,5 +79,52 @@ export const projects: Project[] = [
     status: 'professional',
     featured: true,
     year: '2021–Present',
+    company: { name: 'Irish Distillers', url: 'https://www.irishdistillers.ie/' },
+  },
+  {
+    name: 'Jameson Whiskey',
+    description:
+      'Home of Jameson Irish Whiskey in Ireland, one of the world\'s best-selling Irish whiskeys.',
+    tech: ['WordPress', 'PHP', 'JavaScript', 'Vue.js', 'Twig'],
+    url: 'https://www.jamesonwhiskey.com/en-ie/',
+    status: 'professional',
+    featured: true,
+    year: '2021–2024',
+    company: { name: 'Irish Distillers', url: 'https://www.irishdistillers.ie/' },
+  },
+  {
+    name: 'CSC Portal',
+    description:
+      'Competence management portal for career development and assessment.',
+    tech: ['Laravel', 'PHP', 'JavaScript', 'Vue.js', 'AWS'],
+    url: 'https://www.careerspancompetence.com/products',
+    status: 'professional',
+    featured: true,
+    year: '2021–2022',
+    company: { name: 'Assessbank Examination Software', url: 'https://www.assessbank.ca/' },
+    role: 'Lead developer',
+  },
+  {
+    name: 'Standards Tracker',
+    description:
+      'Performance management system for schools, tracking teacher standards and appraisals.',
+    tech: ['JavaScript', 'PHP', 'CodeIgniter'],
+    url: 'https://www.tes.com/for-schools/now-tes/standards-tracker',
+    status: 'professional',
+    featured: true,
+    year: '2015–2021',
+    company: { name: 'Educate', url: 'https://www.tes.com/' },
+    role: 'Lead developer',
+  },
+  {
+    name: 'Scope Community',
+    description:
+      'Online community forum for Scope, the UK disability equality charity.',
+    tech: ['PHP'],
+    url: 'https://forum.scope.org.uk/',
+    status: 'professional',
+    featured: true,
+    year: '2014–2015',
+    company: { name: 'MMT Digital', url: 'https://mmtdigital.co.uk/' },
   },
 ];

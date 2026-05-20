@@ -79,6 +79,30 @@ const status = statusStyles[project.status];
     </span>
   </div>
 
+  {(project.company || project.role) && (
+    <div class="flex items-center gap-2 text-sm text-gray mb-3">
+      {project.company && (
+        project.company.url ? (
+          <a
+            href={project.company.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:text-primary transition-colors inline-flex items-center gap-1"
+          >
+            {project.company.name}
+            <svg class="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        ) : (
+          <span>{project.company.name}</span>
+        )
+      )}
+      {project.company && project.role && <span class="text-gray-300 dark:text-gray-600">·</span>}
+      {project.role && <span class="italic">{project.role}</span>}
+    </div>
+  )}
+
   <p class="text-gray leading-relaxed mb-4">{project.description}</p>
 
   <div class="flex flex-wrap items-center gap-2 mb-4">
