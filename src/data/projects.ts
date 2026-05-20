@@ -58,6 +58,16 @@ export const projects: Project[] = [
     year: '2024',
   },
   {
+    name: 'SafariOffice for Accommodations',
+    description:
+      'The leading B2B platform for accommodations, connecting hospitality businesses with global travel distribution and booking management tools.',
+    tech: ['Laravel', 'PHP', 'JavaScript', 'MySQL'],
+    url: 'https://www.safarioffice.com/accommodations/',
+    status: 'professional',
+    featured: true,
+    year: '2025–Present',
+  },
+  {
     name: 'Midleton Distillery Collection',
     description:
       'Official e-commerce shop for Ireland\'s finest whiskey brands including Jameson, Redbreast, and Midleton Very Rare.',
@@ -65,6 +75,6 @@ export const projects: Project[] = [
     url: 'https://midletondistillerycollection.com/',
     status: 'professional',
     featured: true,
-    year: '2021–2024',
+    year: '2021–Present',
   },
 ];

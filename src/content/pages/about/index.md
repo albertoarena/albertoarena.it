@@ -39,9 +39,11 @@ My first approach to the programming world was in 1985, coding on a Commodore 64
 	<img src="/images/pages/about/midleton-distillery-collection.jpg" alt="Midleton Distillery Collection">
 </figure>
 
-One of my most notable past projects was the [Midleton Distillery Collection](https://midletondistillerycollection.com/),
+Since June 2025 I have been working on [SafariOffice for Accommodations](https://www.safarioffice.com/accommodations/), the leading B2B platform connecting accommodation providers with global travel distribution and booking management tools.
+
+I also continue to contribute to the [Midleton Distillery Collection](https://midletondistillerycollection.com/),
 the official shop for Ireland's finest whiskey brands (Jameson, Redbreast, Midleton Very Rare, Powers,
-Spot Whiskeys, Method & Madness and Knappogue Castle), where I worked as lead developer from 2021 to 2024.
+Spot Whiskeys, Method & Madness and Knappogue Castle), where I served as lead developer from 2021 to 2024.
 
 Outside of work I read a lot, play guitar, dabble in constructed languages, and build hand-made dioramas.
 
