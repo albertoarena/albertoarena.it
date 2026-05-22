@@ -1,2 +1,5 @@
 # Custom error pages
 ErrorDocument 404 /404.html
+
+# MIME types
+AddType application/xml .xml
