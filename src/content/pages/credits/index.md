@@ -27,6 +27,7 @@ Cover images for some posts are sourced from **[Unsplash](https://unsplash.com)*
 | Post | Photo | Photographer |
 |------|-------|--------------|
 | [Introducing envaudit](/posts/introducing-envaudit/) | A rusty old key on a wooden table | [Nick Russill](https://unsplash.com/@nickrussill) on Unsplash |
+| [Stop Typing, Keep Going](/posts/goal-command-claude-code/) | Runners crossing the finish line at a race | [RETRATO DEPORTIVO](https://unsplash.com/@retratodeportivo) on Unsplash |
 
 ## Images & logos
 
