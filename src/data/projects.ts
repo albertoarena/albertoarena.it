@@ -37,6 +37,17 @@ export const projects: Project[] = [
     year: '2026',
   },
   {
+    name: 'envaudit',
+    description:
+      'Zero-dependency Node.js CLI tool that audits .env files by comparing them against .env.example to detect missing variables, exposed secrets, and configuration drift before they reach production.',
+    tech: ['Node.js', 'JavaScript', 'CLI'],
+    github: 'https://github.com/albertoarena/envaudit',
+    url: 'https://albertoarena.github.io/envaudit/',
+    status: 'active',
+    featured: true,
+    year: '2026',
+  },
+  {
     name: 'Codemetry',
     description:
       'Git repository analysis tool that converts version control history into meaningful quality metrics with daily indicators.',
