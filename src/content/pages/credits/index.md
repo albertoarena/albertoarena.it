@@ -28,6 +28,7 @@ Cover images for some posts are sourced from **[Unsplash](https://unsplash.com)*
 |------|-------|--------------|
 | [Introducing envaudit](/posts/introducing-envaudit/) | A rusty old key on a wooden table | [Nick Russill](https://unsplash.com/@nickrussill) on Unsplash |
 | [Stop Typing, Keep Going](/posts/goal-command-claude-code/) | Runners crossing the finish line at a race | [RETRATO DEPORTIVO](https://unsplash.com/@retratodeportivo) on Unsplash |
+| [Your README Deserves Real Numbers](/posts/traffic-badge-github-action/) | Graphs of performance analytics on a laptop screen | [Luke Chesser](https://unsplash.com/@lukechesser) on Unsplash |
 
 ## Images & logos
 
