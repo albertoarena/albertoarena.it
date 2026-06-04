@@ -36,7 +36,7 @@ It also handles the awkward overlap problem. GitHub's Traffic API returns a roll
 
 ## Setting it up
 
-Two steps. First, generate a personal access token with `repo` scope and add it as a repository secret called `TRAFFIC_TOKEN`. Then add a workflow file:
+Two steps. First, generate a personal access token with `repo` scope (classic) or `Administration: read` (fine-grained) and add it as a repository secret called `TRAFFIC_TOKEN`. The default `GITHUB_TOKEN` won't work here — the Traffic API requires elevated access and will return a 403 otherwise. Then add a workflow file:
 
 ```yaml
 name: Traffic Badge
@@ -44,6 +44,9 @@ on:
   schedule:
     - cron: "0 0 * * *"
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   badge:
