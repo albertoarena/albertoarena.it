@@ -71,7 +71,7 @@ That's it. No server to maintain, no API key for a third-party service, no month
 
 The `metric` field accepts `views`, `clones`, `views-unique`, and `clones-unique`. You can run multiple workflows with different metrics if you want to show both.
 
-`color` takes any named colour or a hex value. `style` supports the standard shields.io styles: `flat`, `flat-square`, `plastic`, `for-the-badge`. And if your numbers get large enough that the badge looks cluttered, there's an `abbreviate` flag that turns `12345` into `12.3K`.
+`color` takes any named colour or a hex value. `style` supports the standard shields.io styles: `flat`, `flat-square`, `plastic`, `for-the-badge`. And if your numbers get large enough that the badge looks cluttered, there's an `abbreviated` flag that turns `12345` into `12.3K`.
 
 ---
 
