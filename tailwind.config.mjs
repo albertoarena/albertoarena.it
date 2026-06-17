@@ -25,6 +25,13 @@ export default {
           'Helvetica Neue',
           'sans-serif'
         ],
+        mono: [
+          'ui-monospace',
+          'SFMono-Regular',
+          'Menlo',
+          'Consolas',
+          'monospace'
+        ],
       },
       typography: (theme) => ({
         DEFAULT: {

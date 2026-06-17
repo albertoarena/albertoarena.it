@@ -1,27 +1,19 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import readingTime from "reading-time";
 
 interface Props {
     post: CollectionEntry<"posts">;
 }
 
 const { post } = Astro.props;
+const categorySlug = post.data.category?.toLowerCase().replace(/\s+/g, "-");
+const readTime = readingTime(post.body).text;
 ---
 
 <article class="group border-l-2 border-transparent hover:border-l-primary pl-5 transition-all duration-200">
-    <a href={`/posts/${post.slug}/`} class="block space-y-1">
-        {post.data.cover && (
-                <img
-                        src={post.data.cover.startsWith("http")
-                            ? post.data.cover
-                            : `/images/posts/${post.data.cover}`}
-                        alt={post.data.title}
-                        class="rounded-lg mb-3 w-full aspect-[16/9] object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-                        loading="lazy"
-                />
-        )}
-
-        <div class="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
+    <div class="space-y-1">
+        <div class="flex items-center gap-3 text-sm font-mono text-gray">
             <time datetime={post.data.date.toISOString()}>
                 {post.data.date.toLocaleDateString("en-US", {
                     year: "numeric",
@@ -31,20 +23,40 @@ const { post } = Astro.props;
             </time>
             {post.data.category && (
                 <>
-                    <span aria-hidden="true" class="text-gray-300 dark:text-gray-600">/</span>
-                    <span>{post.data.category}</span>
+                    <span aria-hidden="true" class="opacity-40">/</span>
+                    <a
+                        href={`/category/${categorySlug}`}
+                        class="hover:text-primary transition-colors"
+                    >
+                        {post.data.category}
+                    </a>
                 </>
             )}
+            <span aria-hidden="true" class="opacity-40">/</span>
+            <span>{readTime}</span>
         </div>
 
-        <h2 class="text-2xl font-semibold group-hover:text-primary transition-colors text-dark dark:text-white">
-            {post.data.title}
-        </h2>
+        <a href={`/posts/${post.slug}/`} class="block space-y-1">
+            {post.data.cover && (
+                <img
+                    src={post.data.cover.startsWith("http")
+                        ? post.data.cover
+                        : `/images/posts/${post.data.cover}`}
+                    alt={post.data.title}
+                    class="rounded-lg mb-3 w-full aspect-[16/9] object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                    loading="lazy"
+                />
+            )}
 
-        {post.data.description && (
+            <h2 class="text-2xl font-semibold group-hover:text-primary transition-colors text-dark dark:text-white">
+                {post.data.title}
+            </h2>
+
+            {post.data.description && (
                 <p class="text-gray mt-1 line-clamp-2">
                     {post.data.description}
                 </p>
-        )}
-    </a>
+            )}
+        </a>
+    </div>
 </article>

@@ -26,7 +26,7 @@ const { category, posts } = Astro.props;
     <h1 class="text-3xl font-bold mb-4">
         Category: <span class="text-primary">{category}</span>
     </h1>
-    <p class="text-gray-600 dark:text-gray-400 mb-8">
+    <p class="text-gray mb-8">
         {posts.length} {posts.length === 1 ? 'post' : 'posts'} in this category
     </p>
     <div class="space-y-10">

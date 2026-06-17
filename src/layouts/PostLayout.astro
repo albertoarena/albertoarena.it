@@ -4,6 +4,7 @@ import type { CollectionEntry } from "astro:content";
 import { siteConfig } from "../utils/config";
 import DisqusComments from "../components/DisqusComments.astro";
 import LanguageToggle from "../components/LanguageToggle.astro";
+import readingTime from "reading-time";
 
 interface Props {
     post: CollectionEntry<"posts">;
@@ -23,6 +24,7 @@ const formattedDate = post.data.date.toLocaleDateString(locale, {
 });
 
 const categorySlug = post.data.category?.toLowerCase().replace(/\s+/g, '-');
+const readTime = readingTime(post.body).text;
 
 // Disqus always uses the English post's slug and URL so both languages share one thread
 const canonicalEnglishSlug = disqusSlug ?? post.slug;
@@ -52,8 +54,8 @@ const hreflangIt = italianUrl ? `${siteConfig.url}${italianUrl}` : undefined;
                 />
             )}
             <h1 class="text-3xl lg:text-4xl font-bold mb-4 text-dark dark:text-white">{post.data.title}</h1>
-            <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-300">
-                <time datetime={post.data.date.toISOString()} class="text-gray-600 dark:text-gray-200 no-underline" style="text-decoration: none !important;">
+            <div class="flex flex-wrap items-center gap-4 text-sm font-mono text-gray">
+                <time datetime={post.data.date.toISOString()} class="no-underline" style="text-decoration: none !important;">
                     {formattedDate}
                 </time>
                 {post.data.category && (
@@ -64,6 +66,7 @@ const hreflangIt = italianUrl ? `${siteConfig.url}${italianUrl}` : undefined;
                         {post.data.category}
                     </a>
                 )}
+                <span>{readTime}</span>
             </div>
         </header>
 
