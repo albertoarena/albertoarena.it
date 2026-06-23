@@ -11,7 +11,7 @@ tags:
   - "Filament"
   - "Event sourcing"
   - "Spatie"
-description: "A Filament plugin that routes every create, edit, and delete through your domain aggregates — without giving up the admin panel you already love."
+description: "A Filament plugin that routes every create, edit, and delete through your domain aggregates, without giving up the admin panel you already love."
 socialImage: "/images/posts/introducing-filament-event-sourcing/cover.jpg"
 ---
 
@@ -25,7 +25,7 @@ Filament is a great admin panel. Event sourcing is a great architectural pattern
 
 The plugin ships with a few things I found myself needing every time I mixed Filament with event sourcing.
 
-The first is an event history browser. Every record gets a dedicated view of its event log: event class, timestamp, version, and the full JSON payload on expand. It's available either as a relation manager tab or as a slide-over action on the table. No extra setup — add the trait to your resource and it appears.
+The first is an event history browser. Every record gets a dedicated view of its event log: event class, timestamp, version, and the full JSON payload on expand. It's available either as a relation manager tab or as a slide-over action on the table. No extra setup: add the trait to your resource and it appears.
 
 ![Per-record event history with expandable JSON payloads](/images/posts/introducing-filament-event-sourcing/post-event-details.webp)
 
@@ -41,7 +41,7 @@ composer require albertoarena/filament-event-sourcing
 
 You'll need Laravel 11 or 12, Filament 4.0+, and Spatie's `laravel-event-sourcing` 7.0+. The plugin registers itself automatically via Filament's plugin system.
 
-From there, you add two traits to your resource (`CreatesEventSourcedRecord` and `EditsEventSourcedRecord`), wire up the delete action, and the rest is your aggregate logic. The plugin doesn't try to generate your events or commands — that's your domain, and it should stay that way.
+From there, you add two traits to your resource (`CreatesEventSourcedRecord` and `EditsEventSourcedRecord`), wire up the delete action, and the rest is your aggregate logic. The plugin doesn't try to generate your events or commands. That's your domain, and it should stay that way.
 
 A full working example with a `Post` entity is available in the [demo repository](https://github.com/albertoarena/filament-event-sourcing-demo/), which walks through the complete setup from aggregate to Filament resource.
 
