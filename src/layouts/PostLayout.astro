@@ -8,13 +8,14 @@ import readingTime from "reading-time";
 
 interface Props {
     post: CollectionEntry<"posts">;
+    slug: string;
     lang?: 'en' | 'it';
     englishUrl?: string;
     italianUrl?: string;
     disqusSlug?: string;
 }
 
-const { post, lang = 'en', englishUrl, italianUrl, disqusSlug } = Astro.props;
+const { post, slug, lang = 'en', englishUrl, italianUrl, disqusSlug } = Astro.props;
 
 const locale = lang === 'it' ? 'it-IT' : 'en-US';
 const formattedDate = post.data.date.toLocaleDateString(locale, {
@@ -27,7 +28,7 @@ const categorySlug = post.data.category?.toLowerCase().replace(/\s+/g, '-');
 const readTime = readingTime(post.body).text;
 
 // Disqus always uses the English post's slug and URL so both languages share one thread
-const canonicalEnglishSlug = disqusSlug ?? post.slug;
+const canonicalEnglishSlug = disqusSlug ?? slug;
 const disqusPostUrl = `${siteConfig.url}/posts/${canonicalEnglishSlug}/`;
 
 const hasTranslation = !!(englishUrl && italianUrl);

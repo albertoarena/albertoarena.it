@@ -1,4 +1,5 @@
 import readingTime from 'reading-time';
+import type { CollectionEntry } from 'astro:content';
 
 export function getReadingTime(content: string): string {
   const result = readingTime(content);
@@ -40,4 +41,15 @@ export function getCategorySlug(category: string): string {
 
 export function getTagSlug(tag: string): string {
   return slugify(tag);
+}
+
+// Content Layer entry.id format: 'my-post/index.md' or 'my-post.md'
+// Frontmatter slug field takes priority when set.
+export function getPostSlug(post: CollectionEntry<'posts'>): string {
+  if (post.data.slug) return post.data.slug.replace(/^\/posts\//, '');
+  return post.id.replace(/\/index\.(md|mdx)$/, '').replace(/\.(md|mdx)$/, '');
+}
+
+export function getPageSlug(page: CollectionEntry<'pages'>): string {
+  return page.id.replace(/\/index\.(md|mdx)$/, '').replace(/\.(md|mdx)$/, '');
 }

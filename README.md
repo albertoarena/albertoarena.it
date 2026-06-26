@@ -1,46 +1,66 @@
-# Astro Starter Kit: Basics
+# albertoarena.it
 
-```sh
-npm create astro@latest -- --template basics
+Personal blog and portfolio — live at **[albertoarena.it](https://albertoarena.it)**.
+
+## Stack
+
+- [Astro 5](https://astro.build) — static site generator with View Transitions and Content Layer
+- [Tailwind CSS v4](https://tailwindcss.com) — utility-first CSS, configured entirely in CSS via `@theme`
+- [@tailwindcss/typography](https://tailwindcss.com/docs/typography-plugin) — prose styling for Markdown content
+- Markdown / MDX content collections
+
+## Development
+
+```bash
+npm install       # Install dependencies
+npm run dev       # Dev server at localhost:4321
+npm run build     # Production build to ./dist/
+npm run preview   # Preview the production build locally
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Project structure
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+```
+src/
+├── components/       # Astro components (Sidebar, PostCard, Feed, etc.)
+├── content/
+│   ├── config.ts     # Content Layer collection definitions
+│   ├── posts/        # Blog posts — one directory per post
+│   └── pages/        # Static pages (about, credits, privacy)
+├── layouts/          # BaseLayout, PostLayout
+├── pages/            # File-based routes
+├── styles/
+│   └── global.css    # Tailwind v4 entry point — @theme tokens, dark mode, prose
+└── utils/            # Config, helpers, slug utilities
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## Content
 
-## 🧞 Commands
+Posts live in `src/content/posts/[slug]/index.md`. Frontmatter fields:
 
-All commands are run from the root of the project, from a terminal:
+| Field | Required | Description |
+|---|---|---|
+| `title` | yes | Post title |
+| `date` | yes | Publication date |
+| `template` | yes | Must be `"post"` |
+| `draft` | no | Hides from listings when `true` |
+| `category` | no | Single category label |
+| `tags` | no | Array of tag strings |
+| `description` | no | Used in post card and OG meta |
+| `socialImage` | no | OG image path (1200×630 px, < 1 MB) |
+| `lang` | no | `"en"` (default) or `"it"` |
+| `translationOf` | no | English post slug — links Italian translations |
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+### Images
 
-## 👀 Want to learn more?
+Resize before committing. Large files slow loads and break social card crawlers.
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+```bash
+# Social image (1200×630, < 1 MB)
+magick input.jpg -resize 1200x630^ -gravity center -extent 1200x630 -quality 85 output.jpg
+
+# Content image (max 1200 px wide, < 200 KB)
+magick input.jpg -resize 1200x\> -quality 82 output.webp
+```
+
+Third-party images must be credited in `src/content/pages/credits/index.md`.

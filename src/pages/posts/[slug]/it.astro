@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import PostLayout from "../../../layouts/PostLayout.astro";
 
 export async function getStaticPaths() {
@@ -13,7 +13,7 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await post.render();
+const { Content } = await render(post);
 
 const slug = post.data.translationOf!;
 const englishPath = `/posts/${slug}/`;
@@ -22,6 +22,7 @@ const italianPath = `/posts/${slug}/it/`;
 
 <PostLayout
     post={post}
+    slug={slug}
     lang="it"
     englishUrl={englishPath}
     italianUrl={italianPath}
