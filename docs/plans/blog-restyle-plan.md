@@ -1,8 +1,9 @@
-# albertoarena.it — Restyle Plan (for review)
+# albertoarena.it — Restyle Plan
 
-**Status:** proposal. Nothing is implemented. No commits until you approve.
+**Status:** approved. Implementation pending build instructions sign-off.
+**Branch:** `restyle/blog-2025`
 **Goal:** rethink layout/structure while staying minimalist. Light mode first, dark parity verified.
-**Locked direction:** compare two structures · one text face + JetBrains Mono · self-hosted via Fontsource variable fonts.
+**Locked direction:** Option B · Geist Sans + JetBrains Mono · self-hosted via Fontsource variable fonts · Playwright smoke tests in scope.
 
 ---
 
@@ -17,18 +18,18 @@ Three concrete weak points the plan addresses:
 
 ---
 
-## 1. Design tokens (proposed)
+## 1. Design tokens
 
 ### Typography
 
 **Text face: Geist Sans** (variable, self-hosted via `@fontsource-variable/geist-sans`).
-Rationale, not default-reaching: Geist is a contemporary engineering-flavoured grotesque (made by Vercel's type team) with excellent screen rendering and a neutral-but-not-anonymous voice. It reads as "built by someone who cares about tooling" without shouting — which matches a DX/event-sourcing blog. It is *not* Inter (the true default), and it pairs naturally with a geometric mono.
+Geist is a contemporary engineering-flavoured grotesque (made by Vercel's type team) with excellent screen rendering and a neutral-but-not-anonymous voice. It reads as "built by someone who cares about tooling" without shouting — which matches a DX/event-sourcing blog. Pairs naturally with JetBrains Mono.
+
+**⚠ Preview gate:** typography changes go into the dev server first. Both fonts must be approved on screen before committing type tokens.
 
 **Mono face: JetBrains Mono** (variable, `@fontsource-variable/jetbrains-mono`) for: code blocks (replacing Shiki's fallback mono), inline code, and the metadata line (date / category / reading time — already `font-mono`). For a software engineer's blog, code is first-class content; a real mono face signals that.
 
-> Alternative if you want *more* character (say the word and I'll swap): **Newsreader** (display serif) for headings + Geist body. More editorial. Riskier to maintain. Default plan keeps the single-text-face appetite you chose.
-
-**Delivery:** Fontsource variable packages, imported in `BaseLayout`, bundled and served from your domain. `font-display: swap`. No Google CDN, no GDPR/consent friction (consistent with your cookie care), no external render dependency.
+**Delivery:** Fontsource variable packages, imported in `BaseLayout`, bundled and served from your domain. `font-display: swap`. No Google CDN, no GDPR/consent friction, no external render dependency.
 
 **Type scale** (proposed, replaces ad-hoc sizes):
 
@@ -45,49 +46,26 @@ Rationale, not default-reaching: Geist is a contemporary engineering-flavoured g
 --font-sans: 'Geist Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
 ```
-(System stack stays as the fallback chain — zero FOIT risk.)
+System stack stays as the fallback chain — zero FOIT risk.
 
 ### Color
 
-Keep your HSL token discipline. Two deliberate adjustments:
+Keep existing HSL token discipline. One deliberate adjustment:
 
-1. **Fix the jarring hover.** Today links go blue→orange on hover (hue flip). Proposed: hover stays in-family (blue, slightly darker/brighter) — `--color-primary` → a `--color-primary-hover`. Orange (`secondary`) is *retained but demoted* to a single accent role (active nav underline, tag hover) so it reads as intentional, not random.
-2. **One warmer neutral.** Body text on a pure-white background at `--color-dark` (hsl 220 17% 17%) is slightly harsh. Proposed body ink: hsl(220, 15%, 22%) light / unchanged dark. Subtle; improves long-read comfort.
+- **Warmer body ink.** Body text on a pure-white background at `--color-dark` (hsl 220 17% 17%) is slightly harsh. Proposed body ink: hsl(220, 15%, 22%) light / unchanged dark. Subtle; improves long-read comfort.
 
-No palette overhaul — minimalist brief. The blue stays the identity color.
+**Link hover:** keep blue→orange. Orange (`--color-secondary`) is intentional brand; the hover behaviour stays. Orange may be further demoted to accent roles (active nav underline, tag hover) where it was previously used generically, but the prose link hover is unchanged.
+
+No palette overhaul — minimalist brief. Blue stays the identity color.
 
 ### Spacing / rhythm
 
-- **Reading measure:** post body capped at ~68ch (drop `max-w-none`, set `prose` + `max-w-[68ch]` on the article body only — header/footer stay full column).
-- Card list spacing `space-y-10` → `space-y-8` once cards get a clearer divider (below).
+- **Reading measure:** post body capped at ~68ch (drop `max-w-none`, use `prose` + `max-w-[68ch]` on the article body only — header/footer stay full column width).
+- Card list spacing `space-y-10` → `space-y-8` once cards have a clearer divider.
 
 ---
 
-## 2. Structure — the two options to compare
-
-You asked to see both. Here they are with tradeoffs; pick one (or a hybrid) at approval.
-
-### Option A — Refined sidebar (evolve what exists)
-
-```
-┌──────────────────────────────────────────────┐
-│  ┌────────┐                                   │
-│  │ ▓▓▓▓▓▓ │   Senior software engineer.       │  ← hero moves
-│  │ avatar │   I build developer tooling for   │     into content
-│  │ name   │   Laravel & event sourcing.       │     column, sidebar
-│  │ ·Art   │   ───────────────────────────     │     loses its
-│  │ ·Proj  │   Jun 18 / Laravel / 3 min        │     duplicate bio
-│  │ ·About │   Filament event sourcing…        │
-│  │ links  │   Jun 4  / OSS / 3 min            │
-│  │ ☀/☾    │   traffic-badge…                  │
-│  └────────┘                                   │
-└──────────────────────────────────────────────┘
-```
-- **Changes:** remove the duplicate bio from the sidebar (`Author.astro` bio line); the *real* positioning statement lives once, in the content hero. Sidebar becomes pure identity + nav + theme. Tighten widths, add a hairline between sidebar and content on desktop.
-- **Pros:** least disruptive, keeps your established skeleton, persistent nav always visible, fast to ship.
-- **Cons:** the left-rail-blog shape is itself common; less of a "rethink."
-
-### Option B — Top-bar + centered single column (the bigger rethink)
+## 2. Structure — Option B (chosen)
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -106,22 +84,30 @@ You asked to see both. Here they are with tradeoffs; pick one (or a hybrid) at a
 │        traffic-badge…                          │
 └──────────────────────────────────────────────┘
 ```
-- **Changes:** sidebar retired; nav → slim sticky top bar (name left, menu + theme right). Content centered at reading measure. Photo demoted to the About page + post-footer author card (already exists).
-- **Pros:** reads as a *publication*, not a personal-homepage template; best reading measure by default; more whitespace = more "senior/minimal"; the structural rethink you asked for.
-- **Cons:** loses always-visible avatar branding; more components to change (new Header, retire Sidebar wiring on list/post pages); mobile nav needs a small menu treatment.
 
-**My recommendation:** **Option B**, *if* you're comfortable demoting the photo. It's the genuine structural rethink and it suits a senior engineer's blog better. Option A is the safe, fast choice. The plan will spec whichever you pick (or A's hero fix + B's measure, as a hybrid).
+**What changes:**
+- Sidebar retired from all layouts.
+- Nav → slim sticky top bar: name/logo left, links + theme toggle right.
+- Mobile: hamburger menu (icon button → overlay or slide-in drawer).
+- Content centered at reading measure.
+- Photo demoted to About page + post-footer author card (already exists).
+
+**Rationale:** reads as a publication, not a personal-homepage template; best reading measure by default; more whitespace suits a senior/minimal aesthetic; genuine structural rethink rather than a surface polish.
 
 ---
 
-## 3. The hero (the "thesis")
+## 3. The hero
 
-Replace the redundant mini-bio with a single, opinionated positioning line — written once, no duplication:
+**⚠ Preview gate:** hero copy goes into the dev server first for approval before committing.
+
+Draft copy:
 
 > **Senior software engineer.** I build and maintain developer tooling for Laravel and event sourcing — including the Laravel Event Sourcing Generator (10k+ downloads).
+>
+> *Currently open to remote / freelance EU work.*
 
-- One short paragraph, real link, no avatar repetition.
-- Optionally a one-line "currently" sub-note (open to remote/freelance EU work) — your call, it can read as either useful or job-seeky. Flagged, not assumed.
+- One paragraph, one real link, no avatar repetition.
+- "Currently open" sub-line included.
 
 ---
 
@@ -129,46 +115,42 @@ Replace the redundant mini-bio with a single, opinionated positioning line — w
 
 | Component | Change |
 |---|---|
-| `global.css` `@theme` | new `--font-sans`/`--font-mono`; `--color-primary-hover`; warmer body ink token |
-| `BaseLayout.astro` | import Fontsource variable fonts; set `theme-color` to match |
-| `Author.astro` | remove duplicate bio line (both options); in Option B, retire from list/post |
-| `index.astro` | single-source hero; tighten section spacing |
-| `PostCard.astro` | consistent treatment whether or not a cover exists (most have none → make the no-cover case the primary design, cover optional); keep the nice left-border hover |
-| `PostLayout.astro` | body wrapped at reading measure; H1/H2 scale; mono metadata refinement |
-| `Header.astro` *(Option B)* | new slim sticky top bar + mobile menu |
-| `Sidebar/*` *(Option B)* | retired from list/post layouts |
-| `prose` tokens | re-point to new ink; verify dark parity |
+| `global.css` `@theme` | new `--font-sans`/`--font-mono`; warmer body ink token |
+| `BaseLayout.astro` | import Fontsource variable font packages |
+| `Author.astro` | retired from list/post layouts (Option B); retained on About page |
+| `index.astro` | single-source hero with "currently" sub-line; tighten section spacing |
+| `PostCard.astro` | no-cover case is the primary design (cover optional); keep left-border hover |
+| `PostLayout.astro` | body wrapped at 68ch reading measure; H1/H2 type scale; mono metadata |
+| `Header.astro` | replace with slim sticky top bar; hamburger + drawer for mobile |
+| `Sidebar/*` | retired from list/post layouts |
+| `prose` tokens | re-point to new body ink; verify dark parity |
 
 ---
 
 ## 5. Dark mode parity (verified, not assumed)
 
-Every token change gets a paired dark value. Specific checks: new body ink contrast ratio ≥ 7:1 light / ≥ 7:1 dark (AAA body), link + hover legible on `--color-dark-paper`, JetBrains Mono in Shiki `github-dark` blocks, tag/category chips on dark. Your `@variant dark` overrides for `.prose` already exist — they'll be updated in lockstep.
+Every token change gets a paired dark value. Specific checks: new body ink contrast ratio ≥ 7:1 light / ≥ 7:1 dark (AAA body), link + hover legible on `--color-dark-paper`, JetBrains Mono in Shiki `github-dark` blocks, tag/category chips on dark. Existing `@variant dark` overrides for `.prose` updated in lockstep.
 
 ---
 
-## 6. Quality floor (non-negotiables carried through)
+## 6. Quality floor (non-negotiables)
 
-Responsive to mobile · visible keyboard focus (your `focus-visible` rings stay) · `prefers-reduced-motion` respected (your `animate-fade-in`/`stagger` gated) · no layout shift from fonts (`swap` + system fallback) · Lighthouse perf not regressed (variable fonts subset, self-hosted).
-
----
-
-## 7. Verification approach (the "TDD where it applies" part)
-
-Visual/styling work isn't unit-testable, but the refresh ships with checks rather than vibes:
-- `astro build` must pass clean (catches broken imports/refs).
-- `astro check` for TS.
-- A short **manual QA checklist** in the instructions file: homepage (light/dark, desktop/mobile), one post, category page, tag page, 404 — each eyeballed against the plan.
-- Optional: a Playwright screenshot smoke test (light+dark homepage + one post) if you want regression coverage. Flagged as optional — say if you want it scoped in.
-- `envaudit` isn't relevant here (static site, no meaningful env surface) — noted so it's a conscious omission, not an oversight.
+Responsive to mobile · visible keyboard focus (`focus-visible` rings stay) · `prefers-reduced-motion` respected (`animate-fade-in`/`stagger` gated) · no layout shift from fonts (`swap` + system fallback) · Lighthouse perf not regressed (variable fonts subset, self-hosted).
 
 ---
 
-## 8. What I need from you to proceed
+## 7. Verification
 
-1. **Structure:** Option A, Option B, or hybrid? (my rec: B, if photo-demotion is fine)
-2. **Hero "currently available" sub-line:** include or omit?
-3. **Playwright screenshot smoke test:** in or out?
-4. Anything above you want changed before I write the build instructions.
+- `astro build` must pass clean.
+- `astro check` for TypeScript.
+- **Manual QA checklist** (in build instructions): homepage light/dark desktop/mobile · one post · category page · tag page · 404.
+- **Playwright screenshot smoke test** (in scope): light + dark homepage + one post — regression coverage for layout regressions.
 
-On your answers I'll produce `blog-refresh-instructions.md` for Claude Code — phased, build-verified, KISS — matching your usual workflow. Still no commits until you've seen that too.
+---
+
+## 8. Preview gates (two checkpoints before full commit)
+
+1. **Typography preview** — install fonts, wire into `@theme`, run dev server. Approve Geist Sans + JetBrains Mono on screen before proceeding.
+2. **Hero copy preview** — render draft hero in dev server. Approve or edit copy before locking.
+
+No commits on these items until you've seen them live on the dev server.
