@@ -27,7 +27,6 @@ const formattedDate = post.data.date.toLocaleDateString(locale, {
 const categorySlug = post.data.category?.toLowerCase().replace(/\s+/g, '-');
 const readTime = readingTime(post.body).text;
 
-// Disqus always uses the English post's slug and URL so both languages share one thread
 const canonicalEnglishSlug = disqusSlug ?? slug;
 const disqusPostUrl = `${siteConfig.url}/posts/${canonicalEnglishSlug}/`;
 
@@ -45,8 +44,9 @@ const hreflangIt = italianUrl ? `${siteConfig.url}${italianUrl}` : undefined;
     hreflangEn={hreflangEn}
     hreflangIt={hreflangIt}
 >
-    <article class="prose dark:prose-invert max-w-none">
-        <header class="mb-8 not-prose">
+    <article>
+        <!-- Full-width post header -->
+        <header class="mb-10">
             {hasTranslation && (
                 <LanguageToggle
                     currentLang={lang}
@@ -54,15 +54,15 @@ const hreflangIt = italianUrl ? `${siteConfig.url}${italianUrl}` : undefined;
                     italianUrl={italianUrl!}
                 />
             )}
-            <h1 class="text-3xl lg:text-4xl font-bold mb-4 text-dark dark:text-white">{post.data.title}</h1>
+            <h1 class="text-4xl font-bold leading-tight mb-4 text-dark dark:text-white">{post.data.title}</h1>
             <div class="flex flex-wrap items-center gap-4 text-sm font-mono text-gray">
-                <time datetime={post.data.date.toISOString()} class="no-underline" style="text-decoration: none !important;">
+                <time datetime={post.data.date.toISOString()} class="no-underline">
                     {formattedDate}
                 </time>
                 {post.data.category && (
                     <a
                         href={`/category/${categorySlug}`}
-                        class="px-2 py-1 bg-primary/10 dark:bg-dark-cloud text-primary dark:text-gray-200 rounded font-medium hover:bg-primary/20 transition-colors"
+                        class="px-2 py-1 bg-primary/10 dark:bg-dark-cloud text-primary dark:text-white-cloud rounded font-medium hover:bg-primary/20 transition-colors"
                     >
                         {post.data.category}
                     </a>
@@ -71,15 +71,19 @@ const hreflangIt = italianUrl ? `${siteConfig.url}${italianUrl}` : undefined;
             </div>
         </header>
 
-        <slot />
+        <!-- Prose body at reading measure -->
+        <div class="prose dark:prose-invert max-w-[68ch]">
+            <slot />
+        </div>
 
+        <!-- Full-width post footer -->
         {post.data.tags && post.data.tags.length > 0 && (
-            <footer class="mt-12 pt-6 border-t border-gray-200 dark:border-dark-cloud not-prose">
+            <footer class="mt-12 pt-6 border-t border-white-cloud dark:border-dark-cloud">
                 <div class="flex flex-wrap gap-2">
                     {post.data.tags.map((tag) => (
                         <a
                             href={`/tag/${tag.toLowerCase().replace(/\s+/g, '-')}`}
-                            class="px-3 py-1 bg-gray-100 dark:bg-dark-cloud text-gray-700 dark:text-gray-200 rounded-full text-sm hover:bg-secondary hover:text-white transition-colors"
+                            class="px-3 py-1 bg-gray-100 dark:bg-dark-cloud text-gray-700 dark:text-white-cloud rounded-full text-sm hover:bg-secondary hover:text-white transition-colors"
                         >
                             #{tag}
                         </a>
@@ -88,16 +92,16 @@ const hreflangIt = italianUrl ? `${siteConfig.url}${italianUrl}` : undefined;
             </footer>
         )}
 
-        <div class="mt-12 pt-6 border-t border-gray-200 dark:border-dark-cloud not-prose">
+        <div class="mt-12 pt-6 border-t border-white-cloud dark:border-dark-cloud">
             <div class="flex items-center gap-4">
                 <img
                     src={siteConfig.author.photo}
                     alt={siteConfig.author.name}
-                    class="w-16 h-16 rounded-full"
+                    class="w-14 h-14 rounded-full"
                 />
                 <div>
                     <p class="font-semibold text-dark dark:text-white">{siteConfig.author.name}</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-300">{siteConfig.author.bio}</p>
+                    <p class="text-sm text-gray">{siteConfig.author.bio}</p>
                 </div>
             </div>
         </div>

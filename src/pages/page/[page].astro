@@ -32,7 +32,7 @@ export async function getStaticPaths() {
 const { pagePosts, currentPage, totalPages } = Astro.props;
 ---
 
-<Layout title={`Articles - Page ${currentPage}`} isIndex={true}>
+<Layout title={`Articles - Page ${currentPage}`}>
   <section class="mb-12 pb-8 border-b border-white-cloud dark:border-dark-cloud">
     <p class="text-lg text-gray leading-relaxed">
       Thoughts on software engineering, architecture patterns, and the tools I build.

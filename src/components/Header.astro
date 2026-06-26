@@ -1,9 +1,130 @@
-<header class="py-6 border-b border-gray-200 dark:border-gray-700 mb-10">
-    <nav class="max-w-3xl mx-auto flex justify-between items-center px-6">
-        <a href="/" class="font-bold text-xl tracking-tight hover:text-blue-600">Alberto Arena</a>
-        <div class="space-x-4 text-sm">
-            <a href="/about" class="hover:text-blue-600">About</a>
-            <a href="/rss.xml" class="hover:text-blue-600">RSS</a>
-        </div>
+---
+import { siteConfig } from '@/utils/config';
+import ThemeSwitcher from '@/components/ThemeSwitcher.astro';
+
+const currentPath = Astro.url.pathname;
+
+function isActive(path: string) {
+  if (path === '/') return currentPath === '/' || /^\/page\/\d+$/.test(currentPath);
+  return currentPath === path || currentPath.startsWith(path + '/');
+}
+---
+
+<header class="sticky top-0 z-40 bg-white/90 dark:bg-dark-paper/90 backdrop-blur-sm border-b border-white-cloud dark:border-dark-cloud">
+  <div class="max-w-3xl mx-auto px-6 h-14 flex items-center justify-between">
+
+    <a
+      href="/"
+      class="font-semibold text-dark dark:text-white hover:text-primary dark:hover:text-primary transition-colors"
+    >
+      Alberto Arena
+    </a>
+
+    <!-- Desktop nav -->
+    <nav class="hidden md:flex items-center gap-6" aria-label="Main navigation">
+      {siteConfig.menu.map((item) => (
+        <a
+          href={item.path}
+          class:list={[
+            'text-sm font-medium transition-colors',
+            isActive(item.path)
+              ? 'text-primary'
+              : 'text-gray hover:text-primary dark:hover:text-primary'
+          ]}
+          aria-current={isActive(item.path) ? 'page' : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
+      <ThemeSwitcher />
     </nav>
+
+    <!-- Mobile controls -->
+    <div class="flex items-center gap-1 md:hidden">
+      <ThemeSwitcher />
+      <button
+        id="mobile-menu-toggle"
+        type="button"
+        class="p-2 text-gray hover:text-primary transition-colors rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+        aria-label="Toggle menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <svg id="hamburger-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <svg id="close-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+  </div>
 </header>
+
+<!-- Mobile menu overlay -->
+<div
+  id="mobile-menu"
+  class="hidden md:hidden fixed inset-0 top-14 z-30 bg-white dark:bg-dark-paper"
+  aria-hidden="true"
+>
+  <nav class="px-6 pt-8 flex flex-col gap-6" aria-label="Mobile navigation">
+    {siteConfig.menu.map((item) => (
+      <a
+        href={item.path}
+        class:list={[
+          'text-lg font-medium transition-colors',
+          isActive(item.path)
+            ? 'text-primary'
+            : 'text-dark dark:text-white hover:text-primary'
+        ]}
+        aria-current={isActive(item.path) ? 'page' : undefined}
+      >
+        {item.label}
+      </a>
+    ))}
+  </nav>
+</div>
+
+<script is:inline>
+  function initMobileMenu() {
+    const toggle = document.getElementById('mobile-menu-toggle');
+    const menu = document.getElementById('mobile-menu');
+    const hamburger = document.getElementById('hamburger-icon');
+    const close = document.getElementById('close-icon');
+    if (!toggle || !menu || !hamburger || !close) return;
+
+    function openMenu() {
+      menu.classList.remove('hidden');
+      menu.setAttribute('aria-hidden', 'false');
+      hamburger.classList.add('hidden');
+      close.classList.remove('hidden');
+      toggle.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+      menu.classList.add('hidden');
+      menu.setAttribute('aria-hidden', 'true');
+      hamburger.classList.remove('hidden');
+      close.classList.add('hidden');
+      toggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    toggle.addEventListener('click', () => {
+      menu.classList.contains('hidden') ? openMenu() : closeMenu();
+    });
+
+    menu.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', closeMenu);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !menu.classList.contains('hidden')) closeMenu();
+    });
+  }
+
+  initMobileMenu();
+  document.addEventListener('astro:after-swap', initMobileMenu);
+</script>
