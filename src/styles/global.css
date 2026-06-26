@@ -34,84 +34,6 @@
     }
   }
 
-  /* Prose — light mode token overrides */
-  .prose {
-    --tw-prose-body: hsl(220, 17%, 17%);
-    --tw-prose-headings: hsl(220, 17%, 17%);
-    --tw-prose-links: hsl(220, 100%, 68%);
-    --tw-prose-bold: hsl(220, 17%, 17%);
-    --tw-prose-counters: hsl(220, 17%, 57%);
-    --tw-prose-bullets: hsl(220, 17%, 57%);
-    --tw-prose-hr: hsl(240, 1%, 92%);
-    --tw-prose-quotes: hsl(220, 17%, 17%);
-    --tw-prose-quote-borders: hsl(220, 100%, 68%);
-    --tw-prose-captions: hsl(220, 17%, 57%);
-    --tw-prose-code: hsl(220, 17%, 17%);
-    --tw-prose-pre-code: #e5e7eb;
-    --tw-prose-pre-bg: #1f2937;
-    --tw-prose-th-borders: hsl(240, 1%, 92%);
-    --tw-prose-td-borders: hsl(240, 1%, 92%);
-  }
-
-  /* Prose — dark mode token overrides */
-  @variant dark {
-    .prose {
-      --tw-prose-body: #e5e7eb;
-      --tw-prose-headings: #ffffff;
-      --tw-prose-lead: #d1d5db;
-      --tw-prose-links: hsl(220, 100%, 68%);
-      --tw-prose-bold: #ffffff;
-      --tw-prose-counters: #9ca3af;
-      --tw-prose-bullets: #9ca3af;
-      --tw-prose-hr: hsl(220, 17%, 30%);
-      --tw-prose-quotes: #d1d5db;
-      --tw-prose-quote-borders: hsl(220, 100%, 68%);
-      --tw-prose-captions: #9ca3af;
-      --tw-prose-code: #ffffff;
-      --tw-prose-pre-code: #e5e7eb;
-      --tw-prose-pre-bg: #1f2937;
-      --tw-prose-th-borders: hsl(220, 17%, 30%);
-      --tw-prose-td-borders: hsl(220, 17%, 30%);
-    }
-  }
-
-  /* Prose link hover colour */
-  .prose a:hover {
-    color: hsl(31, 92%, 62%);
-  }
-
-  /* Inline code: remove backtick pseudo-elements, add background */
-  .prose code::before,
-  .prose code::after {
-    content: "";
-  }
-
-  .prose code:not(pre code) {
-    background-color: hsl(240, 1%, 92%);
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-weight: 400;
-  }
-
-  @variant dark {
-    .prose code:not(pre code) {
-      background-color: hsl(220, 17%, 22%);
-      color: #e5e7eb;
-    }
-  }
-
-  /* Blockquote */
-  .prose blockquote {
-    font-style: normal;
-  }
-
-  /* Heading weights */
-  .prose h1,
-  .prose h2,
-  .prose h3 {
-    font-weight: 600;
-  }
-
   /* time element in dark mode */
   @variant dark {
     time {
@@ -170,6 +92,82 @@
   button:focus-visible {
     @apply outline-2 outline-primary outline-offset-2;
   }
+}
+
+/*
+  Prose token overrides — unlayered so they beat the @tailwindcss/typography plugin
+  which bakes OKLCH values into @layer utilities. Unlayered CSS wins over all @layer.
+*/
+.prose {
+  --tw-prose-body: hsl(220, 17%, 17%);
+  --tw-prose-headings: hsl(220, 17%, 17%);
+  --tw-prose-links: hsl(220, 100%, 68%);
+  --tw-prose-bold: hsl(220, 17%, 17%);
+  --tw-prose-counters: hsl(220, 17%, 57%);
+  --tw-prose-bullets: hsl(220, 17%, 57%);
+  --tw-prose-hr: hsl(240, 1%, 92%);
+  --tw-prose-quotes: hsl(220, 17%, 17%);
+  --tw-prose-quote-borders: hsl(220, 100%, 68%);
+  --tw-prose-captions: hsl(220, 17%, 57%);
+  --tw-prose-code: hsl(220, 17%, 17%);
+  --tw-prose-pre-code: #e5e7eb;
+  --tw-prose-pre-bg: #1f2937;
+  --tw-prose-th-borders: hsl(240, 1%, 92%);
+  --tw-prose-td-borders: hsl(240, 1%, 92%);
+}
+
+@variant dark {
+  .prose {
+    --tw-prose-body: #e5e7eb;
+    --tw-prose-headings: #ffffff;
+    --tw-prose-lead: #d1d5db;
+    --tw-prose-links: hsl(220, 100%, 68%);
+    --tw-prose-bold: #ffffff;
+    --tw-prose-counters: #9ca3af;
+    --tw-prose-bullets: #9ca3af;
+    --tw-prose-hr: hsl(220, 17%, 30%);
+    --tw-prose-quotes: #d1d5db;
+    --tw-prose-quote-borders: hsl(220, 100%, 68%);
+    --tw-prose-captions: #9ca3af;
+    --tw-prose-code: #ffffff;
+    --tw-prose-pre-code: #e5e7eb;
+    --tw-prose-pre-bg: #1f2937;
+    --tw-prose-th-borders: hsl(220, 17%, 30%);
+    --tw-prose-td-borders: hsl(220, 17%, 30%);
+  }
+}
+
+.prose a:hover {
+  color: hsl(31, 92%, 62%);
+}
+
+.prose code::before,
+.prose code::after {
+  content: "";
+}
+
+.prose code:not(pre code) {
+  background-color: hsl(240, 1%, 92%);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-weight: 400;
+}
+
+@variant dark {
+  .prose code:not(pre code) {
+    background-color: hsl(220, 17%, 22%);
+    color: #e5e7eb;
+  }
+}
+
+.prose blockquote {
+  font-style: normal;
+}
+
+.prose h1,
+.prose h2,
+.prose h3 {
+  font-weight: 600;
 }
 
 @layer components {
