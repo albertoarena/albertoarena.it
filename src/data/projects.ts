@@ -26,6 +26,18 @@ export const projects: Project[] = [
     year: '2026',
   },
   {
+    name: 'Filament Event Sourcing',
+    description:
+      'Filament plugin that intercepts create, edit, and delete actions and routes them through Spatie event sourcing aggregates, with per-record event history, a system-wide stored events browser, and projector replay.',
+    tech: ['Laravel', 'PHP', 'Filament', 'Event Sourcing', 'Spatie'],
+    github: 'https://github.com/albertoarena/filament-event-sourcing',
+    url: 'https://albertoarena.github.io/filament-event-sourcing/',
+    postSlug: 'introducing-filament-event-sourcing',
+    status: 'active',
+    featured: true,
+    year: '2026',
+  },
+  {
     name: 'Claude Laravel Event Sourcing',
     description:
       'Claude Code skill that designs and generates event-sourced Laravel domains via a two-gate workflow: domain modelling conversation and ADR approval before any code is written.',
