@@ -1,5 +1,5 @@
 import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
+import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 import mdx from '@astrojs/mdx';
 import rehypeExternalLinks from 'rehype-external-links';
@@ -7,7 +7,6 @@ import rehypeExternalLinks from 'rehype-external-links';
 export default defineConfig({
   site: 'https://albertoarena.it',
   integrations: [
-    tailwind(),
     sitemap({
       filter: (page) => {
         const path = new URL(page).pathname;
@@ -31,6 +30,7 @@ export default defineConfig({
     }
   },
   vite: {
+    plugins: [tailwindcss()],
     build: {
       cssMinify: true
     }

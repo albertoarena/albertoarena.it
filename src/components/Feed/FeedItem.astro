@@ -1,5 +1,5 @@
 ---
-import { formatDate, getReadingTime, getCategorySlug } from '@/utils/helpers';
+import { formatDate, getReadingTime, getCategorySlug, getPostSlug } from '@/utils/helpers';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -8,14 +8,9 @@ interface Props {
 
 const { post } = Astro.props;
 const { title, date, category, description } = post.data;
-const { Content } = await post.render();
 
-// Calculate reading time from the raw markdown content
 const readingTime = getReadingTime(post.body);
-
-// Determine the post URL
-const slug = post.data.slug?.replace(/^\/posts\//, '') || post.id;
-const postUrl = `/posts/${slug}`;
+const postUrl = `/posts/${getPostSlug(post)}`;
 ---
 
 <article class="pb-12 border-b border-white-cloud dark:border-dark-cloud last:border-b-0">
