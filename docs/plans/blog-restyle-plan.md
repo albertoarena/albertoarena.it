@@ -1,7 +1,7 @@
 # albertoarena.it — Restyle Plan
 
-**Status:** approved. Implementation pending build instructions sign-off.
-**Branch:** `restyle/blog-2025`
+**Status:** completed. Merged to master and live on 2026-06-26.
+**Branch:** `restyle/blog-2025` (merged, deleted)
 **Goal:** rethink layout/structure while staying minimalist. Light mode first, dark parity verified.
 **Locked direction:** Option B · Geist Sans + JetBrains Mono · self-hosted via Fontsource variable fonts · Playwright smoke tests in scope.
 
