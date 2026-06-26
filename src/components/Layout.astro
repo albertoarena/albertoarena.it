@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Sidebar from '@/components/Sidebar/Sidebar.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
 import CookieConsent from '@/components/CookieConsent.astro';
 
 interface Props {
@@ -8,25 +9,27 @@ interface Props {
   description?: string;
   image?: string;
   article?: boolean;
-  isIndex?: boolean;
   lang?: 'en' | 'it';
   hreflangEn?: string;
   hreflangIt?: string;
 }
 
-const { title, description, image, article = false, isIndex = false, lang = 'en', hreflangEn, hreflangIt } = Astro.props;
+const { title, description, image, article = false, lang = 'en', hreflangEn, hreflangIt } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description} image={image} article={article} lang={lang} hreflangEn={hreflangEn} hreflangIt={hreflangIt}>
-  <div class="max-w-6xl mx-auto px-4 py-8 lg:py-12">
-    <div class="lg:flex lg:gap-12">
-      <aside class="lg:w-72 lg:flex-shrink-0 mb-8 lg:mb-0 lg:sticky lg:top-8 lg:self-start">
-        <Sidebar isIndex={isIndex} />
-      </aside>
-      <main id="main-content" class="flex-1 min-w-0 animate-fade-in">
-        <slot />
-      </main>
-    </div>
-  </div>
+<BaseLayout
+  title={title}
+  description={description}
+  image={image}
+  article={article}
+  lang={lang}
+  hreflangEn={hreflangEn}
+  hreflangIt={hreflangIt}
+>
+  <Header />
+  <main id="main-content" class="max-w-3xl mx-auto px-6 py-12 animate-fade-in">
+    <slot />
+  </main>
+  <Footer />
   <CookieConsent />
 </BaseLayout>
