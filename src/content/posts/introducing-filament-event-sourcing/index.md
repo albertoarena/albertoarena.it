@@ -15,7 +15,7 @@ description: "A Filament plugin that routes every create, edit, and delete throu
 socialImage: "/images/posts/introducing-filament-event-sourcing/cover.jpg"
 ---
 
-![Filament stored events browser](/images/posts/introducing-filament-event-sourcing/cover.jpg)
+![Filament Event Sourcing plugin](/images/posts/introducing-filament-event-sourcing/cover.jpg)
 
 Filament is a great admin panel. Event sourcing is a great architectural pattern. Getting the two to work together, though, has always meant compromises: either you bypass your aggregates and write directly to the database, or you ditch Filament's create/edit flows and build everything from scratch. I've been using both in the same projects for a while, and that friction kept bothering me. So I built a plugin to remove it.
 
@@ -25,13 +25,25 @@ Filament is a great admin panel. Event sourcing is a great architectural pattern
 
 The plugin ships with a few things I found myself needing every time I mixed Filament with event sourcing.
 
-The first is an event history browser. Every record gets a dedicated view of its event log: event class, timestamp, version, and the full JSON payload on expand. It's available either as a relation manager tab or as a slide-over action on the table. No extra setup: add the trait to your resource and it appears.
+![Posts list with per-row History action](/images/posts/introducing-filament-event-sourcing/posts-list.webp)
 
-![Per-record event history with expandable JSON payloads](/images/posts/introducing-filament-event-sourcing/post-event-details.webp)
+The first is an event history browser. Every record gets a dedicated view of its event log: event class, timestamp, version, and the full JSON payload on expand. It's available either as a relation manager tab on the view page, or as a slide-over action on the table row. No extra setup: add the trait to your resource and it appears.
+
+![Per-record event history as a slide-over with expandable JSON payloads](/images/posts/introducing-filament-event-sourcing/event-history.webp)
+
+![Per-record event history as a relation manager tab](/images/posts/introducing-filament-event-sourcing/event-history-relation-tab.webp)
 
 The second is a system-wide stored events browser. This gives you a searchable, filterable view of every event in your application, across all aggregates. You can filter by event class, aggregate UUID, or date range. It's read-only by design, which keeps the event log immutable.
 
+![System-wide stored events browser](/images/posts/introducing-filament-event-sourcing/stored-event-browser.webp)
+
+![Stored event detail view with full payload and metadata](/images/posts/introducing-filament-event-sourcing/stored-event-view.webp)
+
 The third is a projector replay page. You can trigger a replay for any registered projector directly from the admin panel, one at a time, with a live count of how many events were processed. Access is controlled by a three-layer authorization system: a plugin-level option, a config flag, and a Gate ability for fine-grained control.
+
+![Projector replay confirmation](/images/posts/introducing-filament-event-sourcing/replay-step-2-confirmation.webp)
+
+![Projector replay notification](/images/posts/introducing-filament-event-sourcing/replay-step-3-notification.webp)
 
 ## How to install it
 
