@@ -16,16 +16,19 @@ const pagePosts = sortedPosts.slice(0, postsLimit);
 ---
 
 <Layout title={siteConfig.title}>
-	<section class="mb-12 pb-8 border-b border-white-cloud dark:border-dark-cloud">
-		<p class="text-xl font-semibold text-dark dark:text-white leading-snug">
-			Senior software engineer focused on Laravel and event sourcing.
+	<section class="mb-12 pb-10 border-b border-white-cloud dark:border-dark-cloud">
+		<p class="text-2xl font-semibold text-dark dark:text-white leading-snug">
+			Senior software engineer.
 		</p>
-		<p class="mt-2 text-gray leading-relaxed">
-			I build and maintain open-source developer tooling, including the <a href="https://github.com/albertoarena/laravel-event-sourcing-generator" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-secondary transition-colors">Laravel Event Sourcing Generator</a> (10k+ downloads).
+		<p class="mt-3 text-gray leading-relaxed">
+			I build and maintain developer tooling for Laravel and event sourcing, including the <a href="https://github.com/albertoarena/laravel-event-sourcing-generator" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-secondary transition-colors">Laravel Event Sourcing Generator</a> (10k+ downloads).
+		</p>
+		<p class="mt-2 text-sm font-mono">
+			<a href="https://www.linkedin.com/in/alberto-arena-ba44a624" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-secondary transition-colors">Open to freelance, consulting, and long-term remote collaborations.</a>
 		</p>
 	</section>
 
-	<div class="space-y-10 animate-stagger">
+	<div class="space-y-8 animate-stagger">
 		{pagePosts.map((post) => <PostCard post={post} />)}
 	</div>
 
