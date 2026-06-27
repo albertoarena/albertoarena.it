@@ -47,6 +47,21 @@ Any third-party image used in a post (photos, book covers, logos, screenshots of
 ### Pages
 Location: `/src/content/pages/[slug]/index.md`
 
+## Layout
+
+Single-column, no sidebar. The shell is:
+
+```
+BaseLayout (html/head/scripts)
+└── Layout.astro
+    ├── Header (nav: Articles, Projects, About me + theme toggle)
+    ├── <main class="max-w-3xl mx-auto px-6 py-12"> ← all page content goes here
+    └── Footer
+```
+
+- **Homepage** (`/src/pages/index.astro`): hero bio section → post list → pagination
+- **Post** (`/src/layouts/PostLayout.astro`): header meta → prose body → tags footer → author bio → Disqus comments
+
 ## Key Directories
 
 - `/src/components/` - Astro components
