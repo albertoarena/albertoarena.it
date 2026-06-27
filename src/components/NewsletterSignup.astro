@@ -1,0 +1,29 @@
+---
+import { siteConfig } from '@/utils/config';
+
+const { accountId, formId } = siteConfig.mailerlite;
+const enabled = accountId && formId;
+---
+
+{enabled && (
+  <div class="my-10 py-8 px-6 border border-white-cloud dark:border-dark-cloud rounded-lg">
+    <p class="text-base font-semibold text-dark dark:text-white mb-1">
+      Get new posts by email
+    </p>
+    <p class="text-sm text-gray mb-4">
+      No spam. Unsubscribe any time.
+    </p>
+    <div data-form-id={formId} class="ml-embedded"></div>
+  </div>
+)}
+
+{enabled && (
+  <script
+    src="https://assets.mailerlite.com/js/universal.js"
+    async
+    is:inline
+  ></script>
+  <script is:inline define:vars={{ accountId }}>
+    ml('account', accountId);
+  </script>
+)}

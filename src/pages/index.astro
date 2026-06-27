@@ -3,6 +3,7 @@ import Layout from "../components/Layout.astro";
 import { getCollection } from "astro:content";
 import PostCard from "../components/PostCard.astro";
 import Pagination from "../components/Pagination.astro";
+import NewsletterSignup from "../components/NewsletterSignup.astro";
 import { siteConfig } from "../utils/config";
 
 const posts = await getCollection("posts");
@@ -27,6 +28,8 @@ const pagePosts = sortedPosts.slice(0, postsLimit);
 			<a href="https://www.linkedin.com/in/alberto-arena-ba44a624" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-secondary transition-colors">Open to freelance, consulting, and long-term remote collaborations.</a>
 		</p>
 	</section>
+
+	<NewsletterSignup />
 
 	<div class="space-y-8 animate-stagger">
 		{pagePosts.map((post) => <PostCard post={post} />)}

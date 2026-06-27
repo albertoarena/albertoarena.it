@@ -12,6 +12,10 @@ export const siteConfig = {
     { label: 'Projects', path: '/projects' },
     { label: 'About me', path: '/pages/about' }
   ],
+  mailerlite: {
+    accountId: '',
+    formId: '',
+  },
   author: {
     name: 'Alberto Arena',
     photo: '/photo.jpg',
