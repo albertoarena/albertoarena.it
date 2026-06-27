@@ -7,23 +7,16 @@ const enabled = accountId && formId;
 
 {enabled && (
   <div class="my-10 py-8 px-6 border border-white-cloud dark:border-dark-cloud rounded-lg">
-    <p class="text-base font-semibold text-dark dark:text-white mb-1">
-      Get new posts by email
-    </p>
-    <p class="text-sm text-gray mb-4">
-      No spam. Unsubscribe any time.
-    </p>
-    <div data-form-id={formId} class="ml-embedded"></div>
+    <div data-form={formId} class="ml-embedded"></div>
   </div>
 )}
 
 {enabled && (
-  <script
-    src="https://assets.mailerlite.com/js/universal.js"
-    async
-    is:inline
-  ></script>
   <script is:inline define:vars={{ accountId }}>
+    (function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[])
+    .push(arguments);},l=d.createElement(e),l.async=1,l.src=u,
+    n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})
+    (window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');
     ml('account', accountId);
   </script>
 )}

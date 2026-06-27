@@ -13,8 +13,8 @@ export const siteConfig = {
     { label: 'About me', path: '/pages/about' }
   ],
   mailerlite: {
-    accountId: '',
-    formId: '',
+    accountId: '2474575',
+    formId: 'HjBuvq',
   },
   author: {
     name: 'Alberto Arena',
