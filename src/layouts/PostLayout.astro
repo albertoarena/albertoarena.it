@@ -3,7 +3,6 @@ import Layout from "../components/Layout.astro";
 import type { CollectionEntry } from "astro:content";
 import { siteConfig } from "../utils/config";
 import DisqusComments from "../components/DisqusComments.astro";
-import NewsletterSignup from "../components/NewsletterSignup.astro";
 import LanguageToggle from "../components/LanguageToggle.astro";
 import readingTime from "reading-time";
 
@@ -106,8 +105,6 @@ const hreflangIt = italianUrl ? `${siteConfig.url}${italianUrl}` : undefined;
                 </div>
             </div>
         </div>
-
-        <NewsletterSignup />
 
         <DisqusComments
             url={disqusPostUrl}

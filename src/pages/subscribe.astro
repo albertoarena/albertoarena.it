@@ -1,0 +1,20 @@
+---
+import Layout from '../components/Layout.astro';
+import NewsletterSignup from '../components/NewsletterSignup.astro';
+import { siteConfig } from '../utils/config';
+---
+
+<Layout
+  title={`Subscribe — ${siteConfig.title}`}
+  description="Get new posts by email. No spam. Unsubscribe any time."
+>
+  <section class="mb-10">
+    <h1 class="text-3xl font-bold text-dark dark:text-white mb-3">Subscribe</h1>
+    <p class="text-gray leading-relaxed">
+      Get new posts delivered to your inbox. I write about software engineering,
+      Laravel, and developer tooling — no spam, no marketing.
+    </p>
+  </section>
+
+  <NewsletterSignup />
+</Layout>

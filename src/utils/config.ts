@@ -10,7 +10,8 @@ export const siteConfig = {
   menu: [
     { label: 'Articles', path: '/' },
     { label: 'Projects', path: '/projects' },
-    { label: 'About me', path: '/pages/about' }
+    { label: 'About me', path: '/pages/about' },
+    { label: 'Subscribe', path: '/subscribe' },
   ],
   mailerlite: {
     accountId: '2474575',
