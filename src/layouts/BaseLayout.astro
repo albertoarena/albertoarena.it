@@ -13,6 +13,7 @@ interface Props {
   lang?: 'en' | 'it';
   hreflangEn?: string;
   hreflangIt?: string;
+  noViewTransitions?: boolean;
 }
 
 const {
@@ -23,6 +24,7 @@ const {
   lang = 'en',
   hreflangEn,
   hreflangIt,
+  noViewTransitions = false,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -114,7 +116,7 @@ const socialImageURL = new URL(image, Astro.site);
       });
     </script>
 
-    <ViewTransitions />
+    {!noViewTransitions && <ViewTransitions />}
 
     <!-- Google Consent Mode v2 defaults -->
     <script is:inline>
