@@ -5,15 +5,16 @@ import { getPostSlug } from "@/utils/helpers";
 
 interface Props {
     post: CollectionEntry<"posts">;
+    pinned?: boolean;
 }
 
-const { post } = Astro.props;
+const { post, pinned = false } = Astro.props;
 const categorySlug = post.data.category?.toLowerCase().replace(/\s+/g, "-");
 const readTime = readingTime(post.body).text;
 const postSlug = getPostSlug(post);
 ---
 
-<article class="group border-l-2 border-transparent hover:border-l-primary pl-5 transition-all duration-200">
+<article class={`group border-l-2 pl-5 transition-all duration-200 ${pinned ? "border-primary" : "border-transparent hover:border-l-primary"}`}>
     <div class="space-y-1">
         <div class="flex items-center gap-3 text-sm font-mono text-gray">
             <time datetime={post.data.date.toISOString()} class="whitespace-nowrap">

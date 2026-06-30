@@ -33,9 +33,9 @@ const pagePosts = regularPosts.slice(0, postsLimit);
 
 	{pinnedPosts.length > 0 && (
 		<div class="mb-10">
-			<p class="text-xs font-mono text-gray uppercase tracking-widest mb-5">Pinned</p>
+			<p class="text-xs font-mono text-gray uppercase tracking-widest mb-5">★ Pinned</p>
 			<div class="space-y-8">
-				{pinnedPosts.map((post) => <PostCard post={post} />)}
+				{pinnedPosts.map((post) => <PostCard post={post} pinned={true} />)}
 			</div>
 		</div>
 		<hr class="border-white-cloud dark:border-dark-cloud mb-10" />
