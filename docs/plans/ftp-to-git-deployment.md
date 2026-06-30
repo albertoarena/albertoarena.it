@@ -232,7 +232,7 @@ Once the SSH migration is confirmed working, remove `FTP_HOST`, `FTP_USER`, `FTP
 ## Prerequisites
 
 - [x] Confirm Apache follows symlinks inside `public_html/` — verified via `.htaccess` `+FollowSymLinks`
-- [ ] Confirm Netsons plan supports SSH (SSD 30+)
+- [ ] **Upgrade hosting plan** — current plan is Netsons Hosting Web 10, which does not support SSH. Must move to SSD 50 first. Everything below is blocked on this.
 - [ ] Generate Ed25519 key pair, add public key to Netsons SSH authorised keys
 - [ ] Test SSH connection from local machine: `ssh -p 65100 -i ~/.ssh/deploy_key <user>@<host>`
 - [ ] Capture `SSH_KNOWN_HOSTS`: `ssh-keyscan -p 65100 <host>`
