@@ -11,8 +11,10 @@ export async function getStaticPaths() {
     .filter((post) => !post.data.draft && (post.data.lang ?? 'en') === 'en')
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
+  const regularPosts = sortedPosts.filter((p) => !p.data.pinned);
+
   const { postsLimit } = siteConfig;
-  const totalPages = Math.ceil(sortedPosts.length / postsLimit);
+  const totalPages = Math.ceil(regularPosts.length / postsLimit);
 
   // Generate pages 2+ only (page 1 is the homepage)
   return Array.from({ length: totalPages - 1 }, (_, i) => {
@@ -21,7 +23,7 @@ export async function getStaticPaths() {
     return {
       params: { page: String(pageNum) },
       props: {
-        pagePosts: sortedPosts.slice(start, start + postsLimit),
+        pagePosts: regularPosts.slice(start, start + postsLimit),
         currentPage: pageNum,
         totalPages,
       },

@@ -10,9 +10,12 @@ const sortedPosts = posts
 	.filter((post) => !post.data.draft && (post.data.lang ?? 'en') === 'en')
 	.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
+const pinnedPosts = sortedPosts.filter((p) => p.data.pinned);
+const regularPosts = sortedPosts.filter((p) => !p.data.pinned);
+
 const { postsLimit } = siteConfig;
-const totalPages = Math.ceil(sortedPosts.length / postsLimit);
-const pagePosts = sortedPosts.slice(0, postsLimit);
+const totalPages = Math.ceil(regularPosts.length / postsLimit);
+const pagePosts = regularPosts.slice(0, postsLimit);
 ---
 
 <Layout title={siteConfig.title}>
@@ -27,6 +30,16 @@ const pagePosts = sortedPosts.slice(0, postsLimit);
 			<a href="https://www.linkedin.com/in/alberto-arena-ba44a624" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-secondary transition-colors">Open to freelance, consulting, and long-term remote collaborations.</a>
 		</p>
 	</section>
+
+	{pinnedPosts.length > 0 && (
+		<div class="mb-10">
+			<p class="text-xs font-mono text-gray uppercase tracking-widest mb-5">Pinned</p>
+			<div class="space-y-8">
+				{pinnedPosts.map((post) => <PostCard post={post} />)}
+			</div>
+		</div>
+		<hr class="border-white-cloud dark:border-dark-cloud mb-10" />
+	)}
 
 	<div class="space-y-8 animate-stagger">
 		{pagePosts.map((post) => <PostCard post={post} />)}

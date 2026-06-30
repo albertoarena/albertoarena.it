@@ -14,6 +14,7 @@ const postsCollection = defineCollection({
     description: z.string().optional(),
     socialImage: z.string().optional(),
     cover: z.string().optional(),
+    pinned: z.boolean().default(false),
     lang: z.enum(['en', 'it']).default('en'),
     translationOf: z.string().optional()
   })

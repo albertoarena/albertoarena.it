@@ -12,6 +12,7 @@ tags:
   - "DevTools"
 description: "A simple memory model for structuring docs in a Claude Code project, plus a Laravel starter repo you can copy."
 socialImage: "/images/posts/claude-md-is-ram-not-disk/cover.jpg"
+pinned: true
 ---
 
 ![CLAUDE.md is RAM, not disk](/images/posts/claude-md-is-ram-not-disk/cover.jpg)
