@@ -1,6 +1,6 @@
 # Plan: Pinned / featured posts on the homepage
 
-**Status:** Ready to implement
+**Status:** Completed — live on master 2026-06-30
 **Date:** 2026-06-30
 **Scope:** Allow 2–3 posts to be marked as pinned in their frontmatter and always shown at the top of the homepage, above the regular chronological list and pagination.
 
