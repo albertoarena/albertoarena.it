@@ -108,7 +108,8 @@ a mismatched fleet as an error, not an inconvenience.
 ### Route through the on-box wrapper
 
 The applications already had an on-box wrapper script that prevents overlapping runs of
-the same Artisan command and handles privilege escalation. The toolkit routes every
+the same Artisan command: two engineers triggering the same command simultaneously would
+otherwise process the same records twice or send duplicate emails. The toolkit routes every
 command through this wrapper rather than calling `php artisan` directly. This preserves
 the overlap-protection guarantee that already exists for scheduled commands, keeps
 privilege escalation in one well-known place, and means there is a single source of truth
@@ -146,13 +147,6 @@ resolution, target selection, and the assembled command string: the parts most l
 be wrong quietly. Shellcheck runs as a lint gate on every commit, and a dry-run mode
 (which prints the exact `aws` call without firing it) bridges the gap between
 "tests pass" and "this looks right on prod."
-
-## What is next
-
-The transport (`aws ssm send-command`) is isolated in one place by design. If the fleet
-moves to containers, that single function swaps to ECS Exec and the operator-facing
-surface stays unchanged. A Lambda bridge is designed but deferred: build it when a
-non-terminal trigger (a CI job, a chat integration) is actually needed, not before.
 
 ## The result
 
