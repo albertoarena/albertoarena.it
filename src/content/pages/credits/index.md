@@ -31,6 +31,13 @@ Cover images for some posts are sourced from **[Unsplash](https://unsplash.com)*
 | [Your README Deserves Real Numbers](/posts/traffic-badge-github-action/) | Graphs of performance analytics on a laptop screen | [Luke Chesser](https://unsplash.com/@lukechesser) on Unsplash |
 | [CLAUDE.md is RAM, not disk](/posts/claude-md-is-ram-not-disk/) | Macro shot photo of a computer RAM | [Liam Briese](https://unsplash.com/@liam_1) on Unsplash |
 | [10,000 downloads](/posts/laravel-event-sourcing-generator-10k/) | Sparkler burning at night on a beach | [Tim Collins](https://unsplash.com/@timcollinsphoto) on Unsplash |
+| [Beyond the Bastion](/posts/beyond-the-bastion-aws-ssm-laravel-artisan/) | Dark server racks with LED lights | [Matthieu Beaumont](https://unsplash.com/@matthieubeaumont) on Unsplash |
+
+## Diagrams
+
+| Post | Tool | Source |
+|------|------|--------|
+| [Beyond the Bastion](/posts/beyond-the-bastion-aws-ssm-laravel-artisan/) | Flow diagram | [Mermaid](https://mermaid.js.org) via [mermaid.live](https://mermaid.live) |
 
 ## Images & logos
 
