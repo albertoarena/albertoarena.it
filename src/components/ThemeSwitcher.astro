@@ -44,6 +44,7 @@
 <script>
   function handleThemeToggle() {
     const isDark = document.documentElement.classList.contains('dark');
+    const newTheme = isDark ? 'light' : 'dark';
     if (isDark) {
       document.documentElement.classList.remove('dark');
       document.documentElement.classList.add('light');
@@ -53,6 +54,7 @@
       document.documentElement.classList.remove('light');
       localStorage.setItem('theme', 'dark');
     }
+    document.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: newTheme } }));
   }
 
   function initThemeToggles() {

@@ -38,6 +38,18 @@ const shortname = siteConfig.disqusShortname;
         }
     }
 
+    function reloadDisqusEmbed() {
+        var existingScript = document.querySelector('script[src*="disqus.com/embed.js"]');
+        if (existingScript) existingScript.remove();
+        if (typeof DISQUS !== 'undefined') {
+            try { DISQUS.destroy(); } catch(e) {}
+            window.DISQUS = undefined;
+        }
+        var thread = document.getElementById('disqus_thread');
+        if (thread) thread.innerHTML = '';
+        loadDisqus();
+    }
+
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', loadDisqus);
     } else {
@@ -45,6 +57,11 @@ const shortname = siteConfig.disqusShortname;
     }
 
     document.addEventListener('astro:after-swap', resetDisqus);
+    // Delay outlasts the body background-color transition (200ms) so Disqus
+    // reads the final background value when determining its colour scheme.
+    document.addEventListener('theme-changed', function() {
+        setTimeout(reloadDisqusEmbed, 300);
+    });
 </script>
 
 <noscript>
