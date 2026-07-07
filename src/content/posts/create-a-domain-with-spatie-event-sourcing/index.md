@@ -11,8 +11,10 @@ tags:
   - "Spatie"
   - "Laravel"
 description: "A Laravel command that generates a domain using Spatie event sourcing."
-socialImage: "./media/spatie.jpg"
+socialImage: "/images/posts/domain-using-spatie-event-sourcing/cover.jpg"
 ---
+
+![Create a domain using Spatie event sourcing](/images/posts/domain-using-spatie-event-sourcing/cover.jpg)
 
 Event sourcing is a powerful pattern for tracking changes to application state, offering a robust way to manage
 domain-driven design in Laravel. However, setting up an event-sourcing domain can be time-consuming and repetitive,

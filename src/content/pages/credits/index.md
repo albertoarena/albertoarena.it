@@ -32,6 +32,9 @@ Cover images for some posts are sourced from **[Unsplash](https://unsplash.com)*
 | [CLAUDE.md is RAM, not disk](/posts/claude-md-is-ram-not-disk/) | Macro shot photo of a computer RAM | [Liam Briese](https://unsplash.com/@liam_1) on Unsplash |
 | [10,000 downloads](/posts/laravel-event-sourcing-generator-10k/) | Sparkler burning at night on a beach | [Tim Collins](https://unsplash.com/@timcollinsphoto) on Unsplash |
 | [Beyond the Bastion](/posts/beyond-the-bastion-aws-ssm-laravel-artisan/) | Dark server racks with LED lights | [Matthieu Beaumont](https://unsplash.com/@matthieubeaumont) on Unsplash |
+| [Create a domain using Spatie event sourcing](/posts/domain-using-spatie-event-sourcing/) | Metal scaffolding on an orange building against a blue sky | [Jackson Allan](https://unsplash.com/@artbyjackson) on Unsplash |
+| [Event sourcing with a little help from AI](/posts/ai-laravel-event-sourcing/) | Circuit board shaped as a human brain on a colourful grid | [Steve A Johnson](https://unsplash.com/@steve_j) on Unsplash |
+| [Introducing Codemetry](/posts/introducing-codemetry/) | Magnifying glass resting on a laptop keyboard | [Agence Olloweb](https://unsplash.com/@olloweb) on Unsplash |
 
 ## Diagrams
 
@@ -45,7 +48,6 @@ Cover images for some posts are sourced from **[Unsplash](https://unsplash.com)*
 |------|-------|--------|
 | [I'm back!](/posts/i-am-back/) | The Clean Coder book cover | Robert C. Martin / O'Reilly |
 | [Finally, I moved to Gatsby](/posts/finally-i-moved-to-gatsby/) | Gatsby logo | [Gatsby](https://www.gatsbyjs.com) |
-| [Create a domain using Spatie event sourcing](/posts/domain-using-spatie-event-sourcing/) | Spatie logo | [Spatie](https://spatie.be) |
 | [Special effects in CSS3](/posts/special-effects-in-css3/) | The Simpsons in CSS screenshot | [pattle](https://github.com/pattle/simpsons-in-css) on GitHub |
 
 ---
