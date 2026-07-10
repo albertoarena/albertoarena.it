@@ -1,3 +1,9 @@
+# Canonicalize host: force https://albertoarena.it (no www, https only)
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^www\.albertoarena\.it$ [NC,OR]
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://albertoarena.it/$1 [L,R=301]
+
 # Custom error pages
 ErrorDocument 404 /404.html
 
