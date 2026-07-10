@@ -21,7 +21,7 @@ const tags = [...tagMap.entries()]
     <div class="flex flex-wrap gap-3">
         {tags.map(([tag, count]) => (
             <a
-                href={`/tag/${tag.toLowerCase().replace(/\s+/g, '-')}`}
+                href={`/tag/${tag.toLowerCase().replace(/\s+/g, '-')}/`}
                 class="px-3 py-1 bg-gray-100 dark:bg-dark-cloud rounded-full text-sm hover:bg-secondary hover:text-white transition-colors"
             >
                 #{tag} <span class="opacity-75">({count})</span>

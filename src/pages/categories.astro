@@ -21,7 +21,7 @@ const categories = [...categoryMap.entries()]
     <div class="flex flex-wrap gap-4">
         {categories.map(([category, count]) => (
             <a
-                href={`/category/${category.toLowerCase().replace(/\s+/g, '-')}`}
+                href={`/category/${category.toLowerCase().replace(/\s+/g, '-')}/`}
                 class="px-4 py-2 bg-gray-100 dark:bg-dark-cloud rounded-lg hover:bg-primary hover:text-white transition-colors"
             >
                 {category} <span class="text-sm opacity-75">({count})</span>

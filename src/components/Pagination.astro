@@ -7,14 +7,14 @@ interface Props {
 
 const { currentPage, totalPages, basePath = '' } = Astro.props;
 
-const prevPage = currentPage > 1 
-  ? currentPage === 2 
-    ? basePath || '/' 
-    : `${basePath}/page/${currentPage - 1}`
+const prevPage = currentPage > 1
+  ? currentPage === 2
+    ? basePath || '/'
+    : `${basePath}/page/${currentPage - 1}/`
   : null;
 
-const nextPage = currentPage < totalPages 
-  ? `${basePath}/page/${currentPage + 1}` 
+const nextPage = currentPage < totalPages
+  ? `${basePath}/page/${currentPage + 1}/`
   : null;
 ---
 

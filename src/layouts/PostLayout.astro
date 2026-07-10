@@ -61,7 +61,7 @@ const hreflangIt = italianUrl ? `${siteConfig.url}${italianUrl}` : undefined;
                 </time>
                 {post.data.category && (
                     <a
-                        href={`/category/${categorySlug}`}
+                        href={`/category/${categorySlug}/`}
                         class="px-2 py-1 bg-primary/10 dark:bg-dark-cloud text-primary dark:text-white-cloud rounded font-medium hover:bg-primary/20 transition-colors"
                     >
                         {post.data.category}
@@ -82,7 +82,7 @@ const hreflangIt = italianUrl ? `${siteConfig.url}${italianUrl}` : undefined;
                 <div class="flex flex-wrap gap-2">
                     {post.data.tags.map((tag) => (
                         <a
-                            href={`/tag/${tag.toLowerCase().replace(/\s+/g, '-')}`}
+                            href={`/tag/${tag.toLowerCase().replace(/\s+/g, '-')}/`}
                             class="px-3 py-1 bg-gray-100 dark:bg-dark-cloud text-gray-700 dark:text-white-cloud rounded-full text-sm hover:bg-secondary hover:text-white transition-colors"
                         >
                             #{tag}
