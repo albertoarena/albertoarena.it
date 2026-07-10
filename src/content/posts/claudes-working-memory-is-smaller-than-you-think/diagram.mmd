@@ -1,0 +1,8 @@
+flowchart TB
+    subgraph All["One prompt, six decisions at once"]
+        X["Architecture + schema + UI +<br/>tests + compat + auth context"] --> Y["diluted answer"]
+    end
+    subgraph Staged["Staged, one decision per turn"]
+        A["Architecture"] --> B["Schema"] --> C["Tests"] --> D["Boilerplate"]
+    end
+    All ~~~ Staged

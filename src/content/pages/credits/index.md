@@ -35,12 +35,14 @@ Cover images for some posts are sourced from **[Unsplash](https://unsplash.com)*
 | [Create a domain using Spatie event sourcing](/posts/domain-using-spatie-event-sourcing/) | Metal scaffolding on an orange building against a blue sky | [Jackson Allan](https://unsplash.com/@artbyjackson) on Unsplash |
 | [Event sourcing with a little help from AI](/posts/ai-laravel-event-sourcing/) | Circuit board shaped as a human brain on a colourful grid | [Steve A Johnson](https://unsplash.com/@steve_j) on Unsplash |
 | [Introducing Codemetry](/posts/introducing-codemetry/) | Magnifying glass resting on a laptop keyboard | [Agence Olloweb](https://unsplash.com/@olloweb) on Unsplash |
+| [Claude's Working Memory Is Smaller Than You Think](/posts/claudes-working-memory-is-smaller-than-you-think/) | Street performer juggling three balls | [Yi Liu](https://unsplash.com/@stevenliuyi) on Unsplash |
 
 ## Diagrams
 
 | Post | Tool | Source |
 |------|------|--------|
 | [Beyond the Bastion](/posts/beyond-the-bastion-aws-ssm-laravel-artisan/) | Flow diagram | [Mermaid](https://mermaid.js.org) via [mermaid.live](https://mermaid.live) |
+| [Claude's Working Memory Is Smaller Than You Think](/posts/claudes-working-memory-is-smaller-than-you-think/) | Flow diagram | [Mermaid](https://mermaid.js.org) via [mermaid.live](https://mermaid.live) |
 
 ## Images & logos
 
