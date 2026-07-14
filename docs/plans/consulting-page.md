@@ -1,6 +1,6 @@
 # Plan: Consulting / Consulenza page
 
-**Status:** Implemented (not yet committed/deployed)
+**Status:** Implemented, committed (`56e23cb`), pushed to master
 **Date:** 2026-07-14
 **Scope:** A new bilingual page pitching freelance/consulting services, with a
 LinkedIn call-to-action instead of a contact form. Added to main nav.
