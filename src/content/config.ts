@@ -25,7 +25,9 @@ const pagesCollection = defineCollection({
   schema: z.object({
     title: z.string(),
     template: z.literal('page'),
-    socialImage: z.string().optional()
+    socialImage: z.string().optional(),
+    lang: z.enum(['en', 'it']).default('en'),
+    translationOf: z.string().optional()
   })
 });
 

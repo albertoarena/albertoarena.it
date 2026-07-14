@@ -1,0 +1,42 @@
+---
+import { getCollection, render } from "astro:content";
+import Layout from "../../../components/Layout.astro";
+import LanguageToggle from "../../../components/LanguageToggle.astro";
+import LinkedInCta from "../../../components/LinkedInCta.astro";
+import { siteConfig } from "@/utils/config";
+
+export async function getStaticPaths() {
+    const allPages = await getCollection("pages");
+    const italianPages = allPages.filter((p) => p.data.lang === 'it');
+
+    return italianPages.map((page) => ({
+        params: { slug: page.data.translationOf },
+        props: { page },
+    }));
+}
+
+const { page } = Astro.props;
+const { Content } = await render(page);
+
+const slug = page.data.translationOf!;
+const englishPath = `/pages/${slug}/`;
+const italianPath = `/pages/${slug}/it/`;
+---
+
+<Layout
+    title={page.data.title}
+    lang="it"
+    hreflangEn={`${siteConfig.url}${englishPath}`}
+    hreflangIt={`${siteConfig.url}${italianPath}`}
+>
+    <article class="prose dark:prose-invert max-w-none">
+        <LanguageToggle
+            currentLang="it"
+            englishUrl={englishPath}
+            italianUrl={italianPath}
+        />
+        <h1 class="text-3xl lg:text-4xl font-bold mb-8 text-dark dark:text-white">{page.data.title}</h1>
+        <Content />
+        {slug === 'consulting' && <LinkedInCta lang="it" />}
+    </article>
+</Layout>

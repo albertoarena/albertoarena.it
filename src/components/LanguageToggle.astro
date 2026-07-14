@@ -15,7 +15,7 @@ const { currentLang, englishUrl, italianUrl } = Astro.props;
     class:list={[
       'px-2 py-1 rounded font-medium transition-colors',
       currentLang === 'en'
-        ? 'bg-primary text-white'
+        ? 'solid-link bg-primary text-white hover:bg-secondary'
         : 'text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary'
     ]}
     aria-current={currentLang === 'en' ? 'page' : undefined}
@@ -27,7 +27,7 @@ const { currentLang, englishUrl, italianUrl } = Astro.props;
     class:list={[
       'px-2 py-1 rounded font-medium transition-colors',
       currentLang === 'it'
-        ? 'bg-primary text-white'
+        ? 'solid-link bg-primary text-white hover:bg-secondary'
         : 'text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary'
     ]}
     aria-current={currentLang === 'it' ? 'page' : undefined}

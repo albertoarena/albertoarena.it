@@ -172,6 +172,13 @@
   color: hsl(31, 92%, 62%);
 }
 
+/* Solid-background "button" links (e.g. CTAs, the active language-toggle pill)
+   always keep white text on hover, whether or not they sit inside .prose content. */
+.solid-link:hover,
+.prose .solid-link:hover {
+  color: #fff;
+}
+
 .prose code::before,
 .prose code::after {
   content: "";

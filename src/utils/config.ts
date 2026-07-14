@@ -11,6 +11,7 @@ export const siteConfig = {
     { label: 'Articles', path: '/' },
     { label: 'Projects', path: '/projects/' },
     { label: 'About me', path: '/pages/about/' },
+    { label: 'Consulting', path: '/pages/consulting/' },
     { label: 'Subscribe', path: '/subscribe/' },
   ],
   mailerlite: {

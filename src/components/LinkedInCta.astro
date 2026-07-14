@@ -1,0 +1,37 @@
+---
+import { siteConfig } from '@/utils/config';
+
+interface Props {
+  lang?: 'en' | 'it';
+}
+
+const { lang = 'en' } = Astro.props;
+
+const linkedinUrl = `https://www.linkedin.com/in/${siteConfig.author.contacts.linkedin}/`;
+
+const copy = {
+  en: {
+    heading: "Let's talk",
+    body: "The fastest way to reach me is LinkedIn: send a message with a bit about your project and I'll get back to you.",
+    cta: 'Message me on LinkedIn',
+  },
+  it: {
+    heading: 'Parliamone',
+    body: 'Il modo più rapido per contattarmi è LinkedIn: scrivimi un messaggio con qualche dettaglio sul progetto e ti risponderò al più presto.',
+    cta: 'Scrivimi su LinkedIn',
+  },
+}[lang];
+---
+
+<div class="not-prose mt-12 pt-8 border-t border-white-cloud dark:border-dark-cloud">
+  <h2 class="text-2xl font-bold text-dark dark:text-white mb-2">{copy.heading}</h2>
+  <p class="text-gray leading-relaxed mb-5">{copy.body}</p>
+  <a
+    href={linkedinUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="solid-link inline-flex items-center gap-2 px-5 py-3 bg-primary text-white font-medium rounded-lg hover:bg-secondary transition-colors no-underline"
+  >
+    {copy.cta}
+  </a>
+</div>

@@ -1,0 +1,54 @@
+---
+import { getCollection, render } from "astro:content";
+import Layout from "../../../components/Layout.astro";
+import LanguageToggle from "../../../components/LanguageToggle.astro";
+import LinkedInCta from "../../../components/LinkedInCta.astro";
+import { getPageSlug } from "@/utils/helpers";
+import { siteConfig } from "@/utils/config";
+
+export async function getStaticPaths() {
+    const allPages = await getCollection("pages");
+    const englishPages = allPages.filter((p) => (p.data.lang ?? 'en') === 'en');
+    const translatedSlugs = new Set(
+        allPages
+            .filter((p) => p.data.lang === 'it')
+            .map((p) => p.data.translationOf)
+            .filter(Boolean)
+    );
+
+    return englishPages.map((page) => {
+        const slug = getPageSlug(page);
+        return {
+            params: { slug },
+            props: { page, hasItalian: translatedSlugs.has(slug) },
+        };
+    });
+}
+
+const { page, hasItalian } = Astro.props;
+const { Content } = await render(page);
+
+const slug = getPageSlug(page);
+const englishPath = `/pages/${slug}/`;
+const italianPath = `/pages/${slug}/it/`;
+---
+
+<Layout
+    title={page.data.title}
+    lang="en"
+    hreflangEn={hasItalian ? `${siteConfig.url}${englishPath}` : undefined}
+    hreflangIt={hasItalian ? `${siteConfig.url}${italianPath}` : undefined}
+>
+    <article class="prose dark:prose-invert max-w-none">
+        {hasItalian && (
+            <LanguageToggle
+                currentLang="en"
+                englishUrl={englishPath}
+                italianUrl={italianPath}
+            />
+        )}
+        <h1 class="text-3xl lg:text-4xl font-bold mb-8 text-dark dark:text-white">{page.data.title}</h1>
+        <Content />
+        {slug === 'consulting' && <LinkedInCta lang="en" />}
+    </article>
+</Layout>
