@@ -1,6 +1,6 @@
 # Structured data (JSON-LD) and llms.txt
 
-**Status:** Approach agreed, pending implementation approval
+**Status:** Completed — implemented, committed, and deployed 2026-07-14
 **Date:** 2026-07-14
 
 ## Context

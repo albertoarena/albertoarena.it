@@ -1,5 +1,10 @@
 # Blog Layout Refresh — Instructions for Claude Code
 
+**Status:** Completed — all 6 tasks implemented (see per-task "✓ DONE" notes below). Note: some file
+paths referenced below (`Sidebar/Sidebar.astro`, `tailwind.config.mjs`) reflect the codebase at the
+time this was written and have since shifted (sidebar removed, Tailwind v4 config moved to CSS-based
+config) in the later blog restyle.
+
 Context: `albertoarena.it` is a personal developer blog built with Astro + Tailwind. It is intentionally minimal, has no commercial goal, and targets two audiences: fellow developers and recruiters/hiring managers (the owner is actively job hunting). The goal is a **refresh, not a rebrand**. Keep the name, the domain, the minimal philosophy, and the existing architecture. Do not introduce heavy dependencies, animation libraries, or a CSS framework swap.
 
 Stack constraints:

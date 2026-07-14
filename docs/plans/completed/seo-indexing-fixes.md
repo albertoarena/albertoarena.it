@@ -1,6 +1,6 @@
 # SEO Indexing Fixes
 
-**Status:** In progress (Fix 2 and Fix 3 done; Fix 1 pending cPanel)  
+**Status:** Completed — all three fixes shipped (Fix 1 via `public/.htaccess` www/http→https redirect)
 **Date:** 2026-05-25
 
 ## Problem

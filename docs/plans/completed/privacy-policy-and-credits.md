@@ -1,6 +1,6 @@
 # Plan: Privacy Policy Link + Credits Page
 
-**Status**: Ready to implement  
+**Status**: Completed — implemented via `Footer.astro` (the sidebar was later removed in the blog restyle; the Privacy Policy/Credits links live in the footer instead of `Copyright.astro`, same outcome)
 **Date**: 2026-05-20  
 **Scope**: Make the Privacy Policy discoverable via the sidebar, review its GA4 content, and create a site-wide Credits page for third-party attributions.
 
