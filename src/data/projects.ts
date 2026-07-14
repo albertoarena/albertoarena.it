@@ -92,7 +92,7 @@ export const projects: Project[] = [
     url: 'https://www.safarioffice.com/accommodations/',
     status: 'professional',
     featured: true,
-    year: '2025–Present',
+    year: '2025–2026',
     company: { name: 'SafariOffice', url: 'https://www.safarioffice.com/' },
   },
   {

@@ -39,13 +39,15 @@ My first approach to the programming world was in 1985, coding on a Commodore 64
 	<img src="/images/pages/about/midleton-distillery-collection.jpg" alt="Midleton Distillery Collection">
 </figure>
 
-Since June 2025 I have been working on [SafariOffice for Accommodations](https://www.safarioffice.com/accommodations/), the leading B2B platform connecting accommodation providers with global travel distribution and booking management tools.
+From June 2025 to June 2026, I worked on [SafariOffice for Accommodations](https://www.safarioffice.com/accommodations/), the leading B2B platform connecting accommodation providers with global travel distribution and booking management tools. The platform is now live and running well in production.
+
+I'm currently working with [For Good Measure](https://4gm.ca/), a Canadian psychometrics firm building defensible assessment programs for regulatory bodies and health professions.
 
 I also continue to contribute to the [Midleton Distillery Collection](https://midletondistillerycollection.com/),
 the official shop for Ireland's finest whiskey brands (Jameson, Redbreast, Midleton Very Rare, Powers,
 Spot Whiskeys, Method & Madness and Knappogue Castle), where I served as lead developer from 2021 to 2024.
 
-Outside of work I read a lot, play guitar, dabble in constructed languages, and build hand-made dioramas.
+Outside of work I read a lot, play guitar, dabble in constructed languages, and build hand-made dioramas. I'm also a keen genealogy enthusiast, and I'm currently working on [Fonti e Radici](http://fontieradici.it/), a new Italian portal cataloguing genealogical sources for the Messina province in Sicily.
 
 ## Portfolio
 
