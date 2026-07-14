@@ -1,0 +1,31 @@
+# albertoarena.it
+
+> A blog by Alberto Arena, Senior Software Engineer, on Laravel, AI-assisted engineering, and web development.
+
+Alberto Arena is a Senior Software Engineer based in Sicily, Italy, with a background in PHP/Laravel, Shopify and headless commerce, and AI-assisted engineering. More at https://albertoarena.it/pages/about/.
+
+## Posts
+
+- [Claude's Working Memory Is Smaller Than You Think](https://albertoarena.it/posts/claudes-working-memory-is-smaller-than-you-think/): Anthropic's J-space research shows Claude's internal reasoning workspace is small. Here's what that changes about how I sequence prompts when building a feature.
+- [Beyond the Bastion: Secure Artisan Command Execution with AWS Systems Manager](https://albertoarena.it/posts/beyond-the-bastion-aws-ssm-laravel-artisan/): When IT blocks SSH for compliance, your manual Artisan operations go dark. Here is how AWS Systems Manager Run Command replaces the bastion host with an IAM-authenticated, CloudTrail-audited alternative, and the engineering decisions behind building a reusable toolkit around it.
+- [10,000 downloads](https://albertoarena.it/posts/laravel-event-sourcing-generator-10k/): laravel-event-sourcing-generator just crossed 10,000 downloads on Packagist. A short look back at how it started and where things have gone since.
+- [CLAUDE.md is RAM, not disk](https://albertoarena.it/posts/claude-md-is-ram-not-disk/): A simple memory model for structuring docs in a Claude Code project, plus a Laravel starter repo you can copy.
+- [What if every Filament write went through an aggregate?](https://albertoarena.it/posts/introducing-filament-event-sourcing/): A Filament plugin that routes every create, edit, and delete through your domain aggregates, without giving up the admin panel you already love.
+- [Your README Deserves Real Numbers](https://albertoarena.it/posts/traffic-badge-github-action/): traffic-badge is a GitHub Action that pulls live view and clone counts from the official GitHub API and pins them as SVG badges directly in your README. No third-party servers, no guesses.
+- [Stop Typing, Keep Going](https://albertoarena.it/posts/goal-command-claude-code/): Claude Code and Codex now have a /goal command that turns your coding agent into an autonomous loop. Here's when it helps and when it doesn't.
+- [Deploying Laravel to Netsons with GitHub Actions](https://albertoarena.it/posts/laravel-netsons-deploy/): I built a Laravel package to deploy to Netsons shared hosting via GitHub Actions, supporting both FTP and git clone strategies.
+- [Your .env files are lying to you](https://albertoarena.it/posts/introducing-envaudit/): Environment files drift out of sync silently. envaudit catches what you miss.
+- [Event sourcing with a little help from AI](https://albertoarena.it/posts/ai-laravel-event-sourcing/): A Claude Code skill that designs and generates event-sourced Laravel domains, one conversation at a time.
+- [When Your AI Writes Confident Nonsense](https://albertoarena.it/posts/ai-hallucination-in-coding-agents/): AI coding agents are powerful, but they hallucinate. Here are practical tips to spot it before it reaches production.
+- [Introducing Codemetry](https://albertoarena.it/posts/introducing-codemetry/): A Git repository analysis tool that converts version control history into quality metrics.
+- [Moving from Gatsby to Astro](https://albertoarena.it/posts/moving-from-gatsby-to-astro/): I migrated my blog from Gatsby to Astro. Here's why.
+- [Create a domain using Spatie event sourcing](https://albertoarena.it/posts/create-a-domain-with-spatie-event-sourcing/): A Laravel command that generates a domain using Spatie event sourcing.
+- [My React Calculator](https://albertoarena.it/posts/my-react-calculator/): A React learning exercise: building a React Calculator.
+- [Finally, I moved to Gatsby](https://albertoarena.it/posts/finally-i-moved-to-gatsby/): I moved my blog to Gatsby, a React-based open source framework.
+- [I'm back!](https://albertoarena.it/posts/i-am-back/): My personal blog is back.
+- [Is it really an integer?](https://albertoarena.it/posts/is-it-really-an-integer/): How to check if a variable is really an integer or a float in Javascript, and some considerations on data types.
+- [I moved to Jekyll](https://albertoarena.it/posts/i-moved-to-jekyll/): Four reasons for which I decided to move my blog from WordPress to Jekyll.
+- [A simple Javascript Getter/Setter](https://albertoarena.it/posts/a-simple-javascript-gettersetter/): How to implement a simple Javascript getter/setter than can be used with different libraries and frameworks.
+- [Installing Store Kit in Titanium Studio](https://albertoarena.it/posts/installing-store-kit-in-titanium-studio/): A brief tutorial about how to install Store Kit module in Titanium Studio with gitTio.
+- [Special effects in CSS3](https://albertoarena.it/posts/special-effects-in-css3/): Some interesting effects that can be implemented in pure CSS3.
+- [Sharing your house? Factory method pattern can help you](https://albertoarena.it/posts/sharing-your-house-factory-method-pattern-can-help-you/): An implementation of the Factory method pattern while maintaining a web-application developed in PHP and Zend Framework 1.

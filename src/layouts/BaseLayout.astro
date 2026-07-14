@@ -29,6 +29,22 @@ const {
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const socialImageURL = new URL(image, Astro.site);
+
+const personId = `${siteConfig.url}/#person`;
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  '@id': personId,
+  name: siteConfig.author.name,
+  url: `${siteConfig.url}/pages/about/`,
+  image: new URL(siteConfig.author.photo, Astro.site).toString(),
+  jobTitle: siteConfig.author.bio,
+  sameAs: [
+    `https://x.com/${siteConfig.author.contacts.twitter}`,
+    `https://www.linkedin.com/in/${siteConfig.author.contacts.linkedin}/`,
+    `https://github.com/${siteConfig.author.contacts.github}`,
+  ],
+};
 ---
 
 <!doctype html>
@@ -69,6 +85,9 @@ const socialImageURL = new URL(image, Astro.site);
     <meta name="twitter:image" content={socialImageURL} />
     <meta name="twitter:creator" content={`@${siteConfig.author.contacts.twitter}`} />
     
+    <!-- Structured data -->
+    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+
     <!-- Theme color -->
     <meta name="theme-color" content="#5eb3ff" />
     
