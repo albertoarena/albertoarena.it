@@ -11,7 +11,7 @@ tags:
 description: "I migrated my blog from Gatsby to Astro. Here's why."
 ---
 
-A few years ago, I [moved my blog to Gatsby](/posts/finally-i-moved-to-gatsby) because I wanted to learn React. It served me well, but it was time for a change.
+A few years ago, I [moved my blog to Gatsby](/posts/finally-i-moved-to-gatsby/) because I wanted to learn React. It served me well, but it was time for a change.
 
 ## Why Astro?
 
