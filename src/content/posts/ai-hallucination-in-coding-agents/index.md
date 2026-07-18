@@ -10,10 +10,10 @@ tags:
   - "Code Quality"
   - "Developer Tools"
 description: "AI coding agents hallucinate: they invent APIs, fabricate packages, and write confident, wrong code. Here is how to catch it before it reaches production."
-socialImage: "/images/posts/ai-hallucination-in-coding-agents/cover.svg"
+socialImage: "/images/posts/ai-hallucination-in-coding-agents/cover.png"
 ---
 
-![AI Hallucination in Coding Agents](/images/posts/ai-hallucination-in-coding-agents/cover.svg)
+![AI Hallucination in Coding Agents](/images/posts/ai-hallucination-in-coding-agents/cover.png)
 
 AI coding agents are becoming part of our daily workflow. Tools like GitHub Copilot, Cursor, and Claude Code can write functions, refactor modules, and scaffold entire features in seconds. They're genuinely useful.
 
