@@ -22,6 +22,8 @@ Filament is a great admin panel. Event sourcing is a great architectural pattern
 
 [filament-event-sourcing](https://github.com/albertoarena/filament-event-sourcing) is a Filament plugin that intercepts the standard create, edit, and delete actions and routes them through your domain aggregates. Your forms stay the same. Your validations and notifications stay the same. The only change is what happens on write: instead of an Eloquent save, the data flows through your aggregate and gets stored as a domain event. The read model is still updated by your projectors, exactly as you'd expect.
 
+This plugin is part of a small ecosystem I've been building around Spatie's package — see also the [generator](/posts/domain-using-spatie-event-sourcing/) for scaffolding new domains and the [Claude Code skill](/posts/ai-laravel-event-sourcing/) for designing them conversationally.
+
 ## What you get out of the box
 
 The plugin ships with a few things I found myself needing every time I mixed Filament with event sourcing.

@@ -18,7 +18,7 @@ socialImage: "/images/posts/ai-laravel-event-sourcing/cover.jpg"
 
 ![Event sourcing with a little help from AI](/images/posts/ai-laravel-event-sourcing/cover.jpg)
 
-A while back I published a [Laravel package to generate event-sourcing domains using Spatie's library](https://github.com/albertoarena/laravel-event-sourcing-generator/). You describe your model, run one artisan command, and get aggregates, events, projectors and all the accompanying boilerplate. It crossed 8,000 downloads on Packagist, which was a nice surprise.
+A while back I published a [Laravel package to generate event-sourcing domains using Spatie's library](https://github.com/albertoarena/laravel-event-sourcing-generator/) ([full write-up here](/posts/domain-using-spatie-event-sourcing/)). You describe your model, run one artisan command, and get aggregates, events, projectors and all the accompanying boilerplate. It crossed 8,000 downloads on Packagist, which was a nice surprise.
 
 The package works well for straightforward cases. Feed it a migration, get a domain. But event sourcing stops being straightforward pretty quickly. Real domains have invariants, side effects, read models, and decisions that a CLI flag can't capture. The generator could scaffold the files; it couldn't help you think through the design.
 

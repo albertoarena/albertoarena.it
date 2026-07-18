@@ -268,3 +268,5 @@ invaluable for improving the package and making it even more powerful for Larave
 On December 31, 2024, I have added support to PHP 8.3.
 
 On February 16, 2025, I have added support for update migrations. 👉 [Read documentation here](https://github.com/albertoarena/laravel-event-sourcing-generator/blob/main/docs/migrations.md#generate-a-domain-using-update-migration).
+
+On June 30, 2026, this package crossed 10,000 downloads on Packagist — [read the retrospective](/posts/laravel-event-sourcing-generator-10k/).
