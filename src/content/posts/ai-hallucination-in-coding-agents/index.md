@@ -1,5 +1,5 @@
 ---
-title: "When Your AI Writes Confident Nonsense"
+title: "AI Code Hallucinations: When Your AI Writes Confident Nonsense"
 date: "2026-02-13T10:00:00.000Z"
 template: "post"
 draft: false
@@ -9,7 +9,7 @@ tags:
   - "AI"
   - "Code Quality"
   - "Developer Tools"
-description: "AI coding agents are powerful, but they hallucinate. Here are practical tips to spot it before it reaches production."
+description: "AI coding agents hallucinate: they invent APIs, fabricate packages, and write confident, wrong code. Here is how to catch it before it reaches production."
 socialImage: "/images/posts/ai-hallucination-in-coding-agents/cover.svg"
 ---
 

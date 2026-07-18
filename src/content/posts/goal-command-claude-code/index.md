@@ -1,6 +1,6 @@
 ---
-title: "Stop Typing, Keep Going"
-description: "Claude Code and Codex now have a /goal command that turns your coding agent into an autonomous loop. Here's when it helps and when it doesn't."
+title: "Claude Code /goal vs /loop: Stop Typing, Keep Going"
+description: "Claude Code and Codex added a /goal command: an autonomous loop alternative to typing keep going every turn. When /goal beats /loop, and when it does not."
 date: "2026-05-22T10:00:00.000Z"
 template: "post"
 draft: false
@@ -14,7 +14,7 @@ tags:
 socialImage: "/images/posts/goal-command-claude-code/cover.jpg"
 ---
 
-![Stop Typing, Keep Going](/images/posts/goal-command-claude-code/cover.jpg)
+![Claude Code /goal vs /loop: Stop Typing, Keep Going](/images/posts/goal-command-claude-code/cover.jpg)
 
 If you've spent any real time with Claude Code, you've been through this loop. You give it a meaningful task, something like refactoring a service layer or wiring up a new set of endpoints. It works for one turn, produces solid output, and then hands control back to you. So you type "keep going." It does another round. Stops again. You re-prompt. Another round. Another stop. An hour later you've typed "keep going" more times than you've typed actual code, and the irony of manually babysitting your autonomous coding agent starts to sting.
 

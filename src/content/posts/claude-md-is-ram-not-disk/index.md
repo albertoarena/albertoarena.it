@@ -1,5 +1,5 @@
 ---
-title: "CLAUDE.md is RAM, not disk"
+title: "CLAUDE.md Is RAM, Not Disk: A Memory Model for Claude Code Projects"
 date: "2026-06-28T12:00:00.000Z"
 template: "post"
 draft: false
@@ -10,12 +10,12 @@ tags:
   - "Claude"
   - "Laravel"
   - "DevTools"
-description: "A simple memory model for structuring docs in a Claude Code project, plus a Laravel starter repo you can copy."
+description: "Why a growing CLAUDE.md makes Claude Code worse, and a simple RAM/disk model for structuring your docs instead, plus a Laravel starter repo you can copy."
 socialImage: "/images/posts/claude-md-is-ram-not-disk/cover.jpg"
 pinned: true
 ---
 
-![CLAUDE.md is RAM, not disk](/images/posts/claude-md-is-ram-not-disk/cover.jpg)
+![CLAUDE.md Is RAM, Not Disk: A Memory Model for Claude Code Projects](/images/posts/claude-md-is-ram-not-disk/cover.jpg)
 
 Most Claude Code projects I see have one giant `CLAUDE.md` that keeps growing until it is three hundred lines long, and somewhere around line two hundred the assistant starts getting worse instead of better. That is not bad luck. That file is loaded into context at the start of the session and stays resident there, so every line you add is a line Claude carries in front of it on every turn that follows — context it reads past before it gets to your actual task. The fix is not a longer file. It is treating `CLAUDE.md` like RAM and the rest of your docs like disk.
 
