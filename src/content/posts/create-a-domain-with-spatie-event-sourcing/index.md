@@ -239,11 +239,11 @@ app/
 Some Bluepoint column types are not yet
 supported. You can find the [list at this link](https://github.com/albertoarena/laravel-event-sourcing-generator/blob/main/docs/migrations.md#unsupported-column-types).
 
-~Update migrations cannot yet be used, but only create migrations.~
+~~Update migrations cannot yet be used, but only create migrations.~~
 
 👉 **_Hey, this is available now!_** [(*)](#notes)
 
-~Finally, the package will need to be properly tested with PHP 8.3 and released for that version.~
+~~Finally, the package will need to be properly tested with PHP 8.3 and released for that version.~~
 
 👉 **_I did it!_**  [(*)](#notes)
 
