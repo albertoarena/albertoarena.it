@@ -12,6 +12,7 @@ tags:
   - "Developer Tools"
   - "Claude Code"
 socialImage: "/images/posts/goal-command-claude-code/cover.jpg"
+pinned: true
 ---
 
 ![Claude Code /goal vs /loop: Stop Typing, Keep Going](/images/posts/goal-command-claude-code/cover.jpg)

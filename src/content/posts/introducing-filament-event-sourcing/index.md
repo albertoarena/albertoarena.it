@@ -13,7 +13,6 @@ tags:
   - "Spatie"
 description: "A Filament plugin that routes every create, edit, and delete through your domain aggregates, without giving up the admin panel you already love."
 socialImage: "/images/posts/introducing-filament-event-sourcing/cover.jpg"
-pinned: true
 ---
 
 ![Filament Event Sourcing plugin](/images/posts/introducing-filament-event-sourcing/cover.jpg)

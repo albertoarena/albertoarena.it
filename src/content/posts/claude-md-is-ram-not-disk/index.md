@@ -12,7 +12,6 @@ tags:
   - "DevTools"
 description: "Why a growing CLAUDE.md makes Claude Code worse, and a simple RAM/disk model for structuring your docs instead, plus a Laravel starter repo you can copy."
 socialImage: "/images/posts/claude-md-is-ram-not-disk/cover.jpg"
-pinned: true
 ---
 
 ![CLAUDE.md Is RAM, Not Disk: A Memory Model for Claude Code Projects](/images/posts/claude-md-is-ram-not-disk/cover.jpg)
