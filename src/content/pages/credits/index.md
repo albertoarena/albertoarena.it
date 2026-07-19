@@ -36,6 +36,7 @@ Cover images for some posts are sourced from **[Unsplash](https://unsplash.com)*
 | [Event Sourcing with a Little Help from AI](/posts/ai-laravel-event-sourcing/) | Circuit board shaped as a human brain on a colourful grid | [Steve A Johnson](https://unsplash.com/@steve_j) on Unsplash |
 | [Introducing Codemetry](/posts/introducing-codemetry/) | Magnifying glass resting on a laptop keyboard | [Agence Olloweb](https://unsplash.com/@olloweb) on Unsplash |
 | [Claude's Working Memory Is Smaller Than You Think](/posts/claudes-working-memory-is-smaller-than-you-think/) | Street performer juggling three balls | [Yi Liu](https://unsplash.com/@stevenliuyi) on Unsplash |
+| [Claude Code Routines: A Third Way Beyond /goal and /loop](/posts/claude-code-routines-vs-goal-loop/) | A finger tipping over the first domino in a row | [Bradyn Trollip](https://unsplash.com/@bradyn) on Unsplash |
 
 ## Diagrams
 
