@@ -6,6 +6,7 @@ Alberto Arena is a Senior Software Engineer based in Sicily, Italy, with a backg
 
 ## Posts
 
+- [There's no artisan schema:show, so I built one](https://albertoarena.it/posts/introducing-truss/): A live, zoomable ER diagram of your Laravel app's actual database schema, safe to run in production because it only ever reads structure, never rows.
 - [Claude Code Routines: A Third Way Beyond /goal and /loop](https://albertoarena.it/posts/claude-code-routines-vs-goal-loop/): Anthropic added routines to Claude Code: cloud-hosted automations triggered by a schedule, an API call, or a GitHub event. How they differ from /goal and /loop, and when to reach for each.
 - [Claude's Working Memory Is Smaller Than You Think](https://albertoarena.it/posts/claudes-working-memory-is-smaller-than-you-think/): Anthropic's J-space research shows Claude's internal reasoning workspace is small. Here's what that changes about how I sequence prompts when building a feature.
 - [Beyond the Bastion: Secure Artisan Command Execution with AWS Systems Manager](https://albertoarena.it/posts/beyond-the-bastion-aws-ssm-laravel-artisan/): When IT blocks SSH for compliance, your manual Artisan operations go dark. Here is how AWS Systems Manager Run Command replaces the bastion host with an IAM-authenticated, CloudTrail-audited alternative, and the engineering decisions behind building a reusable toolkit around it.
