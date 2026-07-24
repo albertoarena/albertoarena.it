@@ -38,6 +38,7 @@ Cover images for some posts are sourced from **[Unsplash](https://unsplash.com)*
 | [Claude's Working Memory Is Smaller Than You Think](/posts/claudes-working-memory-is-smaller-than-you-think/) | Street performer juggling three balls | [Yi Liu](https://unsplash.com/@stevenliuyi) on Unsplash |
 | [Claude Code Routines: A Third Way Beyond /goal and /loop](/posts/claude-code-routines-vs-goal-loop/) | A finger tipping over the first domino in a row | [Bradyn Trollip](https://unsplash.com/@bradyn) on Unsplash |
 | [There's no artisan schema:show, so I built one](/posts/introducing-truss/) | Steel truss lattice shot from below against a bright sky | [Roman Serdyuk](https://unsplash.com/@iamr) on Unsplash |
+| [AI Code Hallucinations: When Your AI Writes Confident Nonsense](/posts/ai-hallucination-in-coding-agents/) | Iridescent digital swirl distortion | [Glitch Lab App](https://unsplash.com/@glitchlab) on Unsplash |
 
 ## Diagrams
 
