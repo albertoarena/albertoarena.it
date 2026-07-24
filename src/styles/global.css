@@ -76,12 +76,21 @@
   /* Skip to content */
   .skip-to-content {
     @apply absolute left-0 top-0 z-50 bg-primary text-white px-4 py-2;
-    transform: translateY(-100%);
-    transition: transform 0.2s ease;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    overflow: hidden;
+    white-space: nowrap;
+    width: 1px;
+    height: 1px;
   }
 
   .skip-to-content:focus {
-    transform: translateY(0);
+    clip: auto;
+    clip-path: none;
+    overflow: visible;
+    white-space: normal;
+    width: auto;
+    height: auto;
   }
 
   /* Scrollbar */
