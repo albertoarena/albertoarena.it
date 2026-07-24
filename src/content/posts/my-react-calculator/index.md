@@ -9,7 +9,7 @@ tags:
   - "React"
   - "Javascript"
 description: "A React learning exercise: building a React Calculator."
-socialImage: "./media/react-calculator.webp"
+socialImage: "/images/posts/my-react-calculator/react-calculator.webp"
 ---
 
 <a href="https://github.com/albertoarena/react-calculator"><img src="/images/posts/my-react-calculator/fork-me-overlay.svg" style="position:absolute;top:0;right:0;" alt="Fork me on GitHub"></a>

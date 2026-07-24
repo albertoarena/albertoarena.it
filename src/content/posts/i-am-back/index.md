@@ -8,7 +8,7 @@ category: "Code Quality"
 tags:
   - "Code Quality"
 description: "My personal blog is back."
-socialImage: "./media/clean-coder.webp"
+socialImage: "/images/posts/i-am-back/clean-coder.webp"
 ---
 
 My personal blog is back!
