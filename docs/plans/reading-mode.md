@@ -175,11 +175,13 @@ installed locally via nvm, no new install needed); switched with `nvm use`.
 is correct. Also added `"engines": { "node": ">=20.19.0" }` to
 `package.json` so this doesn't silently bite the next person.
 
-GitHub Actions' `deploy.yml` sets `node-version: 20` (no lockfile pin
-today), which `actions/setup-node` resolves to the latest available 20.x —
-almost certainly already >=20.19 — so CI is unlikely to hit this. Worth
-pointing `deploy.yml` at `node-version-file: '.nvmrc'` for consistency, but
-that's a CI pipeline change outside this plan's scope — flagged, not done.
+GitHub Actions' `deploy.yml` previously set `node-version: 20` (no lockfile
+pin), which `actions/setup-node` resolves to the latest available 20.x —
+almost certainly already >=20.19, so CI was unlikely to hit this in
+practice. Changed anyway, with explicit user confirmation since it touches
+the deploy pipeline: `deploy.yml` now uses `node-version-file: '.nvmrc'`, so
+CI and local dev are guaranteed to run the same Node version instead of two
+numbers that could drift apart.
 
 ### 1.2 Markup fixes
 
@@ -361,11 +363,8 @@ namespace. Don't build before the base toggle ships.
 3. ~~**Test runner scope**~~ — resolved: Vitest only for the eligibility
    check, no Playwright. Toggle behaviour is covered by manual QA instead of
    an e2e spec (see 2.2).
-4. **`deploy.yml` Node pin** — CI likely already resolves to a Node version
-   new enough to avoid the jsdom/ESM issue found locally, but pointing it at
-   `node-version-file: '.nvmrc'` would make that certain instead of assumed.
-   CI changes are out of scope for this plan; flagging for a separate,
-   explicit decision.
+4. ~~**`deploy.yml` Node pin**~~ — resolved: user confirmed the change,
+   `deploy.yml` now uses `node-version-file: '.nvmrc'` (see 1.1 above).
 
 ## Acceptance criteria
 
