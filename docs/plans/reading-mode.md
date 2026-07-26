@@ -1,11 +1,11 @@
 # Plan: Reading mode (native reader eligibility + in-site toggle)
 
-**Status:** Phase 1 and Phase 2 implemented and verified — automated tests,
-in-browser manual testing, and real iOS Safari/Chrome checks on an iPad
-(both direct load and client-side navigation) all pass. Remaining: a real
-keyboard-Tab check of the focus ring (automation gave an inconclusive
-result), and the other manual QA checklist rows (Android Chrome, desktop
-Firefox) if you want them covered too.
+**Status:** Done. Phase 1 and Phase 2 implemented and verified — automated
+tests, in-browser automation testing, real iOS Safari/Chrome checks on an
+iPad (direct load + client-side navigation), and a real keyboard-Tab focus
+check all pass. Android Chrome and desktop Firefox rows in the manual QA
+checklist are unverified but not blocking (same underlying mechanism,
+already confirmed cross-browser). Ready to push / open a PR.
 **Date:** 2026-07-26
 **Source:** Adapted from a plan drafted externally (`reading-mode-plan.md`) against
 the actual repo structure; several of its assumptions didn't hold and are
@@ -348,12 +348,19 @@ already present (no flash); client-side navigation between two posts (via
 an in-body link) keeps the mode on; navigating to the homepage clears it
 and hides the toggle, and navigating back to a post re-applies it from the
 stored preference; keyboard Enter toggles state; toggle absent on
-`/pages/about/`. One item couldn't be confirmed via automation: the
-`focus:ring-2` visual focus ring didn't render under a programmatic
-`.focus()` call in the automated browser tab — but the site's pre-existing
-`ThemeSwitcher.astro` toggle, using the identical Tailwind focus-ring
-classes, showed the same result, so this isn't a regression introduced
-here. Worth a real Tab-key check by a human before calling it done.
+`/pages/about/`; focus ring confirmed via a genuine keyboard Tab press
+(click the button, Shift+Tab away, Tab back) — box-shadow shows the
+expected white offset ring + blue focus ring, both in computed style and
+visually. The earlier ambiguous result (no ring under a programmatic
+`.focus()` call) was an automation artifact of `.focus()` specifically, not
+a real gap — confirmed by reproducing it identically on the site's
+pre-existing `ThemeSwitcher.astro` toggle, then getting a correct ring from
+both components once a real Tab keypress was used instead.
+
+**All manual QA items verified except:** Android Chrome and desktop
+Firefox Reader View (not blocking — the underlying mechanism, Readability
+extraction and CSS attribute toggling, is browser-agnostic and already
+verified on Chrome + Safari on iPad).
 
 ### 2.4 Optional, only if 1 and 2 are green
 
