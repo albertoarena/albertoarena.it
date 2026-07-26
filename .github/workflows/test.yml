@@ -1,0 +1,34 @@
+name: 🧪 Test
+
+on:
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 🧩 Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ⚙️ Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+
+      # 📦 Install dependencies and patch Rollup
+      - name: Install dependencies and fix Rollup
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install
+          npm install rollup@4.22.4 --save-dev --force
+          npm install @rollup/rollup-linux-x64-gnu --save-dev --force || true
+
+      # 🧪 Run tests
+      - name: Run tests
+        run: npm run test
