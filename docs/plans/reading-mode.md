@@ -1,9 +1,11 @@
 # Plan: Reading mode (native reader eligibility + in-site toggle)
 
-**Status:** Phase 1 and Phase 2 implemented and verified (automated +
-in-browser manual testing). Remaining: real-device iOS Safari checks (1.3,
-and the manual QA checklist's device rows) and a real keyboard-Tab check of
-the focus ring, which automation couldn't confirm either way.
+**Status:** Phase 1 and Phase 2 implemented and verified — automated tests,
+in-browser manual testing, and real iOS Safari/Chrome checks on an iPad
+(both direct load and client-side navigation) all pass. Remaining: a real
+keyboard-Tab check of the focus ring (automation gave an inconclusive
+result), and the other manual QA checklist rows (Android Chrome, desktop
+Firefox) if you want them covered too.
 **Date:** 2026-07-26
 **Source:** Adapted from a plan drafted externally (`reading-mode-plan.md`) against
 the actual repo structure; several of its assumptions didn't hold and are
@@ -209,6 +211,14 @@ router swaps the document without a full load.
   committing to it site-wide.
 - Record the outcome in a short comment in `PostLayout.astro`.
 
+**Verified on real iOS Safari (iPad), 2026-07-26:** "Mostra modalità
+Lettura" (Show Reading Mode) appears in Safari's page menu both on a direct
+load of `domain-using-spatie-event-sourcing` and after tapping into the
+same post from the homepage list. Astro's client-side navigation does
+**not** break native reader eligibility — no `data-astro-reload` needed on
+`PostCard.astro`/`Pagination.astro` links. This closes the last open item
+in Phase 1.
+
 ---
 
 ## Phase 2: in-site reading mode
@@ -357,9 +367,9 @@ namespace. Don't build before the base toggle ships.
 1. ~~**Cover image `<figcaption>`**~~ — moot: measured directly, the bare
    `<img>` already survives Readability extraction, so no `<figure>`/rehype
    plugin work is planned (see "Cover image" above).
-2. **`data-astro-reload` tradeoff** — only worth adding if manual iOS Safari
-   testing in 1.3 actually shows client-side nav breaks reader eligibility.
-   Don't add it speculatively.
+2. ~~**`data-astro-reload` tradeoff**~~ — resolved: verified on real iOS
+   Safari that client-side nav doesn't break reader eligibility (see 1.3),
+   so it's not needed.
 3. ~~**Test runner scope**~~ — resolved: Vitest only for the eligibility
    check, no Playwright. Toggle behaviour is covered by manual QA instead of
    an e2e spec (see 2.2).
