@@ -1,8 +1,9 @@
 # Plan: Reading mode (native reader eligibility + in-site toggle)
 
-**Status:** In progress — Phase 1 (native reader eligibility) verified via a
-new automated test, no code changes needed there. Phase 2 (in-site toggle)
-not started.
+**Status:** Phase 1 and Phase 2 implemented and verified (automated +
+in-browser manual testing). Remaining: real-device iOS Safari checks (1.3,
+and the manual QA checklist's device rows) and a real keyboard-Tab check of
+the focus ring, which automation couldn't confirm either way.
 **Date:** 2026-07-26
 **Source:** Adapted from a plan drafted externally (`reading-mode-plan.md`) against
 the actual repo structure; several of its assumptions didn't hold and are
@@ -73,14 +74,9 @@ container. The bare cover `<img>` inside a `<p>` (not a `<figure>`) is
 likewise retained in the extracted content as-is.
 
 **Revised conclusion:** no markup restructuring is required for Phase 1
-(native reader eligibility) — that goal is already met. The article
-restructure (narrowing `<article>` to header + prose body, moving tags/
-author/Disqus to be siblings) is still worth doing, but purely as **Phase 2
-CSS ergonomics** — a clean `.post-content` selector to scope reading-mode
-styles is easier to write and maintain than one that has to explicitly
-exclude a footer/author-box/Disqus block sitting inside the same element.
-It's demoted from "Phase 1 fix" to "do it once, while building the Phase 2
-toggle CSS, because it's convenient there" — see 2.3.
+(native reader eligibility) — that goal is already met. It turned out no
+restructuring was needed for Phase 2 either, once the CSS was actually
+written — see 2.3, "No DOM restructuring, in the end."
 
 ## Cover image — verified NOT a reader-eligibility problem
 
@@ -259,42 +255,64 @@ of an automated spec, folded into the Manual QA checklist below:
 If the toggle logic grows more complex later (font-size steps, serif option
 in 2.4), revisit adding Playwright then — don't front-load it now.
 
-### 2.3 Implementation
+### 2.3 Implementation — done
 
-Because only post pages need the toggle, add it directly in
-`PostLayout.astro` rather than conditionally in the shared `Layout.astro` —
-simpler, no new prop needed.
+Because only post pages need the toggle, it's rendered directly in
+`PostLayout.astro` (as `<ReadingModeToggle />`, sibling to `<article>`)
+rather than conditionally in the shared `Layout.astro` — simpler, no new
+prop needed.
 
-Pre-paint script: follow the exact pattern already in `BaseLayout.astro`'s
-theme script (apply on load, re-apply on `astro:after-swap`) instead of a
-new one-off — same file, same block, for one less place to keep in sync:
+**No DOM restructuring, in the end.** While writing the CSS it became clear
+the theorized `<article>` restructure (moving tags/author/Disqus to be
+siblings) wasn't needed even for CSS ergonomics: `Layout.astro` already
+renders the sitewide `<Header />`/`<Footer />` as direct children of
+`<body>`, while `PostLayout.astro`'s own internal `<header>` (title/date/
+category) and `<footer>` (tags) are nested several levels deeper inside
+`<main>`. A `body > header` / `body > footer` child-combinator selector
+targets only the sitewide chrome, leaving the post's own same-tag-name
+elements untouched — no need to move anything, just add three classes
+(`post-content` on `<article>`, `post-tags` on the tags `<footer>`,
+`post-author` on the bio `<div>`) and let `#disqus_thread`'s existing id
+handle Disqus.
+
+Pre-paint script added to `BaseLayout.astro`, right after the existing theme
+script (same file, same proven `astro:before-swap`/`astro:after-swap` pair,
+for one less place to keep in sync) — guarded to `/posts/` so a stored
+preference never leaks onto non-post pages with no toggle to undo it:
 
 ```astro
 <script is:inline>
   function applyReadingMode() {
-    if (localStorage.getItem('reading-mode') === '1') {
-      document.documentElement.dataset.reading = '';
+    const onPost = location.pathname.startsWith('/posts/');
+    if (onPost && localStorage.getItem('reading-mode') === '1') {
+      document.documentElement.setAttribute('data-reading', '');
     } else {
-      delete document.documentElement.dataset.reading;
+      document.documentElement.removeAttribute('data-reading');
     }
   }
   applyReadingMode();
   document.addEventListener('astro:after-swap', applyReadingMode);
+  document.addEventListener('astro:before-swap', (event) => {
+    const onPost = event.to.pathname.startsWith('/posts/');
+    const on = onPost && localStorage.getItem('reading-mode') === '1';
+    event.newDocument.documentElement.toggleAttribute('data-reading', on);
+  });
 </script>
 ```
 
-`src/components/ReadingModeToggle.astro`: same markup/behaviour as the
-original plan's draft (button + client script binding `click`, syncing
-`aria-pressed` and label, rebinding on `astro:page-load` for the VT case).
+`src/components/ReadingModeToggle.astro`: button + script, matching this
+repo's established rebind idiom (`ThemeSwitcher.astro`'s
+`removeEventListener`/`addEventListener` guard + `astro:after-swap`, not the
+`dataset.bound` flag or `astro:page-load` from the original external draft).
 
-CSS in `global.css`, using the real selectors confirmed above:
+CSS in `global.css`, using the real selectors described above:
 
 ```css
-html[data-reading] :is(
-  header,
-  footer,
-  #disqus_thread
-) {
+html[data-reading] body > header,
+html[data-reading] body > footer,
+html[data-reading] .post-tags,
+html[data-reading] .post-author,
+html[data-reading] #disqus_thread {
   display: none;
 }
 
@@ -310,11 +328,20 @@ html[data-reading] .post-content pre {
 }
 ```
 
-Note the original plan's selector list included `.post-tags`, `.post-author`,
-`.post-share`, `aside` — this repo has no `aside` and no existing classes on
-the tags footer or author box, so those need class names added as part of
-the article-structure fix above (e.g. `.post-tags`, `.post-author`) for this
-CSS to have something to hide. `#disqus_thread` already exists as an id.
+**Verified in a real browser** (Astro preview + claude-in-chrome), against
+both fixed test posts: toggle default-off; click hides sitewide header/
+footer/tags/author-box/Disqus while the post's own title header stays
+visible; label and `aria-pressed` flip; reload persists with the attribute
+already present (no flash); client-side navigation between two posts (via
+an in-body link) keeps the mode on; navigating to the homepage clears it
+and hides the toggle, and navigating back to a post re-applies it from the
+stored preference; keyboard Enter toggles state; toggle absent on
+`/pages/about/`. One item couldn't be confirmed via automation: the
+`focus:ring-2` visual focus ring didn't render under a programmatic
+`.focus()` call in the automated browser tab — but the site's pre-existing
+`ThemeSwitcher.astro` toggle, using the identical Tailwind focus-ring
+classes, showed the same result, so this isn't a regression introduced
+here. Worth a real Tab-key check by a human before calling it done.
 
 ### 2.4 Optional, only if 1 and 2 are green
 

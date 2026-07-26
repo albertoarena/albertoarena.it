@@ -266,3 +266,23 @@
   .animate-stagger > *:nth-child(6) { animation-delay: 0.3s; }
   .animate-stagger > *:nth-child(n+7) { animation-delay: 0.35s; }
 }
+
+/* Reading mode (post pages only, see ReadingModeToggle.astro) */
+html[data-reading] body > header,
+html[data-reading] body > footer,
+html[data-reading] .post-tags,
+html[data-reading] .post-author,
+html[data-reading] #disqus_thread {
+  display: none;
+}
+
+html[data-reading] .post-content {
+  max-width: 38rem;
+  margin-inline: auto;
+  font-size: 1.15rem;
+  line-height: 1.75;
+}
+
+html[data-reading] .post-content pre {
+  font-size: 0.95rem;
+}
