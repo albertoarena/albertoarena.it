@@ -1,0 +1,43 @@
+---
+
+---
+
+<button
+  id="reading-mode-toggle"
+  type="button"
+  aria-pressed="false"
+  class="fixed right-4 z-50 rounded-full bg-primary px-4 py-2 text-sm font-medium text-white shadow-lg transition-colors hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 motion-reduce:transition-none"
+  style="bottom: calc(1rem + env(safe-area-inset-bottom));"
+>
+  Reading mode
+</button>
+
+<script>
+  const KEY = 'reading-mode';
+
+  function handleReadingModeToggle() {
+    const root = document.documentElement;
+    const on = root.toggleAttribute('data-reading');
+    localStorage.setItem(KEY, on ? '1' : '0');
+    syncReadingModeToggle();
+  }
+
+  function syncReadingModeToggle() {
+    const btn = document.getElementById('reading-mode-toggle');
+    if (!btn) return;
+    const on = document.documentElement.hasAttribute('data-reading');
+    btn.setAttribute('aria-pressed', String(on));
+    btn.textContent = on ? 'Exit reading mode' : 'Reading mode';
+  }
+
+  function initReadingModeToggle() {
+    const btn = document.getElementById('reading-mode-toggle');
+    if (!btn) return;
+    btn.removeEventListener('click', handleReadingModeToggle);
+    btn.addEventListener('click', handleReadingModeToggle);
+    syncReadingModeToggle();
+  }
+
+  initReadingModeToggle();
+  document.addEventListener('astro:after-swap', initReadingModeToggle);
+</script>

@@ -135,6 +135,31 @@ const personSchema = {
       });
     </script>
 
+    <!-- Reading mode script (prevent flash, post pages only) -->
+    <script is:inline>
+      function applyReadingMode() {
+        const onPost = location.pathname.startsWith('/posts/');
+        if (onPost && localStorage.getItem('reading-mode') === '1') {
+          document.documentElement.setAttribute('data-reading', '');
+        } else {
+          document.documentElement.removeAttribute('data-reading');
+        }
+      }
+
+      // Apply immediately
+      applyReadingMode();
+
+      // Re-apply after View Transitions swap
+      document.addEventListener('astro:after-swap', applyReadingMode);
+
+      // Also handle before swap to prevent flash
+      document.addEventListener('astro:before-swap', (event) => {
+        const onPost = event.to.pathname.startsWith('/posts/');
+        const on = onPost && localStorage.getItem('reading-mode') === '1';
+        event.newDocument.documentElement.toggleAttribute('data-reading', on);
+      });
+    </script>
+
     {!noViewTransitions && <ViewTransitions />}
 
     <!-- Google Consent Mode v2 defaults -->
