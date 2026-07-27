@@ -117,7 +117,7 @@ Use it for execution when the thinking is done. Keep the thinking for yourself.
 
 ## Sources
 
-- [Keep Claude working toward a goal](https://code.claude.com/docs/en/goal) — Official Anthropic documentation for the `/goal` command.
-- [Claude Code /goal: A Field Guide with Games](https://medium.com/@jason.croucher/claude-code-goal-a-field-guide-with-games-f6f3b617ce5b) — Jason Croucher's hands-on walkthrough with practical examples and real session logs.
-- [Codex /goal: OpenAI's Built-in Ralph Loop](https://ralphable.com/blog/codex-goal-command-ralph-loop-openai-built-in-autonomous-coding-agent-2026) — Deep dive into the Codex CLI implementation and the Ralph loop history.
-- [Claude Code /goal: Set a Finish Line, Walk Away](https://findskill.ai/blog/claude-code-goal-command/) — FindSkill.ai's breakdown of the feature with cost and token considerations.
+- [Keep Claude working toward a goal](https://code.claude.com/docs/en/goal): Official Anthropic documentation for the `/goal` command.
+- [Claude Code /goal: A Field Guide with Games](https://medium.com/@jason.croucher/claude-code-goal-a-field-guide-with-games-f6f3b617ce5b): Jason Croucher's hands-on walkthrough with practical examples and real session logs.
+- [Codex /goal: OpenAI's Built-in Ralph Loop](https://ralphable.com/blog/codex-goal-command-ralph-loop-openai-built-in-autonomous-coding-agent-2026): Deep dive into the Codex CLI implementation and the Ralph loop history.
+- [Claude Code /goal: Set a Finish Line, Walk Away](https://findskill.ai/blog/claude-code-goal-command/): FindSkill.ai's breakdown of the feature with cost and token considerations.

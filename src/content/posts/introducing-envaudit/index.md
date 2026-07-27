@@ -14,7 +14,7 @@ description: "Environment files drift out of sync silently. envaudit catches wha
 socialImage: "/images/posts/introducing-envaudit/cover.jpg"
 ---
 
-![A rusty old key on a wooden table — photo by Nick Russill on Unsplash](/images/posts/introducing-envaudit/cover.jpg)
+![A rusty old key on a wooden table, photo by Nick Russill on Unsplash](/images/posts/introducing-envaudit/cover.jpg)
 
 Not loudly. There's no error, no warning, no failing test. Your `.env.example` says you need 15 variables. Your actual `.env` has 22. The staging server is missing 3 that production has. And nobody noticed, because everyone just eyeballs it.
 

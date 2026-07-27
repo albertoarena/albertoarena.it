@@ -28,19 +28,19 @@ That's the gap I wanted to close with the new version.
 
 ## What it is
 
-This isn't a Composer package — it's a **Claude Code skill**. You install it into your project's `.claude/skills/` directory and trigger it from Claude Code. Instead of wrapping an artisan command in AI, I redesigned the whole workflow around a conversation.
+This isn't a Composer package: it's a **Claude Code skill**. You install it into your project's `.claude/skills/` directory and trigger it from Claude Code. Instead of wrapping an artisan command in AI, I redesigned the whole workflow around a conversation.
 
 The skill works in two gates.
 
-**Gate 1 — Design.** Claude asks you five focused questions about your domain: what the feature does, what state transitions are involved, what triggers commands, whether you need read models, and what side effects matter. From your answers it produces an Architecture Decision Record — a short document listing the aggregates, commands, events, projectors, and reactors it plans to build, plus anything explicitly out of scope. It then stops and waits. Nothing gets generated until you say you're happy with the design.
+**Gate 1: Design.** Claude asks you five focused questions about your domain: what the feature does, what state transitions are involved, what triggers commands, whether you need read models, and what side effects matter. From your answers it produces an Architecture Decision Record (a short document listing the aggregates, commands, events, projectors, and reactors it plans to build, plus anything explicitly out of scope). It then stops and waits. Nothing gets generated until you say you're happy with the design.
 
-**Gate 2 — Implementation.** Once you approve the ADR, Claude generates the full domain in a deliberate order: directory structure, then tests first (TDD), then commands and handlers, then the aggregate root, then events, projectors with migrations, reactors, and finally registration in the config. It runs the tests and reports the result.
+**Gate 2: Implementation.** Once you approve the ADR, Claude generates the full domain in a deliberate order: directory structure, then tests first (TDD), then commands and handlers, then the aggregate root, then events, projectors with migrations, reactors, and finally registration in the config. It runs the tests and reports the result.
 
 If it hits an ambiguity during implementation that the ADR didn't cover, it pauses and asks rather than making a silent assumption.
 
 ## Why this matters
 
-The artisan-based generator was useful precisely because it was mechanical. It did exactly what you told it. But the hard part of event sourcing isn't writing the aggregate class — it's deciding what the aggregate *is*, which events cross a boundary, and where a projector ends and a reactor begins.
+The artisan-based generator was useful precisely because it was mechanical. It did exactly what you told it. But the hard part of event sourcing isn't writing the aggregate class: it's deciding what the aggregate *is*, which events cross a boundary, and where a projector ends and a reactor begins.
 
 The new skill treats those decisions as a conversation rather than a parameter. You still make the calls; Claude just makes sure you've made them before writing the code.
 
@@ -88,6 +88,6 @@ Everything compiles, the tests run green, and the domain is registered in your c
 
 ## Closing thought
 
-I'm still a fan of the artisan command for simple cases — it's fast and predictable. But if you're starting a new domain and you're not completely sure where the boundaries sit, having a design conversation before the code appears is worth the extra five minutes.
+I'm still a fan of the artisan command for simple cases: it's fast and predictable. But if you're starting a new domain and you're not completely sure where the boundaries sit, having a design conversation before the code appears is worth the extra five minutes.
 
 The skill is at v0.1.0. If you try it and run into gaps, issues are open on GitHub.
