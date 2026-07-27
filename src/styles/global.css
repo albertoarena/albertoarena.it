@@ -211,6 +211,11 @@
   font-style: normal;
 }
 
+.prose blockquote p:first-of-type::before,
+.prose blockquote p:last-of-type::after {
+  content: "";
+}
+
 .prose h1,
 .prose h2,
 .prose h3 {
