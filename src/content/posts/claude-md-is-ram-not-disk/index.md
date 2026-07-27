@@ -16,6 +16,8 @@ socialImage: "/images/posts/claude-md-is-ram-not-disk/cover.jpg"
 
 ![CLAUDE.md Is RAM, Not Disk: A Memory Model for Claude Code Projects](/images/posts/claude-md-is-ram-not-disk/cover.jpg)
 
+> **Update**: this post covers two tiers, `CLAUDE.md` and `docs/`. There are two more once you add path-scoped rules and skills to the picture. See the follow-up, [CLAUDE.md Is RAM, Skills Are Not Disk](/posts/claude-md-skills-are-not-disk/), for the four-tier version, including a correction to the nested `CLAUDE.md` trick below.
+
 Most Claude Code projects I see have one giant `CLAUDE.md` that keeps growing until it is three hundred lines long, and somewhere around line two hundred the assistant starts getting worse instead of better. That is not bad luck. That file is loaded into context at the start of the session and stays resident there, so every line you add is a line Claude carries in front of it on every turn that follows — context it reads past before it gets to your actual task. The fix is not a longer file. It is treating `CLAUDE.md` like RAM and the rest of your docs like disk.
 
 Here is the whole idea in one sentence: `CLAUDE.md` is working memory, loaded constantly and paid for constantly, so it stays small; the `docs/` folder is long-term memory, loaded only when something points to it. Once that distinction clicks, every other decision about where a piece of information should live answers itself.
@@ -56,6 +58,8 @@ Claude Code does not only read the root `CLAUDE.md`. It also reads a `CLAUDE.md`
 
 In a Laravel project with a real domain layer, I put a `CLAUDE.md` inside `app/Domains` that says: no framework imports here, aggregates extend Spatie's `AggregateRoot` and only record events, events are immutable and past-tense, and every change starts with a Pest test. None of that needs to be in the root file, because it is irrelevant when Claude is editing a controller or a Blade view. It loads exactly when Claude steps into the domain layer, and not before.
 
+Update: there is now a cleaner version of this trick. `.claude/rules/*.md` files with a `paths:` glob do the same on-demand loading, but scoped by pattern instead of by folder and collected in one reviewable place instead of scattered across the tree. If you're setting this up today, use a rule file instead of a nested `CLAUDE.md`. I cover the mechanism, and where skills fit alongside it, in [CLAUDE.md Is RAM, Skills Are Not Disk](/posts/claude-md-skills-are-not-disk/).
+
 ## The starter
 
 I put all of this into a small template repo you can copy straight into a project: [claude-code-laravel-starter](https://github.com/albertoarena/claude-code-laravel-starter). It is the structure above, with every file as a fillable template rather than lorem ipsum, the Laravel and event sourcing conventions already baked in, and a nested domain-layer `CLAUDE.md` so the pattern is concrete.
@@ -80,3 +84,7 @@ Copy it onto a fresh Laravel app, fill in your real stack and commands, replace 
 If Claude needs it every time, it goes in `CLAUDE.md`. If only sometimes, it goes in `docs/`. Start with three files and add more only when something real demands it. And when a folder gets its own rules, give it its own `CLAUDE.md` instead of stretching the root one.
 
 Start small, keep working memory tight, and let the disk hold the rest.
+
+## Notes
+
+On July 27, 2026, I published a follow-up covering two more tiers, path-scoped rules and skills, plus a correction to the nested `CLAUDE.md` trick above: [read CLAUDE.md Is RAM, Skills Are Not Disk](/posts/claude-md-skills-are-not-disk/).
