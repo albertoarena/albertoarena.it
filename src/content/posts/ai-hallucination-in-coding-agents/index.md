@@ -12,7 +12,6 @@ tags:
 description: "AI coding agents hallucinate: they invent APIs, fabricate packages, and write confident, wrong code. Here is how to catch it before it reaches production."
 socialImage: "/images/posts/ai-hallucination-in-coding-agents/cover.jpg"
 cover: "ai-hallucination-in-coding-agents/thumbnail.webp"
-pinned: true
 ---
 
 ![Abstract iridescent digital swirl distortion](/images/posts/ai-hallucination-in-coding-agents/cover.jpg)
