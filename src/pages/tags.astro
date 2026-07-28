@@ -16,7 +16,7 @@ const tags = [...tagMap.entries()]
     .sort((a, b) => b[1] - a[1]);
 ---
 
-<Layout title="Tags">
+<Layout title="Tags" noindex>
     <h1 class="text-3xl font-bold mb-8">Tags</h1>
     <div class="flex flex-wrap gap-3">
         {tags.map(([tag, count]) => (

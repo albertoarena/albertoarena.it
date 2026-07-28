@@ -22,7 +22,7 @@ export async function getStaticPaths() {
 const { category, posts } = Astro.props;
 ---
 
-<Layout title={`Category: ${category}`}>
+<Layout title={`Category: ${category}`} noindex>
     <h1 class="text-3xl font-bold mb-4">
         Category: <span class="text-primary">{category}</span>
     </h1>

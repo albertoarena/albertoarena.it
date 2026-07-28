@@ -16,7 +16,7 @@ const categories = [...categoryMap.entries()]
     .sort((a, b) => b[1] - a[1]);
 ---
 
-<Layout title="Categories">
+<Layout title="Categories" noindex>
     <h1 class="text-3xl font-bold mb-8">Categories</h1>
     <div class="flex flex-wrap gap-4">
         {categories.map(([category, count]) => (

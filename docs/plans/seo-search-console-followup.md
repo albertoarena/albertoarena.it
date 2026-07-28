@@ -1,7 +1,7 @@
 # SEO / Search Console follow-up
 
-**Status: proposed — awaiting approval, nothing implemented yet**
-**Date:** 2026-07-18
+**Status: 2026-07-18 round shipped; 2026-07-28 round below fixes a regression it caused**
+**Date:** 2026-07-18 (see 2026-07-28 update at the bottom)
 
 ## What was done already
 
@@ -236,3 +236,75 @@ regression or a new "not indexed" reason.
    validation cycles run over days to weeks. Click "Convalida" (Validate fix)
    per reason row in Search Console rather than waiting for the dashboard to
    change on its own, and re-check after ~1-2 weeks.
+
+---
+
+## 2026-07-28 update: robots.txt Disallow froze 2 already-indexed pages
+
+Ten days after the 2026-07-18 round shipped, a fresh Coverage export
+(`albertoarena.it-Coverage-2026-07-28`) and a manual drill-down into every
+reason row in Search Console turned up one real regression from that round,
+one previously-misdiagnosed 404, and confirmed the rest needs no action.
+
+### Root causes found
+
+**1. "Indicizzata ma bloccata da robots.txt" (2 pages) — the robots.txt fix
+itself is the bug.** `/tag/developer-tools/` and `/category/ai/` were indexed
+*before* the 2026-07-18 `Disallow` rules existed. Once a URL is blocked by
+`robots.txt`, Google can never crawl it again — which means it can never
+discover it should be dropped from the index either. `Disallow` only stops
+*future* crawling; it doesn't deindex anything already indexed. These 2 pages
+were frozen in place by the very fix meant to clean things up. This is the
+mechanism behind "pages excluded by robots.txt are still failing in
+indexing" — the exclusion is what prevents the failure from ever resolving.
+
+**Fix**: replaced robots.txt blocking with a `noindex,follow` meta tag
+(`src/layouts/BaseLayout.astro`, `src/components/Layout.astro`, applied to
+the 5 templates: `tag/[tag].astro`, `category/[category].astro`, `tags.astro`,
+`categories.astro`, `page/[page].astro`) and reverted `robots.txt` to
+allow-all. `noindex` requires the page to stay crawlable to work — that's the
+whole point versus `Disallow`. `,follow` (not `,nofollow`) keeps link equity
+flowing to the real posts these hub pages link to. Also submitted temporary
+removal requests for the 2 stuck URLs via Search Console's "Rimozioni" tool
+for faster relief while the `noindex` tag propagates through Google's normal
+recrawl cycle.
+
+**2. "Non trovata (404)" (1 page) — not the favicon after all.** The
+2026-07-18 round assumed the 404 was the missing `favicon.ico`; that fix was
+correct and confirmed live (200). The actual current 404 is
+`/posts/create-a-domain-with-spatie-event-sourcing/`, which only existed as a
+typo in the hand-maintained `public/llms.txt:25` — it used the post's content-
+folder name (`create-a-domain-with-spatie-event-sourcing`) instead of its
+actual frontmatter `slug` (`domain-using-spatie-event-sourcing`). Fixed the
+one line.
+
+### Confirmed to need no action
+
+- **"Pagina con reindirizzamento" (14, failed validation)**: checked every
+  live internal link source (header, footer, nav config, `PostCard`,
+  `PostLayout`, tags/categories pages, RSS feed) — all already use correct
+  trailing slashes and the canonical host. The 14 sampled URLs are all *stale*
+  entries Google already had on file from before the May/July fixes; they
+  correctly 301 today. A permanent redirect is supposed to keep redirecting —
+  "failed validation" here just means Google rechecked and (correctly) found
+  the redirect still there. This clears only as Google's crawler retires these
+  URLs from its own backlog over time; nothing in the code to change.
+- **"Crawled/discovered, not indexed" (38 + 6)**: mostly the same tag/category
+  pages as above (will migrate to "excluded by noindex tag" once Google
+  reprocesses them), one freshly-published post that showed as not-indexed in
+  the snapshot but was confirmed indexed via URL Inspection by the time of
+  writing (normal indexing lag, already resolved), one old thin post
+  (`/posts/is-it-really-an-integer/`) that Google crawled successfully,
+  confirmed indexable with a correct self-canonical, but chose not to index —
+  a content-quality/authority judgment call, not a technical defect — and a
+  few legitimate pages simply not yet crawled (queued, not a bug).
+- **"Duplicate without canonical" / "Alternate with proper canonical"**: both
+  at 0 pages, "Superata" (passed) — fully resolved.
+
+### Tests
+
+Added `tests/seo-indexing.test.ts` (`npm run test:seo-indexing`), following
+the `tests/reader-eligibility.test.ts` pattern of building `dist/` and
+asserting on the output: confirms `noindex,follow` renders on all 5 thin-page
+types and nowhere else (homepage, posts, top-level pages), `robots.txt` has no
+`Disallow` rules, and `llms.txt` no longer links to the broken slug.
