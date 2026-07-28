@@ -12,7 +12,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "test:eligibility": "astro build && vitest run tests/reader-eligibility.test.ts",
-    "test": "npm run test:eligibility"
+    "test:seo-indexing": "astro build && vitest run tests/seo-indexing.test.ts",
+    "test": "npm run test:eligibility && npm run test:seo-indexing"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.0.0",

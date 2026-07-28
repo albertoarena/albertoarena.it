@@ -22,7 +22,7 @@ Alberto Arena is a Senior Software Engineer based in Sicily, Italy, with a backg
 - [When Your AI Writes Confident Nonsense](https://albertoarena.it/posts/ai-hallucination-in-coding-agents/): AI coding agents are powerful, but they hallucinate. Here are practical tips to spot it before it reaches production.
 - [Introducing Codemetry](https://albertoarena.it/posts/introducing-codemetry/): A Git repository analysis tool that converts version control history into quality metrics.
 - [Moving from Gatsby to Astro](https://albertoarena.it/posts/moving-from-gatsby-to-astro/): I migrated my blog from Gatsby to Astro. Here's why.
-- [Create a domain using Spatie event sourcing](https://albertoarena.it/posts/create-a-domain-with-spatie-event-sourcing/): A Laravel command that generates a domain using Spatie event sourcing.
+- [Create a domain using Spatie event sourcing](https://albertoarena.it/posts/domain-using-spatie-event-sourcing/): A Laravel command that generates a domain using Spatie event sourcing.
 - [My React Calculator](https://albertoarena.it/posts/my-react-calculator/): A React learning exercise: building a React Calculator.
 - [Finally, I moved to Gatsby](https://albertoarena.it/posts/finally-i-moved-to-gatsby/): I moved my blog to Gatsby, a React-based open source framework.
 - [I'm back!](https://albertoarena.it/posts/i-am-back/): My personal blog is back.
