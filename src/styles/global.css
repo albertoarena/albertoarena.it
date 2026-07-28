@@ -71,12 +71,18 @@
     values (tuned against --color-dark-paper) — restore them here instead
     of darkening globally and losing dark-mode vibrancy.
   */
-  @variant dark {
-    :root {
-      --color-primary: hsl(220, 100%, 68%);
-      --color-secondary: hsl(31, 92%, 62%);
-      --color-gray: hsl(220, 17%, 57%);
-    }
+  /*
+    Written as a plain compound selector (not @variant dark { :root { ... } })
+    because Tailwind's dark variant always inserts a descendant combinator
+    before the nested selector. For :root that produces
+    ":scope:where(.dark, .dark *) :root", which requires :root to be a
+    descendant of itself — impossible, so the override silently never
+    matched and dark mode kept the light-mode (low-contrast) values.
+  */
+  :root:where(.dark, .dark *) {
+    --color-primary: hsl(220, 100%, 68%);
+    --color-secondary: hsl(31, 92%, 62%);
+    --color-gray: hsl(220, 17%, 57%);
   }
 
   /* time element in dark mode */
