@@ -14,6 +14,18 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    name: 'Truss',
+    description:
+      'Live, zoomable ER diagram viewer for Laravel. Scans your actual database schema, not migration files, and renders it in-app with Mermaid, safe to run in production since it only reads structure, never rows.',
+    tech: ['Laravel', 'PHP', 'Database', 'Mermaid'],
+    github: 'https://github.com/albertoarena/laravel-truss',
+    url: 'https://trussphp.com/',
+    postSlug: 'introducing-truss',
+    status: 'active',
+    featured: true,
+    year: '2026',
+  },
+  {
     name: 'Laravel Netsons Deploy',
     description:
       'GitHub Actions deployment workflow for Laravel on Netsons shared hosting, supporting both FTP and git clone strategies with zero-downtime release switching.',
