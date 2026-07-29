@@ -1,7 +1,7 @@
 # SEO / Search Console follow-up
 
-**Status: 2026-07-18 round shipped; 2026-07-28 round below fixes a regression it caused**
-**Date:** 2026-07-18 (see 2026-07-28 update at the bottom)
+**Status: 2026-07-18 and 2026-07-28 rounds shipped; validation requested from Google 2026-07-29, awaiting recrawl**
+**Date:** 2026-07-18 (see 2026-07-28 and 2026-07-29 updates at the bottom)
 
 ## What was done already
 
@@ -308,3 +308,35 @@ the `tests/reader-eligibility.test.ts` pattern of building `dist/` and
 asserting on the output: confirms `noindex,follow` renders on all 5 thin-page
 types and nowhere else (homepage, posts, top-level pages), `robots.txt` has no
 `Disallow` rules, and `llms.txt` no longer links to the broken slug.
+
+---
+
+## 2026-07-29 update: re-verified the 07-28 diagnosis, requested validation
+
+User shared a fresh Coverage export (`albertoarena.it-Coverage-2026-07-29.zip`)
+and flagged the two "Non riuscita" (failed validation) rows — "Pagina con
+reindirizzamento" (14) and "Pagina scansionata, ma attualmente non
+indicizzata" (38). Re-checked rather than assuming yesterday's diagnosis
+still held:
+
+- **The report itself predates the 07-28 fix.** Its "Ultimo aggiornamento"
+  timestamp was 24/07/26 — the `df795028` fix landed 28/07 10:06am, so this
+  export can't reflect it yet regardless of anything else.
+- **Re-ran `npm run test:seo-indexing`** — all 12 tests still pass.
+- **Live-`curl`-verified 8 of the 14 sampled "Page with redirect" URLs**
+  against production (`/pages/credits`, `/pages/privacy-policy`, `/projects`,
+  `/tag/github`, `/category/react`, `/page/2`, plus the `http://` and
+  `http://www.` homepage variants) — every one still correctly 301s to its
+  canonical trailing-slash/https/non-www form. Confirms the 07-28 conclusion
+  ("stale Google-side cache of URLs that already redirect correctly, not a
+  live bug") still holds; no code changes made.
+
+**Action taken (in Search Console, not code):** clicked "Convalida
+correzione" / "Avvia nuova convalida" (Validate fix) on three rows to
+request a fresh Google recrawl rather than waiting for the passive cycle:
+"Pagina con reindirizzamento" (14 — had a prior *failed* validation dated
+19/07–25/07, restarted), "Bloccata da robots.txt" (12), and "Indicizzata ma
+bloccata da robots.txt" (2 — the actual regression this round's fix
+targets). All three show "Convalida iniziata" as of 29/07/26. No dashboard
+change expected for days to weeks; check back per the playbook above rather
+than re-diagnosing from scratch next time this comes up.
