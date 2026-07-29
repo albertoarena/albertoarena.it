@@ -17,6 +17,8 @@ pinned: true
 
 ![A steel truss lattice shot from below against a bright sky, bolted joints forming a grid](/images/posts/introducing-truss/cover.jpg)
 
+> **Update**: Truss now has a dedicated docs site and a public roadmap. See the notes at the end of this post for what's changed since publishing.
+
 You join a project. Forty tables, half of them undocumented, and a `posts` table that somehow relates to three other tables you've never heard of. Where do you start?
 
 `php artisan db` gets you an interactive shell, and from there you're back to whatever dialect your database speaks: `.schema` on SQLite, `DESCRIBE` on MySQL, `\d` on Postgres. Laravel's own `db:show` and `db:table` commands are a step up, an overview of your tables or one table's columns, indexes, and foreign keys, printed straight to the terminal. But they're still one table at a time, in text. Nothing shows you the shape of the thing: which tables actually connect, and how, across the whole schema. So you end up either opening a DB client through an SSH tunnel, or drawing the diagram yourself on a whiteboard from memory, which is exactly as reliable as it sounds.
@@ -36,7 +38,7 @@ Truss is a live database structure viewer for Laravel. It scans your actual sche
 - **Structure only, always.** Truss reads tables, columns, keys, and indexes. It never queries a single row, which is the whole point of being able to run it somewhere that matters.
 - **Self-contained**: Mermaid and fonts are vendored and served from the package, so it works offline and under a strict CSP. No CDN, nothing phoning home.
 - **Cached and automatic**: the snapshot rebuilds after migrations, so the diagram never goes stale.
-- **Export the whole diagram** as PNG or SVG, exactly as it's currently filtered and focused, so it drops straight into a design doc or a PR description instead of a screenshot. Per-table exports as JSON or CSV are also available from each table's menu.
+- **Export the whole diagram** as PNG or SVG, exactly as it's currently filtered and focused, so it drops straight into a design doc or a PR description instead of a screenshot. Per-table exports as JSON or CSV are also available from each table's menu, and the whole schema can be saved as a Markdown data dictionary or a DBML file.
 
 Install it, visit `/truss`, and you get the diagram. No config, no separate service to run.
 
@@ -61,7 +63,7 @@ Both commands live under a `truss:` namespace rather than `schema:`. A package s
 
 ## Trying it without installing anything
 
-If you want to poke at it before adding it to a project, there's a [live demo](https://albertoarena.github.io/laravel-truss/demo/) running against a fictional schema, right in your browser. Pan, zoom, filter, focus a table, no install required.
+If you want to poke at it before adding it to a project, there's a [live demo](https://trussphp.com/demo/) running against a fictional schema, right in your browser. Pan, zoom, filter, focus a table, no install required.
 
 ## How it's held up
 
@@ -69,6 +71,10 @@ I've dropped Truss into a few of my own Laravel projects since building it, incl
 
 ## Get started
 
-The [documentation](https://albertoarena.github.io/laravel-truss) covers installation, the quick start, and authorization for non-local environments in more detail. It requires PHP 8.3+ and Laravel 12+.
+The [documentation](https://trussphp.com) covers installation, the quick start, and authorization for non-local environments in more detail. It requires PHP 8.3+ and Laravel 12+. There's also a public [roadmap](https://trussphp.com/roadmap/): schema diff, seeing what changed since the last migration, is next up.
 
 Feedback welcome, as always.
+
+## Notes
+
+On July 29, 2026, Truss reached v1.3.1: a data dictionary and DBML export shipped in v1.3.0, and v1.3.1 scoped schema introspection to the connection's own database so a shared server no longer leaks tables from other databases. Docs also moved to a dedicated site, [trussphp.com](https://trussphp.com), with a public [roadmap](https://trussphp.com/roadmap/).
