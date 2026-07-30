@@ -65,7 +65,7 @@ describe.each(TEST_POSTS)(
 
     it('extracts a non-trivial amount of text', () => {
       const { result } = parsePost(slug);
-      expect(result?.textContent.length ?? 0).toBeGreaterThan(MIN_TEXT_LENGTH);
+      expect(result?.textContent?.length ?? 0).toBeGreaterThan(MIN_TEXT_LENGTH);
     });
 
     it('includes the first and last paragraph of the post', () => {
