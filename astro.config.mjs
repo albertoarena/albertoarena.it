@@ -25,7 +25,7 @@ export default defineConfig({
       [rehypeExternalLinks, { target: '_blank', rel: ['noopener', 'noreferrer'] }]
     ],
     shikiConfig: {
-      theme: 'github-dark',
+      theme: 'github-dark-default',
       wrap: true
     }
   },
