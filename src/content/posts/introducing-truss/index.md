@@ -19,6 +19,8 @@ pinned: true
 
 > **Update**: Truss now has a dedicated docs site and a public roadmap. See the notes at the end of this post for what's changed since publishing.
 
+> **Update**: Truss 1.5 adds `truss:doctor`, a deterministic, structure-only review of your schema across thirteen rules, runnable from the terminal, CI, or the dashboard. Read more in [The schema doctor is in](/posts/the-schema-doctor-is-in/).
+
 You join a project. Forty tables, half of them undocumented, and a `posts` table that somehow relates to three other tables you've never heard of. Where do you start?
 
 `php artisan db` gets you an interactive shell, and from there you're back to whatever dialect your database speaks: `.schema` on SQLite, `DESCRIBE` on MySQL, `\d` on Postgres. Laravel's own `db:show` and `db:table` commands are a step up, an overview of your tables or one table's columns, indexes, and foreign keys, printed straight to the terminal. But they're still one table at a time, in text. Nothing shows you the shape of the thing: which tables actually connect, and how, across the whole schema. So you end up either opening a DB client through an SSH tunnel, or drawing the diagram yourself on a whiteboard from memory, which is exactly as reliable as it sounds.
@@ -78,3 +80,5 @@ Feedback welcome, as always.
 ## Notes
 
 On July 29, 2026, Truss reached v1.3.1: a data dictionary and DBML export shipped in v1.3.0, and v1.3.1 scoped schema introspection to the connection's own database so a shared server no longer leaks tables from other databases. Docs also moved to a dedicated site, [trussphp.com](https://trussphp.com), with a public [roadmap](https://trussphp.com/roadmap/).
+
+On July 31, 2026, Truss reached v1.5.0, adding `truss:doctor`: a deterministic, structure-only review of your schema across thirteen rules spanning integrity, indexes, and types, runnable from the terminal, CI, or the dashboard's new Health panel. See [The schema doctor is in](/posts/the-schema-doctor-is-in/).
