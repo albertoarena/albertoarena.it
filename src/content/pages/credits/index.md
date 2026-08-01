@@ -41,6 +41,7 @@ Cover images for some posts are sourced from **[Unsplash](https://unsplash.com)*
 | [AI Code Hallucinations: When Your AI Writes Confident Nonsense](/posts/ai-hallucination-in-coding-agents/) | Iridescent digital swirl distortion | [Glitch Lab App](https://unsplash.com/@glitchlab) on Unsplash |
 | [CLAUDE.md Is RAM, Skills Are Not Disk](/posts/claude-md-skills-are-not-disk/) | Macro shot of an open hard drive platter and read/write arm | [benjamin lehman](https://unsplash.com/@abject) on Unsplash |
 | [The schema doctor is in](/posts/the-schema-doctor-is-in/) | A stethoscope resting on a handwritten notebook next to a laptop keyboard | [Abdulai Sayni](https://unsplash.com/@abdulaisayni80) on Unsplash |
+| [We Became Editors-in-Chief, and Nobody Trained Us](/posts/we-became-editors-in-chief/) | A hand holding a red pen over a blank spiral notebook page on a wooden table | [Kelly Sikkema](https://unsplash.com/@kellysikkema) on Unsplash |
 
 ## Diagrams
 
