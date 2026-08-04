@@ -6,7 +6,7 @@ import { getPostSlug } from "../utils/helpers";
 export async function GET(context) {
     const posts = await getCollection("posts");
     const sortedPosts = posts
-        .filter((post) => !post.data.draft)
+        .filter((post) => !post.data.draft && (post.data.lang ?? 'en') === 'en')
         .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
     return rss({
