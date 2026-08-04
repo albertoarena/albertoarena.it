@@ -6,6 +6,7 @@ Alberto Arena is a Senior Software Engineer based in Sicily, Italy, with a backg
 
 ## Posts
 
+- [I gave my schema viewer your app's colours](https://albertoarena.it/posts/gave-my-schema-viewer-your-app-colours/): Laravel Truss 1.6 adds theming to match the app it's embedded in, and truss:export to generate deterministic schema files your CI can gate on.
 - [We Became Editors-in-Chief, and Nobody Trained Us](https://albertoarena.it/posts/we-became-editors-in-chief/): Agentic development didn't make us prompt engineers. It made reviewing the job, and nobody built tooling yet for the real bottleneck: how long a human can stay sharp.
 - [The schema doctor is in](https://albertoarena.it/posts/the-schema-doctor-is-in/): Laravel Truss 1.5 adds truss:doctor: a deterministic, structure-only review of your database schema, thirteen rules deep, that can fail your CI build.
 - [CLAUDE.md is RAM, skills are not disk](https://albertoarena.it/posts/claude-md-skills-are-not-disk/): Skills look like the disk tier of the CLAUDE.md memory model. They are not. Here is the four-tier model that actually fits: RAM, path-scoped rules, skills, and disk.
