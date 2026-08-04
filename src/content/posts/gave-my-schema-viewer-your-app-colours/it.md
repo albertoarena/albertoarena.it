@@ -70,10 +70,14 @@ php artisan truss:export --format=json --check
 - Demo live: [trussphp.com/demo](https://trussphp.com/demo/)
 - Guida al theming: [trussphp.com/guides/theming](https://trussphp.com/guides/theming/)
 - Guida allo schema export: [trussphp.com/guides/schema-export](https://trussphp.com/guides/schema-export/)
-- Note di rilascio: [v1.6.0 su GitHub](https://github.com/albertoarena/laravel-truss/releases/tag/v1.6.0)
+- Changelog: [CHANGELOG.md su GitHub](https://github.com/albertoarena/laravel-truss/blob/main/CHANGELOG.md)
 
 Aggiorna con `composer update albertoarena/laravel-truss`.
 
 ## Cosa viene dopo
 
 Lighthouse CI è il prossimo passo sulla [roadmap](https://trussphp.com/roadmap/): audit automatici di performance e accessibilità su entrambi i temi, chiaro e scuro. Dopo quello: altre regole per `truss:doctor`, lettura delle relazioni Eloquent per etichette semantiche invece delle sole chiavi esterne, e contesto dello schema formattato per agenti AI che lavorano nella stessa codebase. Se manca una manopola di tema o `truss:export` dovrebbe supportare un formato che non ha, la [discussione](https://github.com/albertoarena/laravel-truss/discussions) è aperta.
+
+## Note
+
+Il 4 agosto 2026, il link alle note di rilascio della v1.6.0 qui sopra è stato sostituito con un link al [changelog completo](https://github.com/albertoarena/laravel-truss/blob/main/CHANGELOG.md), dato che nel frattempo è uscita la v1.6.1 con una correzione.

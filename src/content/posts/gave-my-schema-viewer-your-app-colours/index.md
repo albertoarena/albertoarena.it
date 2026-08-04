@@ -69,10 +69,14 @@ php artisan truss:export --format=json --check
 - Live demo: [trussphp.com/demo](https://trussphp.com/demo/)
 - Theming guide: [trussphp.com/guides/theming](https://trussphp.com/guides/theming/)
 - Schema export guide: [trussphp.com/guides/schema-export](https://trussphp.com/guides/schema-export/)
-- Release notes: [v1.6.0 on GitHub](https://github.com/albertoarena/laravel-truss/releases/tag/v1.6.0)
+- Changelog: [CHANGELOG.md on GitHub](https://github.com/albertoarena/laravel-truss/blob/main/CHANGELOG.md)
 
 Update with `composer update albertoarena/laravel-truss`.
 
 ## What's next
 
 Lighthouse CI is next on the [roadmap](https://trussphp.com/roadmap/): automated performance and accessibility audits across both themes, light and dark. After that: more `truss:doctor` rules, reading Eloquent relationships for semantic labels instead of just foreign keys, and schema context formatted for AI agents working in the same codebase. If a theme knob is missing or `truss:export` should support a format it doesn't, [open a discussion](https://github.com/albertoarena/laravel-truss/discussions).
+
+## Notes
+
+On August 4, 2026, replaced the link to the v1.6.0 release notes above with a link to the [full changelog](https://github.com/albertoarena/laravel-truss/blob/main/CHANGELOG.md), since v1.6.1 has since shipped a fix on top of it.
