@@ -1,10 +1,11 @@
 ---
 import Layout from '../components/Layout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import TrussPromo from '../components/TrussPromo.astro';
 import { projects } from '../data/projects';
 
 const professionalProjects = projects.filter((p) => p.status === 'professional');
-const personalProjects = projects.filter((p) => p.status !== 'professional');
+const personalProjects = projects.filter((p) => p.status !== 'professional' && p.name !== 'Truss');
 ---
 
 <Layout title="Projects">
@@ -14,6 +15,8 @@ const personalProjects = projects.filter((p) => p.status !== 'professional');
   <p class="text-gray mb-10">
     Open source tools and professional work.
   </p>
+
+  <TrussPromo />
 
   <section class="mb-12">
     <h2 class="text-xl font-semibold text-dark dark:text-white mb-6 pb-2 border-b border-white-cloud dark:border-dark-cloud">

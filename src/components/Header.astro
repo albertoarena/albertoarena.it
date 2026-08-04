@@ -8,6 +8,10 @@ function isActive(path: string) {
   if (path === '/') return currentPath === '/' || /^\/page\/\d+$/.test(currentPath);
   return currentPath === path || currentPath.startsWith(path);
 }
+
+function isExternal(path: string) {
+  return path.startsWith('http://') || path.startsWith('https://');
+}
 ---
 
 <header class="sticky top-0 z-40 bg-white/90 dark:bg-dark-paper/90 backdrop-blur-sm border-b border-white-cloud dark:border-dark-cloud">
@@ -25,6 +29,8 @@ function isActive(path: string) {
       {siteConfig.menu.map((item) => (
         <a
           href={item.path}
+          target={isExternal(item.path) ? '_blank' : undefined}
+          rel={isExternal(item.path) ? 'noopener noreferrer' : undefined}
           class:list={[
             'text-sm font-medium transition-colors',
             isActive(item.path)
@@ -72,6 +78,8 @@ function isActive(path: string) {
     {siteConfig.menu.map((item) => (
       <a
         href={item.path}
+        target={isExternal(item.path) ? '_blank' : undefined}
+        rel={isExternal(item.path) ? 'noopener noreferrer' : undefined}
         class:list={[
           'text-lg font-medium transition-colors',
           isActive(item.path)

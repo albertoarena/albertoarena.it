@@ -10,6 +10,7 @@ export const siteConfig = {
   menu: [
     { label: 'Articles', path: '/' },
     { label: 'Projects', path: '/projects/' },
+    { label: 'Truss', path: 'https://trussphp.com/' },
     { label: 'About me', path: '/pages/about/' },
     { label: 'Consulting', path: '/pages/consulting/' },
     { label: 'Subscribe', path: '/subscribe/' },
