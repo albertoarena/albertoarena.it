@@ -102,7 +102,7 @@ const trussLatestSlug = trussSeries[trussSeries.length - 1].slug;
 								{post.title}
 							</a>
 							{post.date && (
-								<time datetime={post.date.toISOString()} class="ml-1.5 text-xs font-mono text-gray opacity-60 whitespace-nowrap">
+								<time datetime={post.date.toISOString()} class="ml-1.5 text-xs font-mono text-gray whitespace-nowrap">
 									{post.date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
 								</time>
 							)}
