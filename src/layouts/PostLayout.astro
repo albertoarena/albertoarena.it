@@ -5,6 +5,8 @@ import { siteConfig } from "../utils/config";
 import DisqusComments from "../components/DisqusComments.astro";
 import LanguageToggle from "../components/LanguageToggle.astro";
 import ReadingModeToggle from "../components/ReadingModeToggle.astro";
+import TrussSeriesNav from "../components/TrussSeriesNav.astro";
+import { trussSeries } from "../data/trussSeries";
 import readingTime from "reading-time";
 
 interface Props {
@@ -32,6 +34,7 @@ const canonicalEnglishSlug = disqusSlug ?? slug;
 const disqusPostUrl = `${siteConfig.url}/posts/${canonicalEnglishSlug}/`;
 
 const hasTranslation = !!(englishUrl && italianUrl);
+const isTrussSeriesPost = trussSeries.some((entry) => entry.slug === slug);
 const hreflangEn = englishUrl ? `${siteConfig.url}${englishUrl}` : undefined;
 const hreflangIt = italianUrl ? `${siteConfig.url}${italianUrl}` : undefined;
 
@@ -63,12 +66,24 @@ const blogPostingSchema = {
 
         <!-- Full-width post header -->
         <header class="mb-10">
-            {hasTranslation && (
-                <LanguageToggle
-                    currentLang={lang}
-                    englishUrl={englishUrl!}
-                    italianUrl={italianUrl!}
-                />
+            {(hasTranslation || isTrussSeriesPost) && (
+                <div class="flex items-center justify-between gap-4 mb-6 not-prose">
+                    {hasTranslation ? (
+                        <LanguageToggle
+                            currentLang={lang}
+                            englishUrl={englishUrl!}
+                            italianUrl={italianUrl!}
+                        />
+                    ) : <span />}
+                    {isTrussSeriesPost && (
+                        <a
+                            href="#truss-series"
+                            class="text-sm font-medium text-gray hover:text-primary transition-colors whitespace-nowrap"
+                        >
+                            {lang === 'it' ? 'Serie Truss ↓' : 'Truss series ↓'}
+                        </a>
+                    )}
+                </div>
             )}
             <h1 class="text-4xl font-bold leading-tight mb-4 text-dark dark:text-white">{post.data.title}</h1>
             <div class="flex flex-wrap items-center gap-4 text-sm font-mono text-gray">
@@ -91,6 +106,10 @@ const blogPostingSchema = {
         <div class="prose dark:prose-invert max-w-[68ch]">
             <slot />
         </div>
+
+        {isTrussSeriesPost && (
+            <TrussSeriesNav currentSlug={slug} lang={lang} />
+        )}
 
         <!-- Full-width post footer -->
         {post.data.tags && post.data.tags.length > 0 && (

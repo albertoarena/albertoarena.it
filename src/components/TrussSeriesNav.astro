@@ -1,0 +1,54 @@
+---
+import { getCollection } from "astro:content";
+import { trussSeries } from "../data/trussSeries";
+
+interface Props {
+	currentSlug: string;
+	lang: "en" | "it";
+}
+
+const { currentSlug, lang } = Astro.props;
+
+const posts = await getCollection("posts");
+const currentIndex = trussSeries.findIndex((entry) => entry.slug === currentSlug);
+
+const entries = trussSeries.map((entry) => ({
+	...entry,
+	hasItalian: posts.some((p) => p.data.lang === "it" && p.data.translationOf === entry.slug),
+}));
+---
+
+<div id="truss-series" class="truss-series-nav not-prose mt-12 pt-6 border-t border-white-cloud dark:border-dark-cloud scroll-mt-20">
+	<p class="text-xs font-mono text-gray uppercase tracking-widest mb-1">{lang === "it" ? "Serie Truss" : "Truss series"}</p>
+	<p class="text-sm text-gray mb-3">
+		{lang === "it" ? `Parte ${currentIndex + 1} di ${trussSeries.length}` : `Part ${currentIndex + 1} of ${trussSeries.length}`}
+	</p>
+	<ol class="list-decimal list-inside space-y-1.5 text-base">
+		{entries.map((entry, i) => (
+			<li class="flex items-baseline justify-between gap-2">
+				<span>
+					{i === currentIndex ? (
+						<span class="font-semibold text-dark dark:text-white">
+							{lang === "it" ? entry.titleIt : entry.title}
+						</span>
+					) : (
+						<a
+							href={`/posts/${entry.slug}/${lang === "it" && entry.hasItalian ? "it/" : ""}`}
+							class="text-gray hover:text-primary transition-colors"
+						>
+							{lang === "it" && entry.hasItalian ? entry.titleIt : entry.title}
+						</a>
+					)}
+				</span>
+				{lang === "en" && entry.hasItalian && (
+					<a
+						href={`/posts/${entry.slug}/it/`}
+						class="flex-shrink-0 font-mono text-[0.66rem] tracking-wide text-gray border border-white-cloud dark:border-dark-cloud rounded-full px-1.5 py-0.5 hover:text-primary hover:border-primary transition-colors"
+					>
+						IT
+					</a>
+				)}
+			</li>
+		))}
+	</ol>
+</div>

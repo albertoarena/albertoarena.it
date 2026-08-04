@@ -1,16 +1,14 @@
 ---
 import { getCollection } from "astro:content";
 import { getPostSlug } from "../utils/helpers";
+import { trussSeries as trussSeriesData } from "../data/trussSeries";
 
 const posts = await getCollection("posts");
 
-const trussSeries = [
-	{ title: "Introducing Truss", slug: "introducing-truss" },
-	{ title: "The schema doctor is in", slug: "the-schema-doctor-is-in" },
-	{ title: "I gave my schema viewer your app's colours", slug: "gave-my-schema-viewer-your-app-colours" },
-].map((entry) => ({
+const trussSeries = trussSeriesData.map((entry) => ({
 	...entry,
 	date: posts.find((p) => getPostSlug(p) === entry.slug)?.data.date,
+	hasItalian: posts.some((p) => p.data.lang === "it" && p.data.translationOf === entry.slug),
 }));
 const trussLatestSlug = trussSeries[trussSeries.length - 1].slug;
 ---
@@ -98,14 +96,24 @@ const trussLatestSlug = trussSeries[trussSeries.length - 1].slug;
 			<h3 class="text-sm font-mono font-semibold text-secondary uppercase tracking-widest mb-2">Truss series</h3>
 			<ol class="list-decimal list-inside space-y-1.5 text-base">
 				{trussSeries.map((post) => (
-					<li>
-						<a href={`/posts/${post.slug}/`} class="text-gray hover:text-primary transition-colors">
-							{post.title}
-						</a>
-						{post.date && (
-							<time datetime={post.date.toISOString()} class="ml-1.5 text-xs font-mono text-gray opacity-60 whitespace-nowrap">
-								{post.date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
-							</time>
+					<li class="flex items-baseline justify-between gap-2">
+						<span>
+							<a href={`/posts/${post.slug}/`} class="text-gray hover:text-primary transition-colors">
+								{post.title}
+							</a>
+							{post.date && (
+								<time datetime={post.date.toISOString()} class="ml-1.5 text-xs font-mono text-gray opacity-60 whitespace-nowrap">
+									{post.date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+								</time>
+							)}
+						</span>
+						{post.hasItalian && (
+							<a
+								href={`/posts/${post.slug}/it/`}
+								class="flex-shrink-0 font-mono text-[0.66rem] tracking-wide text-gray border border-white-cloud dark:border-dark-cloud rounded-full px-1.5 py-0.5 hover:text-primary hover:border-primary transition-colors"
+							>
+								IT
+							</a>
 						)}
 					</li>
 				))}
