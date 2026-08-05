@@ -292,11 +292,45 @@
   .animate-stagger > *:nth-child(n+7) { animation-delay: 0.35s; }
 }
 
+/*
+  Placeholder height before MailerLite's script mounts the real form: an
+  empty div has zero height, which means IntersectionObserver never has any
+  area to test and its callback never fires (the lazy-load in
+  NewsletterSignup.astro would silently never trigger). This also reserves
+  space so the form loading in doesn't shift surrounding content.
+*/
+.newsletter-signup-target {
+  min-height: 320px;
+}
+
+/*
+  MailerLite embed dark-mode override. Its injected <style> targets
+  #mlb2-XXXXX.ml-form-embedContainer, an ID selector, which beats a class
+  selector on specificity alone — !important is needed to win reliably
+  without hardcoding the account-specific numeric ID.
+*/
+@variant dark {
+  .newsletter-signup-target .ml-form-embedWrapper {
+    background-color: var(--color-dark-cloud) !important;
+  }
+
+  .newsletter-signup-target .ml-form-embedContainer h4,
+  .newsletter-signup-target .ml-form-embedContainer p,
+  .newsletter-signup-target .ml-form-embedContainer label {
+    color: #ffffff !important;
+  }
+
+  .newsletter-signup-target .ml-form-embedContainer a {
+    color: var(--color-primary) !important;
+  }
+}
+
 /* Reading mode (post pages only, see ReadingModeToggle.astro) */
 html[data-reading] body > header,
 html[data-reading] body > footer,
 html[data-reading] .post-tags,
 html[data-reading] .post-author,
+html[data-reading] .post-newsletter,
 html[data-reading] #disqus_thread {
   display: none;
 }

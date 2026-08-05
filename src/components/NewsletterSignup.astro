@@ -4,12 +4,31 @@ import { siteConfig } from '@/utils/config';
 const { accountId, formId } = siteConfig.mailerlite;
 ---
 
-<div data-form={formId} class="ml-embedded"></div>
+<div data-form={formId} class="ml-embedded newsletter-signup-target"></div>
 
 <script is:inline define:vars={{ accountId }}>
-  (function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[])
-  .push(arguments);},l=d.createElement(e),l.async=1,l.src=u,
-  n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})
-  (window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');
-  ml('account', accountId);
+  function loadMailerLite() {
+    (function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[])
+    .push(arguments);},l=d.createElement(e),l.async=1,l.src=u,
+    n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})
+    (window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');
+    ml('account', accountId);
+  }
+
+  var target = document.querySelector('.newsletter-signup-target');
+  if (target) {
+    if ('IntersectionObserver' in window) {
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            observer.disconnect();
+            loadMailerLite();
+          }
+        });
+      });
+      observer.observe(target);
+    } else {
+      loadMailerLite();
+    }
+  }
 </script>
