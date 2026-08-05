@@ -4,6 +4,7 @@ import type { CollectionEntry } from "astro:content";
 import { siteConfig } from "../utils/config";
 import DisqusComments from "../components/DisqusComments.astro";
 import LanguageToggle from "../components/LanguageToggle.astro";
+import NewsletterSignup from "../components/NewsletterSignup.astro";
 import ReadingModeToggle from "../components/ReadingModeToggle.astro";
 import TrussSeriesNav from "../components/TrussSeriesNav.astro";
 import { trussSeries } from "../data/trussSeries";
@@ -139,6 +140,18 @@ const blogPostingSchema = {
                     <p class="text-sm text-gray">{siteConfig.author.bio}</p>
                 </div>
             </div>
+        </div>
+
+        <div
+            class="post-newsletter mt-12 pt-6 border-t border-white-cloud dark:border-dark-cloud"
+            transition:persist
+            transition:name="newsletter-signup"
+        >
+            <h2 class="text-lg font-semibold text-dark dark:text-white mb-1">Liked this? Get the next one.</h2>
+            <p class="text-sm text-gray leading-relaxed mb-4">
+                Practical notes on Laravel tooling and AI-assisted development, roughly once a month.
+            </p>
+            <NewsletterSignup />
         </div>
 
         <DisqusComments
