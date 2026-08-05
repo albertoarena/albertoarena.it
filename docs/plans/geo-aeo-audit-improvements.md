@@ -107,7 +107,7 @@ page by scanners and AI crawlers.
 **Acceptance:** `mailto:hello@albertoarena.it` present on the About page,
 matches the address already used on privacy-policy and credits.
 
-## Task 6: CI automation — scheduled GEO audit
+## Task 6: CI automation — manual GEO audit
 
 Add `.github/workflows/geo-audit.yml` using the composite action
 `Auriti-Labs/geo-optimizer-skill@v4.14.0` (free, open source, same tool
@@ -125,31 +125,42 @@ tool emits `https://...` URIs and GitHub rejects the upload outright
 code-scanning isn't the right fit for a live-URL audit; job summary + artifact
 is simpler and actually works.
 
-Trigger: `schedule` (weekly) + `workflow_dispatch` only — not on `push`/`pull_request`
-like `test.yml`, since this audits the live production URL, not the working
-tree, and there's no value re-running it per-commit.
+Trigger: `workflow_dispatch` only — not `schedule`, not `push`/`pull_request`
+like `test.yml`. See finding below for why the schedule was dropped.
 
 Leave `min-score` unset initially (observe-only) for a few runs; revisit
 setting a gate once Tasks 1-5 land and a stable baseline score is known.
 
-**Real finding from the first run (2026-08-05):** the audit reported a
+**Real finding from the first two runs (2026-08-05):** both reported a
 `0/100 critical` score. Not a real regression — every HTTP request from the
 runner hit a TCP *connect* timeout, never reaching TLS/HTTP at all, and the
 tool silently falls back to 0 on total failure instead of erroring the job.
 The same commit's `deploy.yml` verification step (`curl https://albertoarena.it/`
 from an identical `ubuntu-latest` runner) got `200` around the same time, and
 that same deploy workflow had itself failed once on this commit two days
-earlier before succeeding on manual retry. Most likely explanation: Netsons'
-firewall blackholing some fraction of GitHub Actions' ephemeral outbound IP
-pool (a known pattern with budget shared hosts that blocklist cloud-provider
-IP ranges) — not a code or content issue. The job summary now prints a
-warning when score is exactly 0 for this reason. This is a point in favor of
-the already-planned server-pull deployment migration
-(`docs/plans/server-pull-deployment.md`), separate from this plan's scope.
+earlier before succeeding on manual retry — so plain `curl` reaches the host
+fine. What ruled out ordinary IP-reputation blocklisting: the failure was
+2/2, reproducible, across two independent runner instances (different
+ephemeral IPs, ~15 minutes apart) — if only *some* fraction of GitHub's IP
+pool were blocked, an occasional pass would be expected. Getting it every
+time, while `curl` (different TLS handshake) passes every time, points more
+specifically at TLS-fingerprint-based bot blocking on Netsons' side — a
+common WAF technique (Cloudflare/Imunify360/Sucuri-style) that silently
+drops (not rejects) requests matching known non-browser TLS client
+signatures, which is exactly why this is a connect timeout rather than a 403.
 
-**Acceptance:** workflow runs on schedule and via manual dispatch, writes
-score/band to the job summary, uploads the JSON report as an artifact,
-doesn't fail the build while `min-score` is unset.
+Given that, this is unlikely to ever return a real score against this host
+as currently configured, so a `schedule` trigger would just produce a false
+"critical 0/100" every week — noise, not signal. Dropped the `schedule`
+trigger; `workflow_dispatch` stays so the audit can still be run manually,
+e.g. once hosting changes (the already-planned server-pull deployment
+migration, `docs/plans/server-pull-deployment.md`) or the TLS-blocking
+question gets resolved on Netsons' side. The job summary still prints a
+warning when score is exactly 0, for whenever it is run.
+
+**Acceptance:** workflow runs via manual dispatch, writes score/band to the
+job summary, uploads the JSON report as an artifact, doesn't fail the build
+while `min-score` is unset.
 
 ## Out of scope
 
@@ -168,8 +179,10 @@ doesn't fail the build while `min-score` is unset.
 3. Contact email is a plain `mailto:`, not obfuscated — the address is
    already exposed in plain text on two other live pages, so obfuscating a
    third instance would add friction with no anti-scraping benefit.
-4. GEO audit workflow runs on a schedule, not per-push — it checks the live
-   site, not the diff, so per-commit runs would be redundant.
+4. GEO audit workflow is manual-dispatch only, not scheduled or per-push —
+   it checks the live site, not the diff, so per-commit runs would be
+   redundant, and a schedule would just repeat a false 0/100 every week
+   given the TLS-fingerprint blocking finding in Task 6.
 
 ## Definition of done
 
@@ -178,5 +191,5 @@ doesn't fail the build while `min-score` is unset.
 - `Crawl-delay` present in `robots.txt`.
 - No dead `<head>` asset links.
 - `mailto:hello@albertoarena.it` reachable from the About page.
-- `geo-audit.yml` running weekly, score/band in job summary, report artifact
-  uploaded, no CI gate yet.
+- `geo-audit.yml` runnable via manual dispatch, score/band in job summary,
+  report artifact uploaded, no CI gate yet.
