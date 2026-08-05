@@ -269,4 +269,4 @@ On December 31, 2024, I have added support to PHP 8.3.
 
 On February 16, 2025, I have added support for update migrations. 👉 [Read documentation here](https://github.com/albertoarena/laravel-event-sourcing-generator/blob/main/docs/migrations.md#generate-a-domain-using-update-migration).
 
-On June 30, 2026, this package crossed 10,000 downloads on Packagist: [read the retrospective](/posts/laravel-event-sourcing-generator-10k/).
+On June 30, 2026, this package crossed 10,000 downloads on Packagist: [read the retrospective](/posts/laravel-event-sourcing-generator-10k/). The generator has since grown into a small ecosystem: a [Claude Code skill for designing event-sourced domains](/posts/ai-laravel-event-sourcing/) and a [Filament plugin that routes writes through aggregates](/posts/introducing-filament-event-sourcing/).
