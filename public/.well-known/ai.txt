@@ -1,0 +1,9 @@
+# albertoarena.it
+
+A blog by Alberto Arena, Senior Software Engineer, on Laravel, AI-assisted
+engineering, and web development.
+
+All crawlers, including AI assistants and answer engines, are welcome — see
+/robots.txt.
+
+Full site index and post summaries: https://albertoarena.it/llms.txt
