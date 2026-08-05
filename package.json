@@ -13,7 +13,8 @@
     "astro": "astro",
     "test:eligibility": "astro build && vitest run tests/reader-eligibility.test.ts",
     "test:seo-indexing": "astro build && vitest run tests/seo-indexing.test.ts",
-    "test": "npm run test:eligibility && npm run test:seo-indexing"
+    "test:geo-aeo": "astro build && vitest run tests/geo-aeo.test.ts",
+    "test": "npm run test:eligibility && npm run test:seo-indexing && npm run test:geo-aeo"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.0.0",

@@ -29,7 +29,8 @@ I'm particularly drawn to projects where technical rigor meets innovation, where
 Available remotely. Open to freelance projects, long-term collaborations, and consulting engagements.
 
 You can follow me on [X, formerly Twitter](https://x.com/alberto_arena), or view
-my [LinkedIn profile](https://www.linkedin.com/in/alberto-arena-ba44a624/).
+my [LinkedIn profile](https://www.linkedin.com/in/alberto-arena-ba44a624/), or
+reach out directly at [hello@albertoarena.it](mailto:hello@albertoarena.it).
 
 ## Background & interests
 
