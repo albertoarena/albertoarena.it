@@ -1,0 +1,26 @@
+name: 🔎 GEO audit
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+jobs:
+  geo-audit:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 🔎 Run GEO/AEO audit against the live site
+      - name: Run GEO audit
+        uses: Auriti-Labs/geo-optimizer-skill@v4.14.0
+        with:
+          url: https://albertoarena.it
+          format: sarif
+          output-file: geo-report
+
+      # 📤 Upload SARIF to the Security tab
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: geo-report.sarif
+        continue-on-error: true
