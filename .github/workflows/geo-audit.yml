@@ -12,15 +12,35 @@ jobs:
     steps:
       # 🔎 Run GEO/AEO audit against the live site
       - name: Run GEO audit
+        id: audit
         uses: Auriti-Labs/geo-optimizer-skill@v4.14.0
         with:
           url: https://albertoarena.it
-          format: sarif
+          format: json
           output-file: geo-report
 
-      # 📤 Upload SARIF to the Security tab
-      - name: Upload SARIF
-        uses: github/codeql-action/upload-sarif@v4
+      # 📝 Write score/band to the job summary
+      - name: Write summary
+        run: |
+          SCORE="${{ steps.audit.outputs.score }}"
+          BAND="${{ steps.audit.outputs.band }}"
+          {
+            echo "### 🔎 GEO Audit Result"
+            echo ""
+            echo "- **Score:** ${SCORE}/100"
+            echo "- **Band:** ${BAND}"
+            echo ""
+            if [ "$SCORE" = "0" ]; then
+              echo "> ⚠️ A score of 0 usually means the runner couldn't reach the site (connect timeout), not a real regression. Check the \"Run GEO audit\" step log for connection errors before treating this as a real drop, and consider re-running manually."
+              echo ""
+            fi
+            echo "Full JSON report is attached as a workflow artifact."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # 📤 Upload the report for history/download
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
         with:
-          sarif_file: geo-report.sarif
-        continue-on-error: true
+          name: geo-report
+          path: ${{ steps.audit.outputs.report-path }}
+          retention-days: 90

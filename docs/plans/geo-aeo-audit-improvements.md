@@ -112,8 +112,18 @@ matches the address already used on privacy-policy and credits.
 Add `.github/workflows/geo-audit.yml` using the composite action
 `Auriti-Labs/geo-optimizer-skill@v4.14.0` (free, open source, same tool
 behind the report — no Studio subscription needed for this check) against
-`https://albertoarena.it`, `format: sarif` so results surface in GitHub's
-code-scanning tab.
+`https://albertoarena.it`, `format: json`, with the score/band written to
+the job summary and the full report uploaded as a workflow artifact.
+
+Originally designed around `format: sarif` uploaded to GitHub's code-scanning
+tab, matching the action's own README example. Dropped after the first real
+run: GitHub's SARIF ingestion expects finding locations as `file://` URIs
+relative to a checked-out repo (it's built for source-code analysis), but
+this workflow never checks out the repo — it's auditing a live URL, so the
+tool emits `https://...` URIs and GitHub rejects the upload outright
+("SARIF URI scheme https did not match checkout URI scheme file"). SARIF/
+code-scanning isn't the right fit for a live-URL audit; job summary + artifact
+is simpler and actually works.
 
 Trigger: `schedule` (weekly) + `workflow_dispatch` only — not on `push`/`pull_request`
 like `test.yml`, since this audits the live production URL, not the working
@@ -122,9 +132,24 @@ tree, and there's no value re-running it per-commit.
 Leave `min-score` unset initially (observe-only) for a few runs; revisit
 setting a gate once Tasks 1-5 land and a stable baseline score is known.
 
-**Acceptance:** workflow runs on schedule and via manual dispatch, produces a
-SARIF report visible in the Security tab, doesn't fail the build while
-`min-score` is unset.
+**Real finding from the first run (2026-08-05):** the audit reported a
+`0/100 critical` score. Not a real regression — every HTTP request from the
+runner hit a TCP *connect* timeout, never reaching TLS/HTTP at all, and the
+tool silently falls back to 0 on total failure instead of erroring the job.
+The same commit's `deploy.yml` verification step (`curl https://albertoarena.it/`
+from an identical `ubuntu-latest` runner) got `200` around the same time, and
+that same deploy workflow had itself failed once on this commit two days
+earlier before succeeding on manual retry. Most likely explanation: Netsons'
+firewall blackholing some fraction of GitHub Actions' ephemeral outbound IP
+pool (a known pattern with budget shared hosts that blocklist cloud-provider
+IP ranges) — not a code or content issue. The job summary now prints a
+warning when score is exactly 0 for this reason. This is a point in favor of
+the already-planned server-pull deployment migration
+(`docs/plans/server-pull-deployment.md`), separate from this plan's scope.
+
+**Acceptance:** workflow runs on schedule and via manual dispatch, writes
+score/band to the job summary, uploads the JSON report as an artifact,
+doesn't fail the build while `min-score` is unset.
 
 ## Out of scope
 
@@ -152,5 +177,6 @@ SARIF report visible in the Security tab, doesn't fail the build while
 - `/.well-known/ai.txt` live at site root.
 - `Crawl-delay` present in `robots.txt`.
 - No dead `<head>` asset links.
-- Obfuscated email reachable from About page or footer.
-- `geo-audit.yml` running weekly, SARIF uploaded, no CI gate yet.
+- `mailto:hello@albertoarena.it` reachable from the About page.
+- `geo-audit.yml` running weekly, score/band in job summary, report artifact
+  uploaded, no CI gate yet.
