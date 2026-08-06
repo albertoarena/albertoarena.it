@@ -34,6 +34,22 @@ const pagePosts = regularPosts.slice(0, postsLimit);
 
 	<TrussPromo />
 
+	<div class="mb-12 p-4 rounded-lg border border-white-cloud dark:border-dark-cloud flex items-center justify-between gap-4 flex-wrap">
+		<div>
+			<p class="font-semibold text-dark dark:text-white">Cheat sheets</p>
+			<p class="text-sm text-gray">Dense, printable references for Laravel and event sourcing tooling.</p>
+		</div>
+		<a
+			href="/cheatsheets/"
+			class="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-secondary transition-colors whitespace-nowrap"
+		>
+			Browse cheat sheets
+			<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+			</svg>
+		</a>
+	</div>
+
 	{pinnedPosts.length > 0 && (
 		<div class="mb-10">
 			<p class="text-xs font-mono text-gray uppercase tracking-widest mb-5">★ Pinned</p>
