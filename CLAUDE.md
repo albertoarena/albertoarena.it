@@ -47,6 +47,19 @@ Any third-party image used in a post (photos, book covers, logos, screenshots of
 ### Pages
 Location: `/src/content/pages/[slug]/index.md`
 
+### llms.txt
+
+`/public/llms.txt` is hand-maintained, not generated from the content
+collections, it does not update itself. Add an entry (title, URL, one-line
+description) whenever:
+- A new post is published (under `## Posts`).
+- A new cheat sheet or other durable reference page ships (under its own
+  `##` section, e.g. `## Cheat sheets`), the index page and each individual
+  sheet both get a line.
+
+`/public/.well-known/ai.txt` is a static pointer to `/llms.txt`, not a
+second index, it needs no update when content changes.
+
 ## Layout
 
 Single-column, no sidebar. The shell is:

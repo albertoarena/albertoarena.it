@@ -4,6 +4,11 @@
 
 Alberto Arena is a Senior Software Engineer based in Sicily, Italy, with a background in PHP/Laravel, Shopify and headless commerce, and AI-assisted engineering. More at https://albertoarena.it/pages/about/.
 
+## Cheat sheets
+
+- [Cheat sheets](https://albertoarena.it/cheatsheets/): Dense, printable reference sheets for the tools and patterns Alberto uses.
+- [Spatie Laravel Event Sourcing Cheat Sheet](https://albertoarena.it/cheatsheets/spatie-event-sourcing/): A dense, printable reference for spatie/laravel-event-sourcing: aggregates, projectors, reactors, artisan commands, testing, and the gotchas people hit first.
+
 ## Posts
 
 - [I built a Laravel event-sourcing generator, then the AI version](https://albertoarena.it/posts/generator-vs-ai-skill/): I built a deterministic Laravel event-sourcing generator, then a Claude Code skill that does the same job through a design conversation. Which one wins? Wrong question.
