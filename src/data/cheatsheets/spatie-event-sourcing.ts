@@ -60,7 +60,7 @@ export const spatieEventSourcingCheatsheet: Cheatsheet = {
         { code: '->persist()', text: 'Write recorded events to the store.' },
         { code: 'protected function applySomethingHappened(SomethingHappened $event)', text: 'Mutate in-memory state (no side effects, no queries into other aggregates).' },
         { text: 'Enforce invariants BEFORE recordThat; throw domain exceptions on violation.' },
-        { text: "Concurrency: note the package's handling / int $aggregateVersion." },
+        { text: 'Concurrency is built in: persist() throws CouldNotPersistAggregate if another process persisted events for this aggregate since it was retrieved. No manual version passing needed.' },
       ],
     },
     {
@@ -83,11 +83,13 @@ export const spatieEventSourcingCheatsheet: Cheatsheet = {
     {
       id: 'artisan-commands',
       title: 'Artisan commands',
-      note: 'Verify names against the installed version before publishing.',
       entries: [
-        { code: 'php artisan event-sourcing:replay', text: 'Replay events to projectors.' },
-        { code: 'php artisan event-sourcing:list', text: 'List registered handlers.' },
-        { text: 'make: generators the package ships (projector / reactor / aggregate / storable-event) — confirm which exist in the installed version.' },
+        { code: 'php artisan make:aggregate', text: 'Scaffold a new aggregate root.' },
+        { code: 'php artisan make:projector', text: 'Scaffold a new projector. Add -Q for a QueuedProjector.' },
+        { code: 'php artisan make:reactor', text: 'Scaffold a new reactor.' },
+        { code: 'php artisan make:storable-event', text: 'Scaffold a new domain event.' },
+        { code: 'php artisan event-sourcing:replay', text: 'Replay stored events to projectors.' },
+        { code: 'php artisan event-sourcing:list', text: 'List all registered event handlers.' },
       ],
     },
     {
@@ -139,8 +141,8 @@ export const automateThisFooter: AutomateLink[] = [
   },
 ];
 
-export const relatedPosts = [
-  { slug: 'domain-using-spatie-event-sourcing', title: 'Create a domain using Spatie event sourcing' },
-  { slug: 'ai-laravel-event-sourcing', title: 'Event Sourcing with a Little Help from AI' },
-  { slug: 'generator-vs-ai-skill', title: 'I built a Laravel event-sourcing generator, then the AI version' },
+export const relatedPostSlugs = [
+  'domain-using-spatie-event-sourcing',
+  'ai-laravel-event-sourcing',
+  'generator-vs-ai-skill',
 ];
