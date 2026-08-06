@@ -14,9 +14,10 @@ interface Props {
   hreflangIt?: string;
   noViewTransitions?: boolean;
   noindex?: boolean;
+  wide?: boolean;
 }
 
-const { title, description, image, article = false, lang = 'en', hreflangEn, hreflangIt, noViewTransitions = false, noindex = false } = Astro.props;
+const { title, description, image, article = false, lang = 'en', hreflangEn, hreflangIt, noViewTransitions = false, noindex = false, wide = false } = Astro.props;
 ---
 
 <BaseLayout
@@ -31,7 +32,7 @@ const { title, description, image, article = false, lang = 'en', hreflangEn, hre
   noindex={noindex}
 >
   <Header />
-  <main id="main-content" class="max-w-3xl mx-auto px-6 py-12 animate-fade-in">
+  <main id="main-content" class:list={[wide ? 'max-w-5xl' : 'max-w-3xl', 'mx-auto px-6 py-12 animate-fade-in']}>
     <slot />
   </main>
   <Footer />
