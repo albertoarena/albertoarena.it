@@ -1,0 +1,218 @@
+---
+import Layout from '@/components/Layout.astro';
+import NewsletterSignup from '@/components/NewsletterSignup.astro';
+import { siteConfig } from '@/utils/config';
+import {
+  spatieEventSourcingCheatsheet,
+  automateThisFooter,
+  relatedPosts,
+} from '@/data/cheatsheets/spatie-event-sourcing';
+
+const cardSections = spatieEventSourcingCheatsheet.sections.filter((s) => !s.flow);
+const flowSection = spatieEventSourcingCheatsheet.sections.find((s) => s.flow);
+
+const pdfPath = '/downloads/spatie-event-sourcing-cheatsheet.pdf';
+const canonicalPath = '/cheatsheets/spatie-event-sourcing/';
+---
+
+<Layout
+  title={`${spatieEventSourcingCheatsheet.title} — ${siteConfig.title}`}
+  description={spatieEventSourcingCheatsheet.description}
+  image="/images/cheatsheets/spatie-event-sourcing/cover.jpg"
+  wide={true}
+>
+  <header class="mb-10 print-hide">
+    <p class="text-sm font-medium text-primary mb-2">Cheat sheet</p>
+    <h1 class="text-3xl lg:text-4xl font-bold text-dark dark:text-white mb-3">
+      {spatieEventSourcingCheatsheet.title}
+    </h1>
+    <p class="text-gray leading-relaxed max-w-2xl mb-6">
+      {spatieEventSourcingCheatsheet.description}
+    </p>
+    <a
+      href={pdfPath}
+      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-secondary transition-colors"
+    >
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16" />
+      </svg>
+      Download the printable PDF
+    </a>
+  </header>
+
+  {flowSection && (
+    <section class="mb-10 cheatsheet-card rounded-lg border border-white-cloud dark:border-dark-cloud p-5">
+      <h2 class="text-sm font-semibold uppercase tracking-wide text-gray mb-4">
+        {flowSection.title}
+      </h2>
+      <div class="flex flex-wrap items-center gap-2 overflow-x-auto font-mono text-xs sm:text-sm">
+        {flowSection.flow!.map((step, i) => (
+          <>
+            <span class="px-3 py-1.5 rounded bg-gray-100 dark:bg-dark-cloud/60 text-dark dark:text-white whitespace-nowrap">
+              {step}
+            </span>
+            {i < flowSection.flow!.length - 1 && (
+              <span class="text-gray" aria-hidden="true">&rarr;</span>
+            )}
+          </>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <div class="cheatsheet-grid grid gap-6 sm:grid-cols-2 mb-12">
+    {cardSections.map((section) => (
+      <section class="cheatsheet-card rounded-lg border border-white-cloud dark:border-dark-cloud p-5">
+        <h2 class="text-sm font-semibold uppercase tracking-wide text-gray mb-3">
+          {section.title}
+        </h2>
+        {section.note && (
+          <p class="text-xs italic text-gray mb-3">{section.note}</p>
+        )}
+        <ul class="space-y-2.5">
+          {section.entries!.map((entry) => (
+            <li class="text-sm leading-relaxed text-dark dark:text-white">
+              {entry.code && (
+                <code class="block font-mono text-xs sm:text-sm bg-gray-100 dark:bg-dark-cloud/60 rounded px-1.5 py-0.5 mb-1 break-words">
+                  {entry.code}
+                </code>
+              )}
+              {entry.term && (
+                <strong class="font-semibold">{entry.term}</strong>
+              )}
+              {(entry.code || entry.term) && ' — '}
+              <span class="text-gray">{entry.text}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+
+  <section class="mb-12 print-hide">
+    <h2 class="text-xl font-semibold text-dark dark:text-white mb-4 pb-2 border-b border-white-cloud dark:border-dark-cloud">
+      Related reading
+    </h2>
+    <ul class="flex flex-wrap gap-4 text-sm">
+      {relatedPosts.map((post) => (
+        <li>
+          <a
+            href={`/posts/${post.slug}/`}
+            class="text-gray hover:text-primary transition-colors underline underline-offset-2"
+          >
+            {post.title}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="mb-12 print-hide rounded-lg border border-white-cloud dark:border-dark-cloud p-5">
+    <h2 class="text-lg font-semibold text-dark dark:text-white mb-3">
+      Automate all of this
+    </h2>
+    <ul class="space-y-3">
+      {automateThisFooter.map((link) => (
+        <li class="text-sm text-gray leading-relaxed">
+          <a
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-mono text-dark dark:text-white hover:text-primary transition-colors underline underline-offset-2"
+          >
+            {link.name}
+          </a>
+          {' — '}{link.text}
+        </li>
+      ))}
+    </ul>
+    <p class="text-sm text-gray mt-3">
+      Read the honest comparison in
+      {' '}
+      <a href="/posts/generator-vs-ai-skill/" class="hover:text-primary transition-colors underline underline-offset-2">
+        which to reach for, when
+      </a>.
+    </p>
+  </section>
+
+  <div class="print-hide rounded-lg border border-white-cloud dark:border-dark-cloud p-5">
+    <h2 class="text-lg font-semibold text-dark dark:text-white mb-1">
+      Grab the printable one-pager
+    </h2>
+    <p class="text-sm text-gray leading-relaxed mb-4">
+      This page is free to read. Subscribe and I'll send you the printable PDF
+      version, plus practical notes on Laravel tooling and AI-assisted
+      development, roughly once a month.
+    </p>
+    <NewsletterSignup />
+  </div>
+
+  <p class="print-footer hidden text-xs text-gray mt-6">
+    {siteConfig.url}{canonicalPath} — {siteConfig.author.name}
+  </p>
+</Layout>
+
+<style is:global>
+  @media print {
+    header,
+    footer,
+    #cookie-consent,
+    .print-hide {
+      display: none !important;
+    }
+
+    .print-footer {
+      display: block !important;
+    }
+
+    * {
+      color: #000 !important;
+      background-color: transparent !important;
+      border-color: #ccc !important;
+      box-shadow: none !important;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+
+    body {
+      background: #fff !important;
+    }
+
+    main {
+      max-width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    code {
+      background-color: #f0f0f0 !important;
+    }
+
+    .cheatsheet-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 8px !important;
+    }
+
+    .cheatsheet-card {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      padding: 10px !important;
+    }
+
+    pre,
+    code {
+      white-space: pre-wrap !important;
+      word-break: break-word !important;
+      overflow-wrap: break-word !important;
+    }
+
+    a {
+      text-decoration: none !important;
+    }
+
+    @page {
+      size: A4;
+      margin: 12mm;
+    }
+  }
+</style>
