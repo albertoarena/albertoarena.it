@@ -138,3 +138,34 @@ jobs:
           fi
 
           echo "🎉 Deployment verified successfully — all checks passed!"
+
+      # 📰 Push the latest posts into the profile README (albertoarena/albertoarena).
+      # Reads dist/rss.xml, already built above, no network call to albertoarena.it.
+      # Requires the PROFILE_README_TOKEN secret (fine-grained PAT, Contents:
+      # read/write, scoped to albertoarena/albertoarena). See
+      # docs/plans/profile-readme-push.md.
+      - name: Checkout profile repo
+        uses: actions/checkout@v4
+        with:
+          repository: albertoarena/albertoarena
+          path: profile
+          token: ${{ secrets.PROFILE_README_TOKEN }}
+
+      - name: Update profile README with latest posts
+        env:
+          RSS_PATH: dist/rss.xml
+          PROFILE_README: profile/README.md
+        run: node scripts/update-profile-readme.mjs
+
+      - name: Commit and push profile README
+        working-directory: profile
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- README.md; then
+            echo "No change to profile README."
+            exit 0
+          fi
+          git add README.md
+          git commit -m "chore: update latest blog posts"
+          git push
