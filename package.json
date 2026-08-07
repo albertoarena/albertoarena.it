@@ -15,7 +15,8 @@
     "test:seo-indexing": "astro build && vitest run tests/seo-indexing.test.ts",
     "test:geo-aeo": "astro build && vitest run tests/geo-aeo.test.ts",
     "test:cheatsheet-pdf": "vitest run tests/cheatsheet-pdf.test.ts",
-    "test": "npm run test:eligibility && npm run test:seo-indexing && npm run test:geo-aeo && npm run test:cheatsheet-pdf",
+    "test:profile-readme": "vitest run tests/update-profile-readme.test.ts",
+    "test": "npm run test:eligibility && npm run test:seo-indexing && npm run test:geo-aeo && npm run test:cheatsheet-pdf && npm run test:profile-readme",
     "pdf:cheatsheet": "node scripts/generate-cheatsheet-pdf.mjs"
   },
   "dependencies": {
@@ -33,6 +34,7 @@
     "@mozilla/readability": "^0.6.0",
     "@tailwindcss/typography": "^0.5.20",
     "@types/jsdom": "^28.0.3",
+    "fast-xml-parser": "^5.10.1",
     "jsdom": "^27.0.1",
     "pdf-lib": "^1.17.1",
     "puppeteer": "^24.43.1",
