@@ -11,6 +11,7 @@ Alberto Arena is a Senior Software Engineer based in Sicily, Italy, with a backg
 
 ## Posts
 
+- [Context Engineering: The Discipline That Keeps AI From Writing Slop](https://albertoarena.it/posts/context-engineering-not-slop/): AI slop isn't usually a bad model, it's bad context. Here's the discipline that prevents it, the failure modes behind it, and three checks you can actually run to enforce it.
 - [My coding agent kept inventing columns](https://albertoarena.it/posts/my-coding-agent-kept-inventing-columns/): Laravel Truss 1.8 turns your schema export into grounding context for a coding agent: annotations, focused and compact exports, and an optional read-only MCP server.
 - [Claude Code Auto Mode: What Still Needs a Human](https://albertoarena.it/posts/claude-code-auto-mode-still-needs-a-human/): Anthropic says auto mode catches 89% of dangerous commands against 13.6% for human reviewers, and still calls it not risk-free. The config, hooks, and review habits that keep it honest.
 - [I built a Laravel event-sourcing generator, then the AI version](https://albertoarena.it/posts/generator-vs-ai-skill/): I built a deterministic Laravel event-sourcing generator, then a Claude Code skill that does the same job through a design conversation. Which one wins? Wrong question.
