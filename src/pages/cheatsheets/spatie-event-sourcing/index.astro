@@ -6,12 +6,17 @@ import { siteConfig } from '@/utils/config';
 import { getPostSlug } from '@/utils/helpers';
 import {
   spatieEventSourcingCheatsheet,
+  wrongRightPairs,
   automateThisFooter,
   relatedPostSlugs,
 } from '@/data/cheatsheets/spatie-event-sourcing';
 
-const cardSections = spatieEventSourcingCheatsheet.sections.filter((s) => !s.flow);
 const flowSection = spatieEventSourcingCheatsheet.sections.find((s) => s.flow);
+const calloutSection = spatieEventSourcingCheatsheet.sections.find((s) => s.variant === 'callout');
+const cardSections = spatieEventSourcingCheatsheet.sections.filter(
+  (s) => !s.flow && s.variant !== 'callout'
+);
+const gotchasSection = spatieEventSourcingCheatsheet.sections.find((s) => s.id === 'gotchas');
 
 const allPosts = await getCollection('posts');
 const relatedPosts = relatedPostSlugs
@@ -21,6 +26,32 @@ const relatedPosts = relatedPostSlugs
 const pdfPath = '/downloads/spatie-event-sourcing-cheatsheet.pdf';
 const canonicalPath = '/cheatsheets/spatie-event-sourcing/';
 const canonicalURL = new URL(canonicalPath, siteConfig.url).toString();
+
+const techArticleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: spatieEventSourcingCheatsheet.title,
+  description: spatieEventSourcingCheatsheet.description,
+  about: 'spatie/laravel-event-sourcing',
+  dependencies: `spatie/laravel-event-sourcing ${spatieEventSourcingCheatsheet.packageVersion}`,
+  dateModified: spatieEventSourcingCheatsheet.lastReviewed,
+  author: { '@id': `${siteConfig.url}/#person` },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalURL },
+};
+
+const faqSchema = gotchasSection?.entries?.some((e) => e.question)
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: gotchasSection.entries
+        .filter((e) => e.question)
+        .map((e) => ({
+          '@type': 'Question',
+          name: e.question,
+          acceptedAnswer: { '@type': 'Answer', text: e.text },
+        })),
+    }
+  : null;
 ---
 
 <Layout
@@ -29,6 +60,9 @@ const canonicalURL = new URL(canonicalPath, siteConfig.url).toString();
   image="/images/cheatsheets/spatie-event-sourcing/cover.jpg"
   wide={true}
 >
+  <script type="application/ld+json" set:html={JSON.stringify(techArticleSchema)} />
+  {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+
   <div class="cheatsheet-header mb-10">
     <p class="text-sm font-medium text-primary mb-2">Cheat sheet</p>
     <h1 class="text-3xl lg:text-4xl font-bold text-dark dark:text-white mb-3">
@@ -36,6 +70,12 @@ const canonicalURL = new URL(canonicalPath, siteConfig.url).toString();
     </h1>
     <p class="text-gray leading-relaxed max-w-2xl mb-2">
       {spatieEventSourcingCheatsheet.description}
+    </p>
+    <p class="text-xs text-gray mb-2">
+      Covers spatie/laravel-event-sourcing {spatieEventSourcingCheatsheet.packageVersion} &middot; Last reviewed {spatieEventSourcingCheatsheet.lastReviewed}
+    </p>
+    <p class="text-gray leading-relaxed max-w-2xl mb-2">
+      {spatieEventSourcingCheatsheet.intro}
     </p>
     <p class="print-only text-xs text-gray mb-6">
       Printed from <a href={canonicalURL}>{canonicalURL}</a> by {siteConfig.author.name}.
@@ -53,104 +93,232 @@ const canonicalURL = new URL(canonicalPath, siteConfig.url).toString();
     </a>
   </div>
 
-  {flowSection && (
-    <section class="mb-10 cheatsheet-card rounded-lg border border-white-cloud dark:border-dark-cloud p-5">
-      <h2 class="text-sm font-semibold uppercase tracking-wide text-gray mb-4">
-        {flowSection.title}
-      </h2>
-      <div class="cheatsheet-flow flex flex-col gap-2 font-mono text-xs sm:text-sm">
-        {flowSection.flow!.map((step, i) => (
-          <>
-            <span
-              class="px-3 py-1.5 rounded bg-gray-100 dark:bg-dark-cloud/60 text-dark dark:text-white w-fit"
-              style={`margin-left: ${i * 20}px`}
-            >
-              {step}
-            </span>
-            {i < flowSection.flow!.length - 1 && (
-              <span class="text-gray" style={`margin-left: ${i * 20 + 12}px`} aria-hidden="true">&darr;</span>
-            )}
-          </>
-        ))}
-      </div>
-    </section>
-  )}
+  <div class="lg:flex lg:items-start lg:gap-6">
+    <aside class="print-hide hidden lg:block lg:w-36 lg:shrink-0 lg:sticky lg:top-20">
+      <nav aria-label="Cheat sheet sections" class="text-sm space-y-2.5 border-l border-white-cloud dark:border-dark-cloud pl-4">
+        <a href="#building-blocks" class="block text-gray hover:text-primary transition-colors">Building blocks</a>
+        <a href="#wrong-right" class="block text-gray hover:text-primary transition-colors">Code samples</a>
+        <a href="#automate" class="block text-gray hover:text-primary transition-colors">Automate</a>
+        <a href="#related-reading" class="block text-gray hover:text-primary transition-colors">Related reading</a>
+      </nav>
+    </aside>
 
-  <div class="cheatsheet-grid columns-1 sm:columns-2 gap-6 mb-12">
-    {cardSections.map((section) => (
-      <section class="cheatsheet-card break-inside-avoid mb-6 rounded-lg border border-white-cloud dark:border-dark-cloud p-5">
-        <h2 class="text-sm font-semibold uppercase tracking-wide text-gray mb-3">
-          {section.title}
-        </h2>
-        <ul class="space-y-2.5">
-          {section.entries!.map((entry) => (
-            <li class="text-sm leading-relaxed text-dark dark:text-white">
-              {entry.code && (
-                <code class="block font-mono text-xs sm:text-sm bg-gray-100 dark:bg-dark-cloud/60 rounded px-1.5 py-0.5 mb-1 break-words">{entry.code}</code>
-              )}
-              {entry.term && <strong class="font-semibold">{entry.term}:</strong>}{' '}
-              <span class="text-gray">{entry.text}</span>
-            </li>
+    <div class="min-w-0 flex-1">
+      {calloutSection && (
+        <section class="cheatsheet-callout mb-10 rounded-lg border-2 border-primary/40 bg-primary/5 dark:bg-primary/10 p-5">
+          <h2 class="text-sm font-semibold uppercase tracking-wide text-primary mb-2">
+            {calloutSection.title}
+          </h2>
+          {calloutSection.entries!.map((entry) => (
+            <p class="text-sm leading-relaxed text-dark dark:text-white">{entry.text}</p>
           ))}
-        </ul>
-      </section>
-    ))}
-  </div>
+        </section>
+      )}
 
-  {relatedPosts.length > 0 && (
-    <section class="mb-12 print-hide rounded-lg border border-white-cloud dark:border-dark-cloud p-5">
-      <h2 class="text-lg font-semibold text-dark dark:text-white mb-3">
-        Related reading
-      </h2>
-      <div class="grid gap-3 sm:grid-cols-3">
-        {relatedPosts.map((post) => (
-          <a
-            href={`/posts/${getPostSlug(post)}/`}
-            class="group flex items-center gap-3 rounded-lg border border-white-cloud dark:border-dark-cloud p-3 hover:border-primary/50 transition-colors"
-          >
-            <img
-              src={post.data.socialImage ?? siteConfig.author.photo}
-              alt=""
-              class="w-14 h-14 rounded object-cover shrink-0"
-              loading="lazy"
-            />
-            <span class="text-sm font-medium text-dark dark:text-white group-hover:text-primary transition-colors">{post.data.title}</span>
-          </a>
+      {flowSection && (
+        <section class="mb-10 cheatsheet-card rounded-lg border border-white-cloud dark:border-dark-cloud p-5">
+          <h2 class="text-sm font-semibold uppercase tracking-wide text-gray mb-4">
+            {flowSection.title}
+          </h2>
+          <div class="cheatsheet-flow flex flex-col gap-2 font-mono text-xs sm:text-sm">
+            {flowSection.flow!.map((step, i) => (
+              <>
+                <span
+                  class="px-3 py-1.5 rounded bg-gray-100 dark:bg-dark-cloud/60 text-dark dark:text-white w-fit"
+                  style={`margin-left: ${i * 20}px`}
+                >
+                  {step}
+                </span>
+                {i < flowSection.flow!.length - 1 && (
+                  <span class="text-gray" style={`margin-left: ${i * 20 + 12}px`} aria-hidden="true">&darr;</span>
+                )}
+              </>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <div class="print-hide relative mb-6">
+        <input
+          type="search"
+          id="cheatsheet-filter"
+          placeholder="Filter this page&hellip; (press / to focus)"
+          aria-label="Filter cheat sheet entries"
+          class="w-full rounded-lg border border-white-cloud dark:border-dark-cloud bg-white dark:bg-dark px-4 py-2 text-sm text-dark dark:text-white placeholder:text-gray focus:outline-none focus:ring-2 focus:ring-primary/50"
+        />
+      </div>
+
+      <div class="cheatsheet-grid columns-1 sm:columns-2 gap-6 mb-12">
+        {cardSections.map((section) => (
+          <section id={section.id} class="cheatsheet-card break-inside-avoid mb-6 rounded-lg border border-white-cloud dark:border-dark-cloud p-5 scroll-mt-20">
+            <h2 class="text-sm font-semibold uppercase tracking-wide text-gray mb-3">
+              {section.title}
+            </h2>
+            <ul class="space-y-2.5">
+              {section.entries!.map((entry) => (
+                <li
+                  class="cheatsheet-entry text-sm leading-relaxed text-dark dark:text-white"
+                  data-filter-text={`${section.title} ${entry.term ?? ''} ${entry.code ?? ''} ${entry.text}`.toLowerCase()}
+                >
+                  {entry.code && (
+                    <code tabindex="0" class="doc-scroll block font-mono text-xs bg-gray-100 dark:bg-dark-cloud/60 rounded px-1.5 py-0.5 mb-1 overflow-x-auto whitespace-pre">{entry.code}</code>
+                  )}
+                  {entry.term && <strong class="font-semibold">{entry.term}:</strong>}{' '}
+                  <span class="text-gray">{entry.text}</span>
+                  {entry.href && (
+                    <a
+                      href={entry.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="doc-link print-hide inline-flex items-center align-middle ml-1 text-gray/70 hover:text-primary transition-colors"
+                      aria-label="View in Spatie docs"
+                      title="View in Spatie docs"
+                    >
+                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </section>
         ))}
       </div>
-    </section>
-  )}
 
-  <section class="mb-12 print-hide rounded-lg border border-white-cloud dark:border-dark-cloud p-5">
-    <h2 class="text-lg font-semibold text-dark dark:text-white mb-3">
-      Automate all of this
-    </h2>
-    <ul class="space-y-3">
-      {automateThisFooter.map((link) => (
-        <li class="text-sm text-gray leading-relaxed">
-          <a href={link.href} target="_blank" rel="noopener noreferrer" class="font-mono text-dark dark:text-white hover:text-primary transition-colors underline underline-offset-2">{link.name}</a>: {link.text}
-        </li>
-      ))}
-    </ul>
-    <p class="text-sm text-gray mt-3">
-      Read the honest comparison: <a href="/posts/generator-vs-ai-skill/" class="hover:text-primary transition-colors underline underline-offset-2">which to reach for, and when</a>.
-    </p>
-  </section>
+      {wrongRightPairs.length > 0 && (
+        <section id="wrong-right" class="cheatsheet-pairs mb-12 rounded-lg border border-white-cloud dark:border-dark-cloud p-5 scroll-mt-20">
+          <h2 class="text-lg font-semibold text-dark dark:text-white mb-4">
+            Wrong / right
+          </h2>
+          <div class="space-y-6">
+            {wrongRightPairs.map((pair) => (
+              <div class="cheatsheet-pair">
+                <p class="text-sm font-medium text-dark dark:text-white mb-2">{pair.caption}</p>
+                <div class="grid gap-3 sm:grid-cols-2">
+                  <div class="rounded-lg border-l-4 border-red-400 dark:border-red-500 bg-red-50/50 dark:bg-red-950/20 p-3">
+                    <pre tabindex="0" class="doc-scroll font-mono text-xs overflow-x-auto whitespace-pre text-dark dark:text-white">{pair.wrong.code}</pre>
+                    <p class="text-xs text-gray mt-2">{pair.wrong.note}</p>
+                  </div>
+                  <div class="rounded-lg border-l-4 border-green-400 dark:border-green-500 bg-green-50/50 dark:bg-green-950/20 p-3">
+                    <pre tabindex="0" class="doc-scroll font-mono text-xs overflow-x-auto whitespace-pre text-dark dark:text-white">{pair.right.code}</pre>
+                    <p class="text-xs text-gray mt-2">{pair.right.note}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
-  <div class="print-hide rounded-lg border border-white-cloud dark:border-dark-cloud p-5">
-    <h2 class="text-lg font-semibold text-dark dark:text-white mb-1">
-      Grab the printable one-pager
-    </h2>
-    <p class="text-sm text-gray leading-relaxed mb-4">
-      This page is free to read. Subscribe and I'll send you the printable PDF
-      version, plus practical notes on Laravel tooling and AI-assisted
-      development, roughly once a month.
-    </p>
-    <NewsletterSignup />
+      <section id="automate" class="mb-12 print-hide rounded-lg border border-white-cloud dark:border-dark-cloud p-5 scroll-mt-20">
+        <h2 class="text-lg font-semibold text-dark dark:text-white mb-3">
+          Automate all of this
+        </h2>
+        <div class="grid gap-3 sm:grid-cols-2">
+          {automateThisFooter.map((link) => (
+            <a
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group rounded-lg border border-white-cloud dark:border-dark-cloud p-3 hover:border-primary/50 transition-colors"
+            >
+              <span class="block font-mono text-sm text-dark dark:text-white group-hover:text-primary transition-colors underline underline-offset-2">{link.name}</span>
+              <span class="block text-sm text-gray mt-1">{link.text}</span>
+            </a>
+          ))}
+        </div>
+        <p class="text-sm text-gray mt-3">
+          Read the honest comparison: <a href="/posts/generator-vs-ai-skill/" class="hover:text-primary transition-colors underline underline-offset-2">which to reach for, and when</a>.
+        </p>
+      </section>
+
+      {relatedPosts.length > 0 && (
+        <section id="related-reading" class="mb-12 print-hide rounded-lg border border-white-cloud dark:border-dark-cloud p-5 scroll-mt-20">
+          <h2 class="text-lg font-semibold text-dark dark:text-white mb-3">
+            Related reading
+          </h2>
+          <div class="grid gap-3 sm:grid-cols-3">
+            {relatedPosts.map((post) => (
+              <a
+                href={`/posts/${getPostSlug(post)}/`}
+                class="group flex items-center gap-3 rounded-lg border border-white-cloud dark:border-dark-cloud p-3 hover:border-primary/50 transition-colors"
+              >
+                <img
+                  src={post.data.socialImage ?? siteConfig.author.photo}
+                  alt=""
+                  class="w-14 h-14 rounded object-cover shrink-0"
+                  loading="lazy"
+                />
+                <span class="text-sm font-medium text-dark dark:text-white group-hover:text-primary transition-colors">{post.data.title}</span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <div class="print-hide rounded-lg border border-white-cloud dark:border-dark-cloud p-5">
+        <h2 class="text-lg font-semibold text-dark dark:text-white mb-1">
+          Grab the printable PDF
+        </h2>
+        <p class="text-sm text-gray leading-relaxed mb-4">
+          Get notified the moment a new cheat sheet ships, plus practical notes on
+          Laravel tooling and AI-assisted development, roughly once a month. The
+          PDF above is already free, no opt-in required.
+        </p>
+        <NewsletterSignup />
+      </div>
+    </div>
   </div>
+
+  <script>
+    const input = document.getElementById('cheatsheet-filter') as HTMLInputElement | null;
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('.cheatsheet-card'));
+
+    if (input) {
+      input.addEventListener('input', () => {
+        const query = input.value.trim().toLowerCase();
+        for (const card of cards) {
+          const cardEntries = Array.from(card.querySelectorAll<HTMLElement>('.cheatsheet-entry'));
+          let anyVisible = false;
+          for (const entry of cardEntries) {
+            const matches = !query || (entry.dataset.filterText ?? '').includes(query);
+            entry.style.display = matches ? '' : 'none';
+            if (matches) anyVisible = true;
+          }
+          card.style.display = anyVisible ? '' : 'none';
+        }
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === '/' && document.activeElement !== input) {
+          event.preventDefault();
+          input.focus();
+        }
+      });
+    }
+  </script>
 </Layout>
 
 <style is:global>
+  .doc-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(120, 120, 120, 0.5) transparent;
+  }
+
+  .doc-scroll::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .doc-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .doc-scroll::-webkit-scrollbar-thumb {
+    background-color: rgba(120, 120, 120, 0.5);
+    border-radius: 9999px;
+  }
+
   .print-only {
     display: none;
   }
@@ -193,6 +361,7 @@ const canonicalURL = new URL(canonicalPath, siteConfig.url).toString();
     .cheatsheet-grid {
       display: block !important;
       column-count: initial !important;
+      margin-bottom: 4px !important;
     }
 
     .cheatsheet-card {
@@ -253,6 +422,77 @@ const canonicalURL = new URL(canonicalPath, siteConfig.url).toString();
     .cheatsheet-card code {
       padding: 1px 4px !important;
       margin-bottom: 2px !important;
+    }
+
+    .cheatsheet-callout {
+      padding: 6px 10px !important;
+      margin-bottom: 6px !important;
+    }
+
+    .cheatsheet-callout h2 {
+      margin-bottom: 2px !important;
+      font-size: 10px !important;
+    }
+
+    .cheatsheet-callout p {
+      font-size: 11px !important;
+      line-height: 1.3 !important;
+      margin-bottom: 0 !important;
+    }
+
+    .cheatsheet-pairs {
+      padding: 6px 10px !important;
+      margin-bottom: 4px !important;
+    }
+
+    .cheatsheet-pairs h2 {
+      font-size: 13px !important;
+      margin-bottom: 4px !important;
+    }
+
+    .cheatsheet-pairs > div {
+      gap: 6px !important;
+    }
+
+    .cheatsheet-pairs .space-y-6 {
+      display: flex !important;
+      flex-direction: column;
+    }
+
+    .cheatsheet-pair {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      margin-top: 5px !important;
+      margin-bottom: 0 !important;
+    }
+
+    .cheatsheet-pair:first-child {
+      margin-top: 0 !important;
+    }
+
+    .cheatsheet-pair p.font-medium {
+      font-size: 11px !important;
+      margin-bottom: 2px !important;
+    }
+
+    .cheatsheet-pair .grid {
+      gap: 6px !important;
+    }
+
+    .cheatsheet-pair pre {
+      padding: 3px 4px !important;
+      line-height: 1.2 !important;
+      font-size: 8px !important;
+    }
+
+    .cheatsheet-pair > div > div {
+      padding: 4px 6px !important;
+    }
+
+    .cheatsheet-pair p:not(.font-medium) {
+      font-size: 9px !important;
+      line-height: 1.2 !important;
+      margin-top: 2px !important;
     }
 
     a {
