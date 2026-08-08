@@ -1,6 +1,6 @@
 # SEO / Search Console follow-up
 
-**Status: 2026-08-08 round found and locally-verified a real fix (redirect chain); pending deploy + GSC validation click**
+**Status: 2026-08-08 redirect-chain fix merged (#17), deployed, and live-verified; validation requested from Google, awaiting recrawl**
 **Date:** 2026-07-18 (see 2026-07-28, 2026-07-29 and 2026-08-08 updates at the bottom)
 
 ## What was done already
@@ -488,3 +488,59 @@ risking a live regression. All 7 cases passed on the first try:
    chain is fixed).
 5. No action on the other four rows this round — check back in 1-2 weeks
    per the playbook.
+
+---
+
+## 2026-08-08 update: shipped, deployed, live-verified; GSC validation requested
+
+PR [#17](https://github.com/albertoarena/albertoarena.it/pull/17) (the
+`.htaccess` fix above) merged to `master`, CI deployed via the existing FTP
+pipeline.
+
+**Live-`curl`-verified the fix on production**, including a case the local
+Apache test couldn't cover (no TLS in that environment): `https://` + `www`
+combined. All single-hop, `num_redirects: 1` via `curl -w`:
+
+| Request | Result |
+|---|---|
+| `http://www.albertoarena.it/category/react` | 1 hop → `https://albertoarena.it/category/react/` |
+| `https://www.albertoarena.it/tag/github` | 1 hop → `https://albertoarena.it/tag/github/` |
+| `http://albertoarena.it/page/2` | 1 hop → `https://albertoarena.it/page/2/` |
+| `http://www.albertoarena.it/` (root) | 1 hop, unchanged |
+| `http://www.albertoarena.it/favicon.ico` (static file) | 1 hop, no slash appended |
+| `http://www.albertoarena.it/tag/node.js` (dotted slug) | 1 hop → `.../tag/node.js/` |
+| already-canonical URLs (`/`, `/category/react/`, `/pages/credits/`, a post) | unchanged, 200 direct |
+
+Previously these same www/http + no-slash URLs took 2 hops; confirmed fixed.
+
+**Search Console actions taken by the user:**
+- Clicked "Convalida correzione" on **"Non trovata (404)"** (1 page,
+  `/posts/create-a-domain-with-spatie-event-sourcing/`) — this was the
+  already-code-fixed 404 that had never actually been submitted for
+  validation before (see 07-28 entry).
+- Re-requested a fresh "Convalida" on **"Pagina con reindirizzamento"** (13
+  pages) — now that the redirect is genuinely single-hop, this gives Google
+  something that should actually pass this time, unlike the prior four
+  rounds of validation against a URL that was still secretly 2-hop.
+
+**On the other two rows visible in the same report** (user asked
+specifically about these):
+
+- **"Esclusa in base al tag noindex" (24, Non iniziata)** — left alone,
+  deliberately. This isn't a problem to fix; it's Google recognizing the
+  intentional `noindex,follow` on the tag/category/pagination hub pages
+  from the 07-28 fix. "Convalida" is for confirming a fix to something
+  broken — there's nothing broken here, so nothing was clicked.
+- **"Pagina scansionata, ma attualmente non indicizzata" (31, Non
+  riuscita)** — re-confirmed as a non-technical bucket (stale tag/category
+  migration + tracking-param URLs correctly deferring to their canonical +
+  genuine content-authority judgment calls on a few old posts). No code fix
+  identified on this or any prior round; not clicked this time since
+  re-validating wouldn't change the outcome without an underlying fix to
+  point at.
+
+**Next check-in:** per the playbook, GSC validation cycles run days to
+weeks — no dashboard change expected immediately. Come back to this doc
+rather than re-diagnosing from scratch; if "Pagina con reindirizzamento"
+still fails validation after this round, the redirect-chain fix can be
+ruled out as the cause and the search should move elsewhere.
