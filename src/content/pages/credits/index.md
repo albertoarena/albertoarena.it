@@ -44,6 +44,7 @@ Cover images for some posts are sourced from **[Unsplash](https://unsplash.com)*
 | [We Became Editors-in-Chief, and Nobody Trained Us](/posts/we-became-editors-in-chief/) | A hand holding a red pen over a blank spiral notebook page on a wooden table | [Kelly Sikkema](https://unsplash.com/@kellysikkema) on Unsplash |
 | [I gave my schema viewer your app's colours](/posts/gave-my-schema-viewer-your-app-colours/) | Pantone colour swatches fanned out in a circle on a concrete surface | [Annie Spratt](https://unsplash.com/@anniespratt) on Unsplash |
 | [I built a Laravel event-sourcing generator, then the AI version](/posts/generator-vs-ai-skill/) | A dirt path forking in two through a green forest | [Jens Lelie](https://unsplash.com/@madebyjens) on Unsplash |
+| [Claude Code Auto Mode: What Still Needs a Human](/posts/claude-code-auto-mode-still-needs-a-human/) | A red-and-white boom barrier gate lowered across a road, blocking a waiting car | [Mauro Sbicego](https://unsplash.com/@maurosbicego) on Unsplash |
 
 ## Diagrams
 
