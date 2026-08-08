@@ -1,7 +1,9 @@
 # Plan: push latest posts into the profile README from this repo's deploy CI
 
-**Status:** Implemented on branch `chore/profile-readme-push`, pending the
-`PROFILE_README_TOKEN` secret before it can run successfully in CI
+**Status:** Completed — merged and deployed (PR #16), `PROFILE_README_TOKEN`
+in place, verified working in CI. The one remaining step — retiring the old
+pull-based workflow in the profile repo (see "After it works" below) — lives
+in that repo, not this one, and isn't tracked here.
 **Target repo:** `albertoarena/albertoarena` (profile repo), `README.md`
 **Moved from:** `albertoarena/albertoarena`'s `docs/blog-push-handoff.md`,
 which now just points here. This plan lives in this repo because all the

@@ -1,6 +1,6 @@
 # GEO/AEO audit follow-up
 
-**Status:** Planned
+**Status:** Completed — all 6 tasks shipped (PR #11, `adf63853`)
 **Date:** 2026-08-05
 
 ## Context
