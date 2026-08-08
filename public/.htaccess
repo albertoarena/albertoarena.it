@@ -1,5 +1,15 @@
 # Canonicalize host: force https://albertoarena.it (no www, https only)
 RewriteEngine On
+
+# Collapse host+scheme+trailing-slash normalization into a single 301
+# (avoids a 2-hop chain for e.g. http://www.albertoarena.it/category/react)
+RewriteCond %{HTTP_HOST} ^www\.albertoarena\.it$ [NC,OR]
+RewriteCond %{HTTPS} off
+RewriteCond %{REQUEST_URI} !/$
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d
+RewriteRule ^ https://albertoarena.it%{REQUEST_URI}/ [L,R=301]
+
+# Existing host-only rewrite (root path, already-slashed paths, static files)
 RewriteCond %{HTTP_HOST} ^www\.albertoarena\.it$ [NC,OR]
 RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://albertoarena.it/$1 [L,R=301]
