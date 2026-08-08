@@ -1,7 +1,7 @@
 # SEO / Search Console follow-up
 
-**Status: 2026-07-18 and 2026-07-28 rounds shipped; validation requested from Google 2026-07-29, awaiting recrawl**
-**Date:** 2026-07-18 (see 2026-07-28 and 2026-07-29 updates at the bottom)
+**Status: 2026-08-08 round found and locally-verified a real fix (redirect chain); pending deploy + GSC validation click**
+**Date:** 2026-07-18 (see 2026-07-28, 2026-07-29 and 2026-08-08 updates at the bottom)
 
 ## What was done already
 
@@ -340,3 +340,151 @@ bloccata da robots.txt" (2 — the actual regression this round's fix
 targets). All three show "Convalida iniziata" as of 29/07/26. No dashboard
 change expected for days to weeks; check back per the playbook above rather
 than re-diagnosing from scratch next time this comes up.
+
+---
+
+## 2026-08-08 update: found the real cause of the persistent redirect-validation failures
+
+User forwarded a fresh GSC notification email plus a full Coverage export
+(`albertoarena.it-Coverage-2026-08-08.zip` + 4 drilldown exports) after
+noticing the redirect issue still hadn't cleared across three prior rounds.
+Re-verified from scratch instead of trusting the earlier "just stale cache"
+conclusion, since the user explicitly flagged that past attempts changed
+little.
+
+### Current report snapshot (05/08/26 data, 40 indexed / 86 not indexed)
+
+| Reason | Pages | Validation |
+|---|---|---|
+| Pagina con reindirizzamento | 13 | **Non riuscita (failed)** |
+| Pagina scansionata, ma attualmente non indicizzata | 31 | **Non riuscita (failed)** |
+| Esclusa in base al tag "noindex" | 24 | Non iniziata (new) |
+| Non trovata (404) | 1 | Non iniziata |
+| Bloccata da robots.txt | 14 | Iniziata (in progress) |
+| Rilevata, ma attualmente non indicizzata | 3 | Iniziata (in progress) |
+| Duplicate / Alternate canonical | 0 | Superata (passed) |
+| Indicizzata ma bloccata da robots.txt | 0 | **Superata** — confirms the 07-28 noindex fix worked |
+
+### Root cause found: a real 2-hop redirect chain, missed by every prior round
+
+Every prior round (05-25, 07-18, 07-28, 07-29) tested the www/http →
+canonical-host redirect using only the **homepage** (`http://albertoarena.it/`,
+`http://www.albertoarena.it/`) — a path that already ends in `/`, so the
+`.htaccess` host-rewrite alone produces a clean single-hop 301. Today,
+live-`curl`-verifying every sampled URL from the fresh export (not just the
+homepage) turned up the actual bug:
+
+```
+$ curl -sI -L http://www.albertoarena.it/category/react
+HTTP/1.1 301 Moved Permanently
+Location: https://albertoarena.it/category/react       ← hop 1: .htaccess host rewrite (no slash added)
+HTTP/2 301
+location: https://albertoarena.it/category/react/       ← hop 2: Apache mod_dir DirectorySlash
+HTTP/2 200
+```
+
+`public/.htaccess`'s host-canonicalization rule rewrites `www`/`http` to the
+canonical host but preserves the original request path verbatim. If that
+path lacks a trailing slash (true for every tag/category/page URL Google has
+on file pre-dating the 07-10 trailing-slash fixes), the rewritten URL is
+itself non-canonical and triggers a *second* 301 from Apache's own
+`mod_dir` directory-slash behavior. A URL that redirects twice is much less
+likely to pass Google's redirect validation than one that redirects once —
+this is almost certainly why "Pagina con reindirizzamento" has failed
+validation across four consecutive rounds despite each round concluding
+"nothing to fix, just wait." This is the first round to catch it because
+it's the first round to test a non-homepage, non-trailing-slash URL under
+the www/http host-rewrite path specifically.
+
+### Fix — collapse host + trailing-slash normalization into one 301
+
+```apache
+RewriteEngine On
+
+# Collapse host+scheme+trailing-slash normalization into a single 301
+# (avoids the 2-hop chain above for any www/http URL missing its slash)
+RewriteCond %{HTTP_HOST} ^www\.albertoarena\.it$ [NC,OR]
+RewriteCond %{HTTPS} off
+RewriteCond %{REQUEST_URI} !/$
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d
+RewriteRule ^ https://albertoarena.it%{REQUEST_URI}/ [L,R=301]
+
+# Existing host-only rewrite (root path, already-slashed paths, static files)
+RewriteCond %{HTTP_HOST} ^www\.albertoarena\.it$ [NC,OR]
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://albertoarena.it/$1 [L,R=301]
+```
+
+The new rule only fires when the request path (a) doesn't already end in
+`/` and (b) resolves to a real directory under `DOCUMENT_ROOT` (i.e. it's a
+page route, not a static asset like `/favicon.ico`) — the `-d` filesystem
+check handles this more reliably than an extension regex would (it correctly
+classifies dotted slugs like `/tag/node.js/` as directories, not files).
+When it fires, it redirects straight to the final `https://` +
+non-www + trailing-slash URL in one hop; everything else (root `/`,
+already-slashed paths, static files) falls through unchanged to the
+existing rule.
+
+**Verified locally** against a real Apache 2.4.66 instance (Homebrew httpd,
+`mod_rewrite` + `mod_dir`, `AllowOverride All`, a docroot mirroring `dist/`'s
+directory layout) before touching production — no staging environment
+exists for this site, so this was the only way to test an `.htaccess`
+change (which controls the entire domain's redirect behavior) without
+risking a live regression. All 7 cases passed on the first try:
+
+| Request | Result |
+|---|---|
+| `www` host, `/category/react` (no slash) | single 301 → `https://albertoarena.it/category/react/` |
+| non-www `http`, `/category/react` (no slash) | single 301 → same |
+| `/` (root) | single 301, no double slash |
+| `/favicon.ico` (static file) | single 301, no slash appended |
+| `/tag/node.js` (dotted slug, `-d` edge case) | single 301 → `.../tag/node.js/` |
+| `/category/react/` (already slashed) | single 301, no double slash |
+| `www` host, `/` (root) | single 301 |
+| `/category/react?foo=bar` (query string) | query string preserved through the redirect |
+
+### Other rows — confirmed no further action needed
+
+- **"Esclusa in base al tag noindex" (24, new)**: not a regression — this is
+  the 07-28 `noindex,follow` fix (`df795028`) finally being recognized by
+  Google for the tag/category/pagination pages it targets. The GSC email
+  ("new reason blocking indexing") is Google's generic new-reason notice,
+  not a signal something broke. `grep -rn noindex src/` confirms the 5
+  templates (`tag/[tag]`, `category/[category]`, `tags`, `categories`,
+  `page/[page]`) still carry it and nothing else does; `npm run test:seo-indexing`
+  passes (12/12).
+- **"Pagina scansionata, ma attualmente non indicizzata" (31, failed)**: same
+  diagnosis as 07-28/07-29, re-confirmed — a mix of (a) stale tag/category
+  URLs still migrating into the noindex bucket above, (b) tracking-parameter
+  post URLs (`?utm_source=`, `?ref=`) which already self-canonicalize
+  correctly via `BaseLayout.astro`'s `new URL(Astro.url.pathname, Astro.site)`
+  (query strings are dropped), and (c) genuine content-authority judgment
+  calls (e.g. `/posts/is-it-really-an-integer/`). No reproducible technical
+  defect found; checked every live internal link source again (playbook
+  step 3) and found no non-trailing-slash `href`s or markdown links, only
+  image asset references (which correctly don't need slashes).
+- **"Non trovata (404)" (1, not started)**: confirmed via GSC UI to still be
+  `https://albertoarena.it/posts/create-a-domain-with-spatie-event-sourcing/`
+  — the exact slug already fixed in `public/llms.txt` by `df795028` on
+  07-28. `grep -rn create-a-domain-with-spatie-event-sourcing .` (excluding
+  `dist/`) finds zero remaining references anywhere in the repo. This one
+  isn't stuck on a code issue — nobody ever clicked "Convalida correzione"
+  on this specific row (the 07-29 round validated three other rows but not
+  this one). Pure GSC-UI action needed, no code change.
+- **"Bloccata da robots.txt" (14, in progress)** and **"Rilevata, ma
+  attualmente non indicizzata" (3, in progress)**: both mid-validation from
+  the 07-29 "Convalida" clicks, `robots.txt` confirmed still allow-all
+  (`Disallow:` empty) — just need more time, consistent with GSC's own
+  "days to weeks" guidance.
+
+### Implementation order
+
+1. Ship the `.htaccess` fix above (only code change this round).
+2. Deploy (push to `master` → existing FTP CI deploy).
+3. Live-`curl`-verify the same 7 cases against production.
+4. In Search Console: click "Convalida correzione" on "Non trovata (404)"
+   (never requested) and re-request "Pagina con reindirizzamento" (to give
+   Google a fresh single-hop redirect to validate against, now that the
+   chain is fixed).
+5. No action on the other four rows this round — check back in 1-2 weeks
+   per the playbook.
