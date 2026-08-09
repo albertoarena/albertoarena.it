@@ -7,6 +7,13 @@ export const siteConfig = {
   googleAnalyticsId: 'G-PJGZWDSK4K', // managed via GTM, kept for reference
   postsLimit: 6,
   /*
+    Fallback "open a discussion" target (redesign-plan.md §11) for posts with
+    no per-post `discussion` field. Discussions enabled 2026-08-09 specifically
+    to serve this — most posts aren't about one package, so a per-package repo
+    doesn't cover them, see .docs/plans/redesign/ discussion for the reasoning.
+  */
+  discussionRepo: 'albertoarena/albertoarena.it',
+  /*
     Grouped nav for the redesign rail (redesign-plan.md §6). `/writing` points
     at `/` until Phase 4 splits the paginated index out of the home page, and
     `/series` is added once Phase 5 builds it — eight items is the hard cap.

@@ -118,7 +118,8 @@ function ordinal(n: number, lang: 'en' | 'it'): string {
     return `${n}th`;
 }
 
-const discussionUrl = post.data.discussion ? `https://github.com/${post.data.discussion}/discussions` : undefined;
+const discussionRepo = post.data.discussion ?? siteConfig.discussionRepo;
+const discussionUrl = `https://github.com/${discussionRepo}/discussions`;
 
 const articleImageURL = new URL(post.data.socialImage ?? siteConfig.author.photo, siteConfig.url).toString();
 const postCanonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
@@ -257,14 +258,10 @@ const blogPostingSchema = {
 
             <div class="discuss border-t border-rule-soft pt-4 mb-7 font-mono text-sm text-muted leading-relaxed">
                 {lang === 'it' ? 'Hai trovato un errore, o non sei d’accordo?' : 'Found a mistake, or disagree?'}{' '}
-                {discussionUrl && (
-                    <>
-                        <a href={discussionUrl} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
-                            {lang === 'it' ? 'Apri una discussione su GitHub' : 'Open a discussion on GitHub'}
-                        </a>{' '}
-                        {lang === 'it' ? 'o ' : 'or '}
-                    </>
-                )}
+                <a href={discussionUrl} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
+                    {lang === 'it' ? 'Apri una discussione su GitHub' : 'Open a discussion on GitHub'}
+                </a>{' '}
+                {lang === 'it' ? 'o ' : 'or '}
                 <a href="mailto:hello@albertoarena.it" class="text-accent hover:underline">
                     {lang === 'it' ? 'inviami un’email' : 'send me an email'}
                 </a>.
