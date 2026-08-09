@@ -8,6 +8,7 @@ category: "CSS"
 tags:
   - "CSS"
 description: "Some interesting effects that can be implemented in pure CSS3."
+socialImage: "/images/posts/special-effects-in-css3/cover.png"
 ---
 
 Cascading Style Sheet (CSS) is evolving, and especially from when level 3, know usually as CSS3, has been adopted by the

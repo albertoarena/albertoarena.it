@@ -8,6 +8,7 @@ category: "Javascript"
 tags:
   - "Javascript"
 description: "How to implement a simple Javascript getter/setter than can be used with different libraries and frameworks."
+socialImage: "/images/posts/a-simple-javascript-gettersetter/cover.png"
 ---
 
 [A GitHub repository is available!](https://github.com/albertoarena/gettersetter)
