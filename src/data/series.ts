@@ -53,6 +53,12 @@ export const seriesRegistry: SeriesEntry[] = [
     metaLabel: 'Claude Code automation thread',
     description: 'Comparing /goal, /loop, and routines for unattended Claude Code work.',
   },
+  {
+    slug: 'ci',
+    title: 'CI tooling',
+    metaLabel: 'CI tooling thread',
+    description: 'Tooling that keeps a Laravel pipeline honest: catching config drift before deploy, and deploying safely to shared hosting.',
+  },
 ];
 
 export function getSeriesEntry(slug: string): SeriesEntry | undefined {

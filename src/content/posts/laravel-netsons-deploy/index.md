@@ -14,6 +14,9 @@ tags:
   - "PHP"
 description: "I built a Laravel package to deploy to Netsons shared hosting via GitHub Actions, supporting both FTP and git clone strategies."
 socialImage: "/images/posts/laravel-netsons-deploy/cover.png"
+series:
+  slug: "ci"
+  order: 2
 ---
 
 If you work with Italian clients, sooner or later you will run into [Netsons](https://www.netsons.com). It is one of the most popular hosting providers here, affordable and widely used for small and medium projects. The problem is that deploying a Laravel application to shared hosting is not exactly straightforward.
