@@ -23,25 +23,35 @@ const { accountId, formId } = siteConfig.mailerlite;
     if (!target || target.dataset.mlObserved === '1') return;
     target.dataset.mlObserved = '1';
 
-    if ('IntersectionObserver' in window) {
-      // Generous rootMargin, not just the viewport: a same-page anchor jump
-      // (clicking a TOC link, scroll-behavior: smooth) can move the target
-      // through the viewport fast enough to slip between two observer check
-      // frames at the default 0px margin, which never fires isIntersecting
-      // at all and leaves the form permanently unloaded. A wide buffer makes
-      // that gap far less likely regardless of how the scroll happened.
-      var observer = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) {
-            observer.disconnect();
-            loadMailerLite();
-          }
-        });
-      }, { rootMargin: '600px 0px' });
-      observer.observe(target);
-    } else {
-      loadMailerLite();
+    // Plain scroll-position polling, not IntersectionObserver: the box is
+    // transition:persist (home page and every post share one DOM node), so
+    // an observer created on first load keeps "watching" that node forever,
+    // even after it's carried into a page it never ran its own init on —
+    // fine on its own, except a same-page TOC jump rides scroll-behavior:
+    // smooth, and an animated scroll can move the target through the
+    // viewport fast enough to land between two observer check frames,
+    // which then never reports isIntersecting at all (same failure mode
+    // already hit and fixed this way for the TOC active-heading tracking).
+    // A rAF-throttled getBoundingClientRect check against every 'scroll'
+    // event can't miss a frame like that, and rides along with the persisted
+    // node onto whichever page it ends up on.
+    var ticking = false;
+    function checkPosition() {
+      ticking = false;
+      var rect = target.getBoundingClientRect();
+      if (rect.top < window.innerHeight + 600 && rect.bottom > -600) {
+        window.removeEventListener('scroll', onScroll);
+        loadMailerLite();
+      }
     }
+    function onScroll() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(checkPosition);
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    checkPosition();
   }
 
   // Astro's View Transitions swap doesn't re-execute an inline script whose
