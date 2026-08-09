@@ -336,29 +336,61 @@ const blogPostingSchema = {
 </BaseLayout>
 
 <script>
-  let currentObserver: IntersectionObserver | undefined;
+  /*
+    Deliberately not IntersectionObserver. That approach tracked the highest
+    ratio any heading had *ever* reported and never invalidated it, so a
+    heading briefly passed through mid-scroll (e.g. clicking a TOC link that
+    triggers the smooth-scroll jump) could register a high ratio and then
+    stay "active" even after landing somewhere else — most visible jumping
+    backward across several headings at once. Tracking scroll position
+    directly and asking "which heading has most recently crossed the line"
+    is stateless (recomputed fresh every scroll tick), so there's nothing to
+    go stale.
+  */
+  let currentScrollHandler: (() => void) | undefined;
 
   function initToc() {
-    currentObserver?.disconnect();
+    if (currentScrollHandler) {
+      window.removeEventListener('scroll', currentScrollHandler);
+      currentScrollHandler = undefined;
+    }
 
     const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('#toc a[data-target]'));
     const headingEls = links
       .map((a) => document.getElementById(a.dataset.target!))
       .filter((el): el is HTMLElement => !!el);
 
-    if (!('IntersectionObserver' in window) || !headingEls.length) return;
+    if (!headingEls.length) return;
 
-    const ratios = new Map<string, number>();
-    currentObserver = new IntersectionObserver((entries) => {
-      entries.forEach((e) => ratios.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0));
-      let best: string | null = null;
-      let bestRatio = 0;
-      ratios.forEach((ratio, id) => { if (ratio > bestRatio) { bestRatio = ratio; best = id; } });
+    const activeLine = () => window.innerHeight * 0.2;
+
+    function updateActive() {
+      const line = activeLine();
+      let current = headingEls[0].id;
+      for (const el of headingEls) {
+        if (el.getBoundingClientRect().top <= line) {
+          current = el.id;
+        } else {
+          break;
+        }
+      }
       links.forEach((a) => {
-        a.classList.toggle('toc-active', a.dataset.target === best);
+        a.classList.toggle('toc-active', a.dataset.target === current);
       });
-    }, { rootMargin: '-10% 0px -70% 0px', threshold: [0, 0.5, 1] });
-    headingEls.forEach((el) => currentObserver!.observe(el));
+    }
+
+    let ticking = false;
+    currentScrollHandler = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        updateActive();
+      });
+    };
+
+    window.addEventListener('scroll', currentScrollHandler, { passive: true });
+    updateActive();
   }
 
   initToc();
