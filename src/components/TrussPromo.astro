@@ -6,16 +6,17 @@
   gone in favour of plain mono links, matching every other link row built
   so far (post tags, endnote, etc).
 
-  Version is hardcoded for now — live Packagist fetch at build time is
-  Phase 7 scope (redesign-plan.md §9.2, §10 /projects), with this exact
-  string as the documented fallback so a failed request never breaks the
-  build.
+  Version comes from the same project-stats.json cache /projects reads
+  (scripts/fetch-project-stats.mjs, Phase 7), with this hardcoded string as
+  the fallback so a stats file that's missing the entry — or missing
+  entirely — never breaks the build, per the plan's own requirement.
 */
 import { getCollection } from "astro:content";
 import { getPostSlug } from "../utils/helpers";
 import { trussSeries as trussSeriesData } from "../data/trussSeries";
+import projectStats from "../data/project-stats.json";
 
-const TRUSS_VERSION = "v1.6.1";
+const TRUSS_VERSION = projectStats['albertoarena/laravel-truss']?.version ?? "v1.6.1";
 
 const posts = await getCollection("posts");
 

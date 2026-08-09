@@ -1,4 +1,14 @@
 ---
+/*
+  Restyled /subscribe (redesign-plan.md §10): the plan's 5-point structure
+  minus point 4 (link to a past issue) — no newsletter has actually been
+  sent from this MailerLite account yet, so there's nothing real to link
+  to. See the "Not yet available" note in the plan; add that section back
+  once a public archive URL exists.
+
+  MailerLite embed itself (NewsletterSignup.astro) is untouched per the
+  plan: restyling happens in MailerLite's own theme options, not here.
+*/
 import Layout from '../components/Layout.astro';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
 import { siteConfig } from '../utils/config';
@@ -9,17 +19,26 @@ import { siteConfig } from '../utils/config';
   description="Get new posts by email. No spam. Unsubscribe any time."
   noViewTransitions={true}
 >
-  <section class="mb-10">
-    <h1 class="text-3xl font-bold text-dark dark:text-white mb-3">
-      Laravel tooling and AI-assisted development, in your inbox.
-    </h1>
-    <p class="text-gray leading-relaxed">
-      Subscribe and get the printable
-      <a href="/cheatsheets/spatie-event-sourcing/" class="hover:text-primary transition-colors underline underline-offset-2">
-        Spatie Event Sourcing cheat sheet
-      </a> (PDF). Practical notes, roughly once a month. No spam.
-    </p>
-  </section>
+  <h1 class="font-sans text-3xl font-bold text-ink dark:text-white mb-3">
+    Laravel tooling and AI-assisted development, in your inbox.
+  </h1>
+  <p class="text-ink-2 mb-8 max-w-[60ch]">
+    Practical notes on Laravel tooling, event sourcing, and AI-assisted development, roughly once a month. No spam, unsubscribe any time.
+  </p>
+
+  <p class="font-mono text-sm text-muted mb-10">
+    Written by <a href="/pages/about/" class="text-accent hover:underline">Alberto Arena</a>, senior software engineer.
+  </p>
 
   <NewsletterSignup />
+
+  <p class="mt-8 text-ink-2 max-w-[60ch]">
+    Subscribing also gets you the printable
+    <a href="/cheatsheets/spatie-event-sourcing/" class="text-accent hover:underline">Spatie Event Sourcing cheat sheet</a> (PDF), immediately.
+  </p>
+
+  <p class="mt-10 pt-6 border-t border-rule-soft text-sm text-muted max-w-[60ch]">
+    Your email is only used to send this newsletter, never sold or shared. See the
+    <a href="/pages/privacy-policy/" class="text-accent hover:underline">privacy policy</a> for details.
+  </p>
 </Layout>

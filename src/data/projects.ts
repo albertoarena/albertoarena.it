@@ -10,6 +10,10 @@ export interface Project {
   year: string;
   company?: { name: string; url?: string };
   role?: string;
+  /** "vendor/package" — drives scripts/fetch-project-stats.mjs and the /projects table's version/installs columns. */
+  packagist?: string;
+  /** npm package name, same purpose as `packagist` for the one Node project. */
+  npmPackage?: string;
 }
 
 export const projects: Project[] = [
@@ -24,6 +28,7 @@ export const projects: Project[] = [
     status: 'active',
     featured: true,
     year: '2026',
+    packagist: 'albertoarena/laravel-truss',
   },
   {
     name: 'Laravel Netsons Deploy',
@@ -36,6 +41,7 @@ export const projects: Project[] = [
     status: 'active',
     featured: true,
     year: '2026',
+    packagist: 'albertoarena/laravel-netsons-deploy',
   },
   {
     name: 'Filament Event Sourcing',
@@ -48,6 +54,7 @@ export const projects: Project[] = [
     status: 'active',
     featured: true,
     year: '2026',
+    packagist: 'albertoarena/filament-event-sourcing',
   },
   {
     name: 'Claude Laravel Event Sourcing',
@@ -68,9 +75,11 @@ export const projects: Project[] = [
     tech: ['Node.js', 'JavaScript', 'CLI'],
     github: 'https://github.com/albertoarena/envaudit',
     url: 'https://albertoarena.github.io/envaudit/',
+    postSlug: 'introducing-envaudit',
     status: 'active',
     featured: true,
     year: '2026',
+    npmPackage: '@albertoarena/envaudit',
   },
   {
     name: 'Codemetry',
@@ -83,6 +92,7 @@ export const projects: Project[] = [
     status: 'active',
     featured: true,
     year: '2025',
+    packagist: 'albertoarena/codemetry',
   },
   {
     name: 'Laravel Event Sourcing Generator',
@@ -95,6 +105,7 @@ export const projects: Project[] = [
     status: 'active',
     featured: true,
     year: '2024',
+    packagist: 'albertoarena/laravel-event-sourcing-generator',
   },
   {
     name: 'SafariOffice for Accommodations',
