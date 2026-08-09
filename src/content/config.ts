@@ -30,9 +30,9 @@ const postsCollection = defineCollection({
     }).optional(),
     /*
       GitHub repo ("owner/name") to link "open a discussion" at, in place of
-      Disqus. Only set this where Discussions are actually enabled on that
-      repo — there is no site-level fallback repo (albertoarena.it itself
-      has Discussions disabled), so an unset field means email-only.
+      Disqus. Only set this on posts genuinely about that package (Truss
+      posts point at laravel-truss) — everything else falls back to
+      siteConfig.discussionRepo (the blog's own repo).
     */
     discussion: z.string().optional(),
   })
