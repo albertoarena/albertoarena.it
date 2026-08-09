@@ -11,6 +11,13 @@ export interface SeriesEntry {
   /** Completes "Nth in the {metaLabel}" in the post meta line. */
   metaLabel: string;
   description: string;
+  /**
+   * Same convention as posts' `pinned` field: floats an entry to the top of
+   * /series, ahead of everything unpinned. Among pinned entries, order
+   * follows their position in this array (truss before how-to-use-ai below)
+   * — reorder the array itself if that relative order needs to change.
+   */
+  pinned?: boolean;
 }
 
 export const seriesRegistry: SeriesEntry[] = [
@@ -19,6 +26,14 @@ export const seriesRegistry: SeriesEntry[] = [
     title: 'Truss',
     metaLabel: 'Truss series',
     description: "Building a live, zoomable ER diagram for your Laravel app's database schema.",
+    pinned: true,
+  },
+  {
+    slug: 'how-to-use-ai',
+    title: 'How to use AI',
+    metaLabel: 'how to use AI series',
+    description: 'Practitioner discipline for working with AI: review, trust, safety, and context.',
+    pinned: true,
   },
   {
     slug: 'event-sourcing',
@@ -37,12 +52,6 @@ export const seriesRegistry: SeriesEntry[] = [
     title: 'Claude Code automation',
     metaLabel: 'Claude Code automation thread',
     description: 'Comparing /goal, /loop, and routines for unattended Claude Code work.',
-  },
-  {
-    slug: 'how-to-use-ai',
-    title: 'How to use AI',
-    metaLabel: 'how to use AI series',
-    description: 'Practitioner discipline for working with AI: review, trust, safety, and context.',
   },
 ];
 
