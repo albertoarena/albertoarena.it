@@ -316,8 +316,8 @@ const blogPostingSchema = {
                 </h4>
                 <ul class="font-mono text-xs leading-[1.5]">
                     {seriesMeta.posts.map((p) => (
-                        <li class="flex gap-[0.5ch] py-[0.3rem]">
-                            <span class="text-muted shrink-0">{p.order}</span>
+                        <li class="flex py-[0.3rem]">
+                            <span class="text-muted shrink-0 w-3">{p.order}</span>
                             {p.isCurrent ? (
                                 <span class="text-accent font-semibold">{p.title}</span>
                             ) : (
