@@ -1,68 +1,145 @@
 ---
 import Layout from "../components/Layout.astro";
-import { getCollection } from "astro:content";
-import PostCard from "../components/PostCard.astro";
-import Pagination from "../components/Pagination.astro";
 import TrussPromo from "../components/TrussPromo.astro";
+import PostListRow from "../components/PostListRow.astro";
+import NewsletterSignup from "../components/NewsletterSignup.astro";
+import { getCollection } from "astro:content";
 import { siteConfig } from "../utils/config";
+import { getPostSlug } from "../utils/helpers";
+import { buildSeriesTotals, getSeriesMarker } from "../data/series";
+import readingTime from "reading-time";
 
-const posts = await getCollection("posts");
-const sortedPosts = posts
-	.filter((post) => !post.data.draft && (post.data.lang ?? 'en') === 'en')
-	.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const posts = await getCollection("posts", ({ data }) => !data.draft && (data.lang ?? 'en') === 'en');
+const sortedPosts = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const seriesTotals = buildSeriesTotals(sortedPosts);
 
-const pinnedPosts = sortedPosts.filter((p) => p.data.pinned);
-const regularPosts = sortedPosts.filter((p) => !p.data.pinned);
+// Newest post is the featured slot, not necessarily whichever is `pinned`
+// (pinned is used for /series instead) — this also avoids featuring a
+// Truss post immediately under the dedicated Truss block above it.
+const [featured, ...rest] = sortedPosts;
+const listPosts = rest.slice(0, 6);
 
-const { postsLimit } = siteConfig;
-const totalPages = Math.ceil(regularPosts.length / postsLimit);
-const pagePosts = regularPosts.slice(0, postsLimit);
+const featuredSlug = getPostSlug(featured);
+const featuredReadTime = readingTime(featured.body).text;
+const featuredCover = featured.data.cover
+	? (featured.data.cover.startsWith('http') ? featured.data.cover : `/images/posts/${featured.data.cover}`)
+	: featured.data.socialImage;
 ---
 
 <Layout title={siteConfig.title}>
-	<section class="mb-12 pb-10 border-b border-white-cloud dark:border-dark-cloud">
-		<p class="text-2xl font-semibold text-dark dark:text-white leading-snug">
+	<section class="mb-12 pb-10 border-b border-rule">
+		<h1 class="font-sans text-2xl font-semibold text-ink dark:text-white leading-snug mb-3">
 			Senior software engineer.
-		</p>
-		<p class="mt-3 text-gray leading-relaxed">
+		</h1>
+		<p class="text-ink-2 leading-relaxed max-w-[60ch]">
 			I build and maintain developer tooling for Laravel and event sourcing.
 		</p>
-		<p class="mt-2 text-sm font-mono">
-			<a href="/pages/consulting/" class="text-primary hover:text-secondary transition-colors">Open to freelance, consulting, and long-term remote collaborations.</a>
+		<p class="mt-3 font-mono text-sm">
+			<span class="inline-block w-[0.45rem] h-[0.45rem] rounded-full bg-ok mr-1.5" aria-hidden="true"></span>
+			<a href="/pages/consulting/" class="text-accent hover:underline">Open to freelance, consulting, and long-term remote collaborations.</a>
 		</p>
 	</section>
 
-	<TrussPromo />
-
-	<div class="mb-12 p-4 rounded-lg border border-white-cloud dark:border-dark-cloud flex items-center justify-between gap-4 flex-wrap">
-		<div>
-			<p class="font-semibold text-dark dark:text-white">Cheat sheets</p>
-			<p class="text-sm text-gray">Dense, printable references for Laravel and event sourcing tooling.</p>
+	<section class="mb-12">
+		<div class="flex items-baseline justify-between gap-4 border-b border-rule pb-2 mb-5">
+			<h2 class="font-mono text-xs uppercase tracking-[0.14em] text-ink dark:text-white font-semibold">Current project</h2>
+			<a href="https://trussphp.com/" target="_blank" rel="noopener noreferrer" class="font-mono text-xs text-muted hover:text-accent transition-colors">trussphp.com &rarr;</a>
 		</div>
-		<a
-			href="/cheatsheets/"
-			class="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-secondary transition-colors whitespace-nowrap"
-		>
-			Browse cheat sheets
-			<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-			</svg>
-		</a>
-	</div>
+		<TrussPromo />
+	</section>
 
-	{pinnedPosts.length > 0 && (
-		<div class="mb-10">
-			<p class="text-xs font-mono text-gray uppercase tracking-widest mb-5">★ Pinned</p>
-			<div class="space-y-8">
-				{pinnedPosts.map((post) => <PostCard post={post} pinned={true} />)}
+	<section class="mb-12">
+		<div class="flex items-baseline justify-between gap-4 border-b border-rule pb-2 mb-5">
+			<h2 class="font-mono text-xs uppercase tracking-[0.14em] text-ink dark:text-white font-semibold">Writing</h2>
+			<a href="/archive/" class="font-mono text-xs text-muted hover:text-accent transition-colors whitespace-nowrap">all {sortedPosts.length} posts by year &rarr;</a>
+		</div>
+
+		<a href={`/posts/${featuredSlug}/`} class="group grid grid-cols-1 min-[560px]:grid-cols-[13rem_minmax(0,1fr)] gap-5 items-start mb-8">
+			{featuredCover ? (
+				<img
+					src={featuredCover}
+					alt={featured.data.coverAlt ?? featured.data.title}
+					width="1200"
+					height="628"
+					loading="lazy"
+					class="w-full aspect-[1.91/1] object-cover border border-rule"
+				/>
+			) : (
+				<div class="w-full aspect-[1.91/1] border border-rule bg-surface flex items-center justify-center font-mono text-[0.6rem] text-muted text-center px-2">
+					{featured.data.title}
+				</div>
+			)}
+			<div class="min-w-0">
+				<p class="font-mono text-xs uppercase tracking-[0.14em] text-accent mb-1.5">&#9733; Latest</p>
+				<h3 class="font-sans text-lg font-semibold text-ink dark:text-white group-hover:text-accent transition-colors mb-1.5">
+					{featured.data.title}
+				</h3>
+				{featured.data.description && (
+					<p class="text-ink-2 mb-2 max-w-[52ch]">{featured.data.description}</p>
+				)}
+				<p class="font-mono text-xs text-muted">
+					{featured.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+					{featured.data.category && <> &middot; {featured.data.category}</>}
+					&middot; {featuredReadTime}
+				</p>
+			</div>
+		</a>
+
+		<ul class="border-t border-rule">
+			{listPosts.map((post) => (
+				<PostListRow post={post} seriesMarker={getSeriesMarker(post, seriesTotals)} />
+			))}
+		</ul>
+	</section>
+
+	<section class="mb-12">
+		<div class="flex items-baseline justify-between gap-4 border-b border-rule pb-2 mb-5">
+			<h2 class="font-mono text-xs uppercase tracking-[0.14em] text-ink dark:text-white font-semibold">Cheat sheets</h2>
+		</div>
+		<div class="border border-rule px-5 py-4 flex flex-wrap items-baseline justify-between gap-3">
+			<p class="text-ink-2 max-w-[44ch]">Dense, printable references for the tools I use daily. Spatie event sourcing is the first one, with a one-page PDF.</p>
+			<a href="/cheatsheets/" class="font-mono text-sm text-accent hover:underline whitespace-nowrap">Browse cheat sheets &rarr;</a>
+		</div>
+	</section>
+
+	<section class="mb-12">
+		<div class="flex items-baseline justify-between gap-4 border-b border-rule pb-2 mb-5">
+			<h2 class="font-mono text-xs uppercase tracking-[0.14em] text-ink dark:text-white font-semibold">Other projects</h2>
+		</div>
+		<div class="flex flex-wrap items-baseline justify-between gap-3">
+			<p class="text-ink-2 max-w-[52ch]">An event sourcing generator with 10,000+ installs, a Claude Code skill for designing event sourced domains, env validation for pipelines, and deploys for Netsons servers.</p>
+			<a href="/projects/" class="font-mono text-sm text-accent hover:underline whitespace-nowrap">See all projects &rarr;</a>
+		</div>
+	</section>
+
+	<section class="mb-12">
+		<div class="flex items-baseline justify-between gap-4 border-b border-rule pb-2 mb-5">
+			<h2 class="font-mono text-xs uppercase tracking-[0.14em] text-ink dark:text-white font-semibold">Working with me</h2>
+			<a href="/pages/consulting/" class="font-mono text-xs text-muted hover:text-accent transition-colors whitespace-nowrap">availability &rarr;</a>
+		</div>
+		<div class="grid grid-cols-1 min-[640px]:grid-cols-3 gap-6">
+			<div>
+				<h3 class="font-mono text-xs uppercase tracking-[0.08em] text-muted mb-1.5">Event sourcing</h3>
+				<p class="text-ink-2">Modelling aggregates and events for a domain that has to survive replays, audits and real production load.</p>
+			</div>
+			<div>
+				<h3 class="font-mono text-xs uppercase tracking-[0.08em] text-muted mb-1.5">Laravel codebases</h3>
+				<p class="text-ink-2">Adding structure to an app that grew fast, without selling you a rewrite you do not need.</p>
+			</div>
+			<div>
+				<h3 class="font-mono text-xs uppercase tracking-[0.08em] text-muted mb-1.5">Tooling and CI</h3>
+				<p class="text-ink-2">Tests, schema checks and env validation that fail the build instead of the deploy.</p>
 			</div>
 		</div>
-		<hr class="border-white-cloud dark:border-dark-cloud mb-10" />
-	)}
+	</section>
 
-	<div class="space-y-8 animate-stagger">
-		{pagePosts.map((post) => <PostCard post={post} />)}
-	</div>
-
-	<Pagination currentPage={1} totalPages={totalPages} />
+	<section class="border border-rule px-6 py-6" transition:persist transition:name="newsletter-signup">
+		<h3 class="font-sans text-lg font-semibold text-ink dark:text-white mb-1.5">Get the next one</h3>
+		<p class="text-ink-2 max-w-[52ch] mb-4">
+			Practical notes on Laravel tooling and AI-assisted development, about once a month. New subscribers get the
+			<a href="/cheatsheets/spatie-event-sourcing/" class="text-accent hover:underline">Spatie Event Sourcing cheat sheet</a>
+			as a printable PDF.
+		</p>
+		<NewsletterSignup />
+	</section>
 </Layout>

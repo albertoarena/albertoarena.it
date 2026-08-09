@@ -1,0 +1,49 @@
+---
+import Layout from "@/components/Layout.astro";
+import PostListRow from "@/components/PostListRow.astro";
+import Pagination from "@/components/Pagination.astro";
+import { getCollection } from "astro:content";
+import { siteConfig } from "@/utils/config";
+import { buildSeriesTotals, getSeriesMarker } from "@/data/series";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts", ({ data }) => !data.draft && (data.lang ?? 'en') === 'en');
+  const sortedPosts = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+  const { postsLimit } = siteConfig;
+  const totalPages = Math.ceil(sortedPosts.length / postsLimit);
+
+  return Array.from({ length: totalPages - 1 }, (_, i) => {
+    const pageNum = i + 2;
+    const start = (pageNum - 1) * postsLimit;
+    return {
+      params: { page: String(pageNum) },
+      props: {
+        pagePosts: sortedPosts.slice(start, start + postsLimit),
+        seriesTotals: buildSeriesTotals(sortedPosts),
+        currentPage: pageNum,
+        totalPages,
+      },
+    };
+  });
+}
+
+const { pagePosts, seriesTotals, currentPage, totalPages } = Astro.props;
+---
+
+<Layout title={`Writing, page ${currentPage} — ${siteConfig.title}`} noindex>
+  <div class="flex items-baseline justify-between gap-4 mb-8">
+    <h1 class="font-sans text-3xl font-bold text-ink dark:text-white">Writing</h1>
+    <a href="/archive/" class="font-mono text-xs text-muted hover:text-accent transition-colors whitespace-nowrap">
+      by year &rarr;
+    </a>
+  </div>
+
+  <ul class="border-t border-rule">
+    {pagePosts.map((post) => (
+      <PostListRow post={post} seriesMarker={getSeriesMarker(post, seriesTotals)} />
+    ))}
+  </ul>
+
+  <Pagination currentPage={currentPage} totalPages={totalPages} basePath="/writing" />
+</Layout>

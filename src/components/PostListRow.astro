@@ -1,0 +1,42 @@
+---
+/*
+  Dense list row shared by /writing, /archive, /series/[slug], and the
+  category/tag pages (redesign-plan.md §10: "reusing the same dense list
+  component"). Date, title (+ optional series marker), category + reading
+  time, in that order in the DOM so it reads sensibly stacked on mobile
+  without needing any `order` overrides.
+*/
+import type { CollectionEntry } from 'astro:content';
+import { getPostSlug, getReadingTime } from '@/utils/helpers';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+  seriesMarker?: string;
+}
+
+const { post, seriesMarker } = Astro.props;
+const slug = getPostSlug(post);
+const readTime = getReadingTime(post.body);
+const formattedDate = post.data.date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+---
+
+<li class="grid grid-cols-1 min-[640px]:grid-cols-[6.5rem_minmax(0,1fr)_auto] gap-x-4 gap-y-0.5 items-baseline py-3 border-b border-rule-soft">
+  <time datetime={post.data.date.toISOString()} class="font-mono text-xs text-muted whitespace-nowrap">
+    {formattedDate}
+  </time>
+  <a href={`/posts/${slug}/`} class="group min-w-0">
+    <span class="font-sans text-base font-medium text-ink dark:text-white group-hover:text-accent transition-colors">
+      {post.data.title}
+    </span>
+    {seriesMarker && (
+      <span class="font-sans text-base text-muted"> &middot; {seriesMarker}</span>
+    )}
+  </a>
+  <span class="font-mono text-xs text-muted whitespace-nowrap">
+    {post.data.category}{post.data.category ? ' · ' : ''}{readTime}
+  </span>
+</li>

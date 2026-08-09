@@ -14,16 +14,15 @@ export const siteConfig = {
   */
   discussionRepo: 'albertoarena/albertoarena.it',
   /*
-    Grouped nav for the redesign rail (redesign-plan.md §6). `/writing` points
-    at `/` until Phase 4 splits the paginated index out of the home page —
-    eight items is the hard cap, and we're at it exactly.
+    Grouped nav for the redesign rail (redesign-plan.md §6). Eight items is
+    the hard cap, and we're at it exactly.
   */
   railNav: [
     {
       label: 'read',
       ariaLabel: 'Reading',
       items: [
-        { label: 'writing', path: '/' },
+        { label: 'writing', path: '/writing/' },
         { label: 'series', path: '/series/' },
         { label: 'cheatsheets', path: '/cheatsheets/' },
       ],

@@ -1,12 +1,19 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../../components/Layout.astro";
-import PostCard from "../../components/PostCard.astro";
+import PostListRow from "../../components/PostListRow.astro";
+import { buildSeriesTotals, getSeriesMarker } from "../../data/series";
 
 export async function getStaticPaths() {
     const posts = await getCollection("posts");
     const englishPosts = posts.filter((post) => (post.data.lang ?? 'en') === 'en');
     const categories = [...new Set(englishPosts.map((post) => post.data.category).filter(Boolean))];
+
+    // Series totals must come from every post site-wide, not this category's
+    // subset — a series can span categories (the event-sourcing series' 10k
+    // downloads post is "Open Source", not "Laravel"), so counting only the
+    // filtered posts undercounts the total and produces markers like "5/4".
+    const seriesTotals = buildSeriesTotals(englishPosts.filter((post) => !post.data.draft));
 
     return categories.map((category) => ({
         params: { category: category.toLowerCase().replace(/\s+/g, '-') },
@@ -14,22 +21,23 @@ export async function getStaticPaths() {
             category,
             posts: englishPosts
                 .filter((post) => post.data.category === category && !post.data.draft)
-                .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+                .sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
+            seriesTotals,
         },
     }));
 }
 
-const { category, posts } = Astro.props;
+const { category, posts, seriesTotals } = Astro.props;
 ---
 
 <Layout title={`Category: ${category}`} noindex>
-    <h1 class="text-3xl font-bold mb-4">
-        Category: <span class="text-primary">{category}</span>
+    <h1 class="font-sans text-3xl font-bold text-ink dark:text-white mb-3">
+        {category}
     </h1>
-    <p class="text-gray mb-8">
-        {posts.length} {posts.length === 1 ? 'post' : 'posts'} in this category
+    <p class="text-ink-2 mb-10">
+        {posts.length} {posts.length === 1 ? 'post' : 'posts'} in this category.
     </p>
-    <div class="space-y-10">
-        {posts.map((post) => <PostCard post={post} />)}
-    </div>
+    <ul class="border-t border-rule">
+        {posts.map((post) => <PostListRow post={post} seriesMarker={getSeriesMarker(post, seriesTotals)} />)}
+    </ul>
 </Layout>

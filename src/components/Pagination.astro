@@ -9,7 +9,7 @@ const { currentPage, totalPages, basePath = '' } = Astro.props;
 
 const prevPage = currentPage > 1
   ? currentPage === 2
-    ? basePath || '/'
+    ? (basePath ? `${basePath}/` : '/')
     : `${basePath}/page/${currentPage - 1}/`
   : null;
 
@@ -19,57 +19,19 @@ const nextPage = currentPage < totalPages
 ---
 
 {totalPages > 1 && (
-  <nav class="mt-12 flex justify-between items-center" aria-label="Pagination">
+  <nav class="mt-12 pt-6 border-t border-rule flex justify-between items-center font-mono text-sm" aria-label="Pagination">
     {prevPage ? (
-      <a 
-        href={prevPage}
-        class="inline-flex items-center text-primary hover:text-secondary transition-colors font-medium"
-      >
-        <svg 
-          class="w-4 h-4 mr-1" 
-          fill="none" 
-          stroke="currentColor" 
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path 
-            stroke-linecap="round" 
-            stroke-linejoin="round" 
-            stroke-width="2" 
-            d="M7 16l-4-4m0 0l4-4m-4 4h18"
-          />
-        </svg>
-        Previous
-      </a>
+      <a href={prevPage} class="text-accent hover:underline">&larr; Previous</a>
     ) : (
       <span />
     )}
-    
-    <span class="text-sm text-gray">
+
+    <span class="text-muted">
       Page {currentPage} of {totalPages}
     </span>
-    
+
     {nextPage ? (
-      <a 
-        href={nextPage}
-        class="inline-flex items-center text-primary hover:text-secondary transition-colors font-medium"
-      >
-        Next
-        <svg 
-          class="w-4 h-4 ml-1" 
-          fill="none" 
-          stroke="currentColor" 
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path 
-            stroke-linecap="round" 
-            stroke-linejoin="round" 
-            stroke-width="2" 
-            d="M17 8l4 4m0 0l-4 4m4-4H3"
-          />
-        </svg>
-      </a>
+      <a href={nextPage} class="text-accent hover:underline">Next &rarr;</a>
     ) : (
       <span />
     )}

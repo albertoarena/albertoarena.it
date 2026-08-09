@@ -1,49 +1,37 @@
 ---
-import Layout from "../../components/Layout.astro";
+/*
+  The paginated index moved to /writing/page/N/ (redesign-plan.md §9-10).
+  This route is kept only as a redirect so old /page/N/ links (search
+  results, bookmarks, other posts' inline links) still resolve — same
+  getStaticPaths as before the move, so every URL that used to exist still
+  gets a page here.
+*/
 import { getCollection } from "astro:content";
-import PostCard from "../../components/PostCard.astro";
-import Pagination from "../../components/Pagination.astro";
-import { siteConfig } from "../../utils/config";
+import { siteConfig } from "@/utils/config";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("posts");
-  const sortedPosts = posts
-    .filter((post) => !post.data.draft && (post.data.lang ?? 'en') === 'en')
-    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-
-  const regularPosts = sortedPosts.filter((p) => !p.data.pinned);
-
+  const posts = await getCollection("posts", ({ data }) => !data.draft && (data.lang ?? 'en') === 'en');
   const { postsLimit } = siteConfig;
-  const totalPages = Math.ceil(regularPosts.length / postsLimit);
+  const totalPages = Math.ceil(posts.length / postsLimit);
 
-  // Generate pages 2+ only (page 1 is the homepage)
-  return Array.from({ length: totalPages - 1 }, (_, i) => {
-    const pageNum = i + 2;
-    const start = (pageNum - 1) * postsLimit;
-    return {
-      params: { page: String(pageNum) },
-      props: {
-        pagePosts: regularPosts.slice(start, start + postsLimit),
-        currentPage: pageNum,
-        totalPages,
-      },
-    };
-  });
+  return Array.from({ length: totalPages - 1 }, (_, i) => ({
+    params: { page: String(i + 2) },
+  }));
 }
 
-const { pagePosts, currentPage, totalPages } = Astro.props;
+const { page } = Astro.params;
+const dest = `/writing/page/${page}/`;
 ---
 
-<Layout title={`Articles - Page ${currentPage}`} noindex>
-  <section class="mb-12 pb-8 border-b border-white-cloud dark:border-dark-cloud">
-    <p class="text-lg text-gray leading-relaxed">
-      Thoughts on software engineering, architecture patterns, and the tools I build.
-    </p>
-  </section>
-
-  <div class="space-y-10 animate-stagger">
-    {pagePosts.map((post) => <PostCard post={post} />)}
-  </div>
-
-  <Pagination currentPage={currentPage} totalPages={totalPages} />
-</Layout>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Redirecting…</title>
+    <link rel="canonical" href={dest} />
+    <meta http-equiv="refresh" content={`0;url=${dest}`} />
+    <meta name="robots" content="noindex,follow" />
+  </head>
+  <body>
+    <p>This page moved to <a href={dest}>{dest}</a>.</p>
+  </body>
+</html>
