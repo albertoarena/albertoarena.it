@@ -1,0 +1,64 @@
+---
+import Layout from '@/components/Layout.astro';
+import { getCollection } from 'astro:content';
+import { getSeriesEntry } from '@/data/series';
+import { getPostSlug } from '@/utils/helpers';
+import readingTime from 'reading-time';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft && (data.lang ?? 'en') === 'en');
+  const slugs = [...new Set(posts.map((p) => p.data.series?.slug).filter((s): s is string => !!s))];
+
+  return slugs.map((slug) => {
+    const seriesPosts = posts
+      .filter((p) => p.data.series?.slug === slug)
+      .sort((a, b) => (a.data.series?.order ?? 0) - (b.data.series?.order ?? 0));
+    return { params: { slug }, props: { seriesPosts } };
+  });
+}
+
+const { slug } = Astro.params;
+const { seriesPosts } = Astro.props;
+const entry = getSeriesEntry(slug!);
+const title = entry?.title ?? slug!;
+---
+
+<Layout
+  title={title}
+  description={entry?.description}
+>
+  <p class="font-mono text-xs uppercase tracking-[0.14em] text-accent mb-3">
+    <a href="/series/" class="hover:underline">Series</a>
+  </p>
+  <h1 class="font-sans text-3xl font-bold text-ink dark:text-white mb-3">{title}</h1>
+  {entry?.description && (
+    <p class="text-ink-2 mb-10 max-w-[60ch]">{entry.description}</p>
+  )}
+
+  <ol class="border-t border-rule">
+    {seriesPosts.map((post, i) => {
+      const postSlug = getPostSlug(post);
+      const readTime = readingTime(post.body).text;
+      return (
+        <li class="border-b border-rule py-5">
+          <a href={`/posts/${postSlug}/`} class="group flex items-start gap-4">
+            <span class="font-mono text-sm text-muted shrink-0 pt-0.5">{i + 1}</span>
+            <span class="min-w-0">
+              <span class="font-sans text-lg font-semibold text-ink dark:text-white group-hover:text-accent transition-colors block">
+                {post.data.title}
+              </span>
+              {post.data.description && (
+                <span class="block text-ink-2 mt-1 max-w-[60ch]">{post.data.description}</span>
+              )}
+              <span class="font-mono text-xs text-muted mt-2 block">
+                {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                {post.data.category && <> &middot; {post.data.category}</>}
+                &middot; {readTime}
+              </span>
+            </span>
+          </a>
+        </li>
+      );
+    })}
+  </ol>
+</Layout>

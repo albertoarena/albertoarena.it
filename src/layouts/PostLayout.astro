@@ -11,6 +11,7 @@ import { siteConfig } from "../utils/config";
 import NewsletterSignup from "../components/NewsletterSignup.astro";
 import ReadingModeToggle from "../components/ReadingModeToggle.astro";
 import { getPostSlug } from "../utils/helpers";
+import { getSeriesEntry } from "../data/series";
 import readingTime from "reading-time";
 
 interface Heading {
@@ -57,20 +58,12 @@ const toc = headings.filter((h) => h.depth === 2);
 // Series thread + pager (redesign-plan.md §7): series wins, chronological is
 // the fallback per side. Pager is English-only for now — the small set of
 // translated posts don't have a bilingual reading order worth inventing.
-const SERIES_LABELS: Record<string, string> = {
-    truss: 'Truss series',
-    'event-sourcing': 'event sourcing thread',
-    'claude-md': 'CLAUDE.md memory model series',
-    'claude-goal-loop': 'Claude Code automation thread',
-    'how-to-use-ai': 'how to use AI series',
-};
-
 const allPosts = await getCollection('posts', ({ data }) => !data.draft);
 const enPosts = allPosts
     .filter((p) => (p.data.lang ?? 'en') === 'en')
     .sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
 
-let seriesMeta: { label: string; position: number; posts: { slug: string; title: string; order: number; isCurrent: boolean }[] } | null = null;
+let seriesMeta: { slug: string; label: string; position: number; posts: { slug: string; title: string; order: number; isCurrent: boolean }[] } | null = null;
 if (post.data.series) {
     const seriesSlug = post.data.series.slug;
     const seriesPosts = enPosts
@@ -78,7 +71,8 @@ if (post.data.series) {
         .sort((a, b) => (a.data.series?.order ?? 0) - (b.data.series?.order ?? 0));
     const idx = seriesPosts.findIndex((p) => getPostSlug(p) === slug);
     seriesMeta = {
-        label: SERIES_LABELS[seriesSlug] ?? seriesSlug,
+        slug: seriesSlug,
+        label: getSeriesEntry(seriesSlug)?.metaLabel ?? seriesSlug,
         position: idx + 1,
         posts: seriesPosts.map((p, i) => ({
             slug: getPostSlug(p),
@@ -319,7 +313,9 @@ const blogPostingSchema = {
 
         {seriesMeta && (
             <div>
-                <h4 class="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted mb-2.5">{seriesMeta.label}</h4>
+                <h4 class="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted mb-2.5">
+                    <a href={`/series/${seriesMeta.slug}/`} class="hover:text-accent">{seriesMeta.label}</a>
+                </h4>
                 <ul class="font-mono text-xs leading-[1.5]">
                     {seriesMeta.posts.map((p) => (
                         <li class="flex gap-[0.5ch] py-[0.3rem]">
