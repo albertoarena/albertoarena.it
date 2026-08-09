@@ -1,49 +1,100 @@
 ---
+/*
+  Redesign /projects (redesign-plan.md §10): a monospace table for the
+  maintained open-source tools (version/installs from the build-time cache,
+  scripts/fetch-project-stats.mjs — "show a dash when unknown, never a
+  zero"), then a quieter list for professional/client work below, matching
+  "the archived or client work in a second quieter group." Replaces
+  ProjectCard's rounded cards and icon set, both against the plan's
+  constraints (§1: no card grids, no icon set).
+*/
 import Layout from '../components/Layout.astro';
-import ProjectCard from '../components/ProjectCard.astro';
 import TrussPromo from '../components/TrussPromo.astro';
 import { projects } from '../data/projects';
+import projectStats from '../data/project-stats.json';
 
+const openSourceProjects = projects.filter((p) => p.status !== 'professional');
 const professionalProjects = projects.filter((p) => p.status === 'professional');
-const personalProjects = projects.filter((p) => p.status !== 'professional' && p.name !== 'Truss');
+
+function statsFor(project: (typeof projects)[number]) {
+  const key = project.packagist ?? project.npmPackage;
+  return key ? (projectStats as Record<string, { version: string | null; installs: number | null }>)[key] : undefined;
+}
+
+function hasSeparateDocs(project: (typeof projects)[number]) {
+  return !!project.url && project.url !== project.github;
+}
 ---
 
-<Layout title="Projects">
-  <h1 class="text-3xl lg:text-4xl font-bold mb-2 text-dark dark:text-white">
-    Projects
-  </h1>
-  <p class="text-gray mb-10">
-    Open source tools and professional work.
-  </p>
+<Layout title="Projects" description="Open source tools and professional work.">
+  <h1 class="font-sans text-3xl font-bold text-ink dark:text-white mb-3">Projects</h1>
+  <p class="text-ink-2 mb-10">Open source tools and professional work.</p>
 
   <TrussPromo />
 
-  <section class="mb-12">
-    <h2 class="text-xl font-semibold text-dark dark:text-white mb-6 pb-2 border-b border-white-cloud dark:border-dark-cloud">
-      Professional Work
+  <section class="mt-12">
+    <h2 class="font-mono text-xs uppercase tracking-[0.14em] text-ink dark:text-white font-semibold border-b border-rule pb-2 mb-2">
+      Open source
     </h2>
-    <div class="grid gap-6">
-      {professionalProjects.map((project) => <ProjectCard project={project} />)}
-    </div>
-    <p class="mt-6 text-sm text-gray">
-      View more on my
-      <a
-        href="https://www.linkedin.com/in/alberto-arena-ba44a624/details/projects/"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="hover:text-primary transition-colors underline underline-offset-2"
-      >
-        LinkedIn profile
-      </a>.
-    </p>
+    <ul class="border-t border-rule font-mono text-sm">
+      {openSourceProjects.map((project) => {
+        const stats = statsFor(project);
+        return (
+          <li class="grid grid-cols-1 min-[900px]:grid-cols-[9rem_minmax(0,1fr)_4.5rem_5rem_auto] gap-x-5 gap-y-1.5 items-baseline py-4 border-b border-rule-soft">
+            <span class="font-sans text-base font-semibold text-ink dark:text-white">{project.name}</span>
+            <span class="text-ink-2">{project.description}</span>
+            <span class="text-muted whitespace-nowrap">{stats?.version ?? '—'}</span>
+            <span class="text-muted whitespace-nowrap">{stats?.installs != null ? stats.installs.toLocaleString('en-US') : '—'}</span>
+            <span class="flex flex-wrap gap-x-4 gap-y-1 whitespace-nowrap">
+              {project.github && (
+                <a href={project.github} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">GitHub</a>
+              )}
+              {hasSeparateDocs(project) && (
+                <a href={project.url} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">Docs</a>
+              )}
+              {project.postSlug && (
+                <a href={`/posts/${project.postSlug}/`} class="text-accent hover:underline">Post</a>
+              )}
+            </span>
+          </li>
+        );
+      })}
+    </ul>
   </section>
 
-  <section>
-    <h2 class="text-xl font-semibold text-dark dark:text-white mb-6 pb-2 border-b border-white-cloud dark:border-dark-cloud">
-      Personal Projects
+  <section class="mt-12">
+    <h2 class="font-mono text-xs uppercase tracking-[0.14em] text-ink dark:text-white font-semibold border-b border-rule pb-2 mb-2">
+      Professional work
     </h2>
-    <div class="grid gap-6">
-      {personalProjects.map((project) => <ProjectCard project={project} />)}
-    </div>
+    <ul class="border-t border-rule-soft">
+      {professionalProjects.map((project) => (
+        <li class="py-4 border-b border-rule-soft">
+          <div class="flex items-baseline justify-between gap-4">
+            <span class="font-sans text-base font-medium text-ink dark:text-white">
+              {project.url ? (
+                <a href={project.url} target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">{project.name}</a>
+              ) : project.name}
+            </span>
+            <span class="font-mono text-xs text-muted whitespace-nowrap">{project.year}</span>
+          </div>
+          <p class="text-ink-2 mt-1 max-w-[64ch]">{project.description}</p>
+          {(project.company || project.role) && (
+            <p class="font-mono text-xs text-muted mt-1.5">
+              {project.company && (
+                project.company.url ? (
+                  <a href={project.company.url} target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">{project.company.name}</a>
+                ) : <span>{project.company.name}</span>
+              )}
+              {project.company && project.role && ' · '}
+              {project.role}
+            </p>
+          )}
+        </li>
+      ))}
+    </ul>
+    <p class="mt-6 text-sm text-ink-2">
+      View more on my
+      <a href="https://www.linkedin.com/in/alberto-arena-ba44a624/details/projects/" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">LinkedIn profile</a>.
+    </p>
   </section>
 </Layout>

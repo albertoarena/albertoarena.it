@@ -18,7 +18,8 @@
     "test:profile-readme": "vitest run tests/update-profile-readme.test.ts",
     "test": "npm run test:eligibility && npm run test:seo-indexing && npm run test:geo-aeo && npm run test:cheatsheet-pdf && npm run test:profile-readme",
     "pdf:cheatsheet": "node scripts/generate-cheatsheet-pdf.mjs",
-    "covers:generate": "node scripts/generate-covers.mjs"
+    "covers:generate": "node scripts/generate-covers.mjs",
+    "projects:fetch-stats": "node scripts/fetch-project-stats.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.0.0",

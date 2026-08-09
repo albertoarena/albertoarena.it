@@ -1,0 +1,22 @@
+{
+  "albertoarena/laravel-truss": {
+    "version": "v1.7.0",
+    "installs": 791
+  },
+  "albertoarena/laravel-event-sourcing-generator": {
+    "version": "v1.1.2",
+    "installs": 10690
+  },
+  "albertoarena/filament-event-sourcing": {
+    "version": "v1.1.0",
+    "installs": 15
+  },
+  "albertoarena/laravel-netsons-deploy": {
+    "version": "v1.12.0",
+    "installs": 489
+  },
+  "@albertoarena/envaudit": {
+    "version": "v1.1.0",
+    "installs": 882
+  }
+}
