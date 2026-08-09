@@ -75,9 +75,15 @@ describe.each(TEST_POSTS)(
     });
 
     it('excludes nav link labels', () => {
+      // Checking the bare label ("projects") false-positives on ordinary
+      // prose ("your Laravel projects"). The rail renders each item as
+      // "/" + label with no separating space (Rail.astro), so checking
+      // for that exact leaked-nav signature only matches if the nav
+      // itself slipped into the article, not a word that happens to
+      // coincide with a nav label.
       const { result } = parsePost(slug);
       for (const label of NAV_LABELS) {
-        expect(result?.textContent).not.toContain(label);
+        expect(result?.textContent).not.toContain(`/${label}`);
       }
     });
 
