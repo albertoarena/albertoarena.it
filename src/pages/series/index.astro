@@ -9,6 +9,9 @@ const entries = seriesRegistry.map((entry) => ({
   ...entry,
   count: posts.filter((p) => p.data.series?.slug === entry.slug).length,
 })).filter((entry) => entry.count > 0);
+
+const pinnedEntries = entries.filter((entry) => entry.pinned);
+const regularEntries = entries.filter((entry) => !entry.pinned);
 ---
 
 <Layout
@@ -20,8 +23,31 @@ const entries = seriesRegistry.map((entry) => ({
     Most posts stand alone. These are the ones that don't: a deliberate order worth reading in sequence.
   </p>
 
+  {pinnedEntries.length > 0 && (
+    <div class="mb-8">
+      <p class="font-mono text-xs uppercase tracking-widest text-muted mb-3">&#9733; Pinned</p>
+      <ul class="border-t border-rule">
+        {pinnedEntries.map((entry) => (
+          <li class="border-b border-rule py-5">
+            <a href={`/series/${entry.slug}/`} class="group flex items-baseline justify-between gap-4">
+              <span>
+                <span class="font-sans text-lg font-semibold text-ink dark:text-white group-hover:text-accent transition-colors">
+                  {entry.title}
+                </span>
+                <span class="block text-ink-2 mt-1 max-w-[52ch]">{entry.description}</span>
+              </span>
+              <span class="font-mono text-xs text-muted whitespace-nowrap shrink-0">
+                {entry.count} post{entry.count === 1 ? '' : 's'} &rarr;
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+
   <ul class="border-t border-rule">
-    {entries.map((entry) => (
+    {regularEntries.map((entry) => (
       <li class="border-b border-rule py-5">
         <a href={`/series/${entry.slug}/`} class="group flex items-baseline justify-between gap-4">
           <span>
