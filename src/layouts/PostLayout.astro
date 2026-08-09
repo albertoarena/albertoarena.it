@@ -196,10 +196,9 @@ const blogPostingSchema = {
                     {lang === 'it' ? 'In questa pagina' : 'On this page'}
                 </summary>
                 <ul class="toc-list mt-3 font-mono text-sm leading-relaxed">
-                    {toc.map((h, i) => (
-                        <li class="flex gap-[0.25ch]">
-                            <span class="text-rule shrink-0" aria-hidden="true">{i === toc.length - 1 ? '└─' : '├─'}</span>
-                            <a href={`#${h.slug}`} class="text-ink-2 hover:text-ink">{h.text}</a>
+                    {toc.map((h) => (
+                        <li>
+                            <a href={`#${h.slug}`} class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">{h.text}</a>
                         </li>
                     ))}
                 </ul>
@@ -301,10 +300,9 @@ const blogPostingSchema = {
                     {lang === 'it' ? 'In questa pagina' : 'On this page'}
                 </h4>
                 <ul id="toc" class="font-mono text-xs leading-[1.55]">
-                    {toc.map((h, i) => (
-                        <li class="flex gap-[0.25ch]">
-                            <span class="text-rule shrink-0" aria-hidden="true">{i === toc.length - 1 ? '└─' : '├─'}</span>
-                            <a href={`#${h.slug}`} class="toc-link text-muted hover:text-ink py-[0.2rem] block" data-target={h.slug}>{h.text}</a>
+                    {toc.map((h) => (
+                        <li>
+                            <a href={`#${h.slug}`} class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target={h.slug}>{h.text}</a>
                         </li>
                     ))}
                 </ul>
@@ -357,9 +355,7 @@ const blogPostingSchema = {
       let bestRatio = 0;
       ratios.forEach((ratio, id) => { if (ratio > bestRatio) { bestRatio = ratio; best = id; } });
       links.forEach((a) => {
-        const active = a.dataset.target === best;
-        a.classList.toggle('text-accent', active);
-        a.classList.toggle('font-semibold', active);
+        a.classList.toggle('toc-active', a.dataset.target === best);
       });
     }, { rootMargin: '-10% 0px -70% 0px', threshold: [0, 0.5, 1] });
     headingEls.forEach((el) => currentObserver!.observe(el));
