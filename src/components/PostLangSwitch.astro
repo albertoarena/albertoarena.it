@@ -1,0 +1,34 @@
+---
+/*
+  Compact EN · IT control for the post meta line and aside (redesign-plan.md
+  §7). Distinct from LanguageToggle.astro, which is the larger pill-style
+  switch used on translated /pages/ content and is left alone here. When the
+  Italian version doesn't exist, IT renders disabled rather than being
+  hidden, per the plan.
+*/
+interface Props {
+  lang: 'en' | 'it';
+  englishUrl: string;
+  italianUrl?: string;
+}
+
+const { lang, englishUrl, italianUrl } = Astro.props;
+---
+
+<span class="font-mono">
+  <a
+    href={englishUrl}
+    aria-current={lang === 'en' ? 'page' : undefined}
+    class:list={lang === 'en' ? 'text-ink dark:text-white font-semibold' : 'text-accent hover:underline'}
+  >EN</a>
+  <span class="text-muted"> &middot; </span>
+  {italianUrl ? (
+    <a
+      href={italianUrl}
+      aria-current={lang === 'it' ? 'page' : undefined}
+      class:list={lang === 'it' ? 'text-ink dark:text-white font-semibold' : 'text-accent hover:underline'}
+    >IT</a>
+  ) : (
+    <span class="text-muted opacity-50" aria-disabled="true">IT</span>
+  )}
+</span>

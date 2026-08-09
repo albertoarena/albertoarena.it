@@ -11,11 +11,14 @@ tags:
   - "Database"
 description: "Laravel Truss 1.6 aggiunge la personalizzazione del tema per adattarsi all'app in cui è incorporato, e truss:export per generare file di schema deterministici su cui la tua CI può basarsi."
 socialImage: "/images/posts/gave-my-schema-viewer-your-app-colours/cover.jpg"
+coverAlt: "Campioni di colore Pantone disposti a ventaglio in cerchio su una superficie in cemento"
 lang: it
 translationOf: gave-my-schema-viewer-your-app-colours
+series:
+  slug: "truss"
+  order: 3
+discussion: "albertoarena/laravel-truss"
 ---
-
-![Campioni di colore Pantone disposti a ventaglio in cerchio su una superficie in cemento](/images/posts/gave-my-schema-viewer-your-app-colours/cover.jpg)
 
 [Truss](https://github.com/albertoarena/laravel-truss) è un diagramma ER live e zoomabile dello schema reale del database della tua app Laravel, sicuro da eseguire in produzione perché legge solo la struttura. L'ho presentato [a luglio](/posts/introducing-truss/it/), ed è rimasto parte di ogni progetto per i clienti da allora, protetto dietro una policy `viewTruss`. Due cose continuavano a darmi fastidio. La dashboard era sempre blu Truss, qualunque fosse il brand reale del cliente, e sembrava incollata sopra la loro app invece che parte di essa. E il pulsante di export, un click per un dizionario dati in Markdown o un file DBML, veniva premuto solo quando me ne ricordavo, così il file di schema committato nel repo si allontanava piano piano da quello reale finché qualcuno non se ne accorgeva, di solito nel modo peggiore.
 

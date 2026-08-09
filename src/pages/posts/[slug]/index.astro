@@ -23,7 +23,7 @@ export async function getStaticPaths() {
 }
 
 const { post, hasItalian } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 
 const slug = getPostSlug(post);
 const englishPath = `/posts/${slug}/`;
@@ -36,6 +36,7 @@ const italianPath = `/posts/${slug}/it/`;
     lang="en"
     englishUrl={hasItalian ? englishPath : undefined}
     italianUrl={hasItalian ? italianPath : undefined}
+    headings={headings}
 >
     <Content />
 </PostLayout>

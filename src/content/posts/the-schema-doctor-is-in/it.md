@@ -11,11 +11,14 @@ tags:
   - "Database"
 description: "Laravel Truss 1.5 aggiunge truss:doctor: una revisione deterministica, basata solo sulla struttura, del tuo schema di database, tredici regole in profondità, che può far fallire la tua build CI."
 socialImage: "/images/posts/the-schema-doctor-is-in/cover.jpg"
+coverAlt: "Uno stetoscopio appoggiato su un quaderno scritto a mano accanto a una tastiera di laptop, in bianco e nero"
 lang: it
 translationOf: the-schema-doctor-is-in
+series:
+  slug: "truss"
+  order: 2
+discussion: "albertoarena/laravel-truss"
 ---
-
-![Uno stetoscopio appoggiato su un quaderno scritto a mano accanto a una tastiera di laptop, in bianco e nero](/images/posts/the-schema-doctor-is-in/cover.jpg)
 
 Una migration che aggiunge una colonna `user_id` senza un indice a supporto passa la review ogni volta. Sembra tutto a posto. Laravel non si lamenta, la migration gira pulita, la CI è verde. Poi, qualche mese dopo, qualcuno fissa una JOIN che tocca duecento righe e impiega otto secondi, e nessuno ricorda più il perché.
 

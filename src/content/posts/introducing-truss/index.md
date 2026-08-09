@@ -12,10 +12,13 @@ tags:
   - "Database"
 description: "A live, zoomable ER diagram of your Laravel app's actual database schema, safe to run in production because it only ever reads structure, never rows."
 socialImage: "/images/posts/introducing-truss/cover.jpg"
+coverAlt: "A steel truss lattice shot from below against a bright sky, bolted joints forming a grid"
 pinned: true
+series:
+  slug: "truss"
+  order: 1
+discussion: "albertoarena/laravel-truss"
 ---
-
-![A steel truss lattice shot from below against a bright sky, bolted joints forming a grid](/images/posts/introducing-truss/cover.jpg)
 
 > **Update**: Truss now has a dedicated docs site and a public roadmap. See the notes at the end of this post for what's changed since publishing.
 

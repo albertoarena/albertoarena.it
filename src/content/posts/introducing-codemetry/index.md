@@ -12,9 +12,8 @@ tags:
   - "Code Quality"
 description: "A Git repository analysis tool that converts version control history into quality metrics."
 socialImage: "/images/posts/introducing-codemetry/cover.jpg"
+coverAlt: "Introducing Codemetry"
 ---
-
-![Introducing Codemetry](/images/posts/introducing-codemetry/cover.jpg)
 
 I'm excited to introduce [Codemetry](https://albertoarena.github.io/codemetry/), a new open-source project I've been working on.
 

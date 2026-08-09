@@ -13,9 +13,11 @@ tags:
   - "Open Source"
 description: "laravel-event-sourcing-generator just crossed 10,000 downloads on Packagist. A short look back at how it started and where things have gone since."
 socialImage: "/images/posts/laravel-event-sourcing-generator-10k/cover.jpg"
+coverAlt: "Sparkler at night"
+series:
+  slug: "event-sourcing"
+  order: 4
 ---
-
-![Sparkler at night](/images/posts/laravel-event-sourcing-generator-10k/cover.jpg)
 
 [laravel-event-sourcing-generator](https://github.com/albertoarena/laravel-event-sourcing-generator) crossed 10,000 downloads on Packagist today.
 

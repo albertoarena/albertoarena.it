@@ -11,9 +11,8 @@ tags:
   - "Prompting"
 description: "Anthropic's J-space research shows Claude's internal reasoning workspace is small. Here's what that changes about how I sequence prompts when building a feature."
 socialImage: "/images/posts/claudes-working-memory-is-smaller-than-you-think/cover.jpg"
+coverAlt: "Claude's Working Memory Is Smaller Than You Think"
 ---
-
-![Claude's Working Memory Is Smaller Than You Think](/images/posts/claudes-working-memory-is-smaller-than-you-think/cover.jpg)
 
 What Anthropic's J-space research means for how you should prompt.
 

@@ -12,9 +12,8 @@ tags:
   - "Open Source"
   - "Developer Tools"
 socialImage: "/images/posts/traffic-badge-github-action/cover.jpg"
+coverAlt: "Your README Deserves Real Numbers"
 ---
-
-![Your README Deserves Real Numbers](/images/posts/traffic-badge-github-action/cover.jpg)
 
 If you maintain an open-source repo, you've probably wondered at some point how many people actually visit it. GitHub has the answer buried in the Insights tab, but nobody looks there. It resets after 14 days, there's no history, and your README, the thing everyone sees, tells them nothing.
 
