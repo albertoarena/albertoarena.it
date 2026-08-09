@@ -494,3 +494,23 @@ html[data-reading] .post-content pre {
 .prose blockquote p {
   margin: 0;
 }
+
+/*
+  Aside TOC connector line. Started as box-drawing characters (├─/└─) per
+  the mockup, but those don't survive a heading wrapping to a second line —
+  the glyph stays pinned to the first line only, reading as disconnected.
+  A border-left on each item is immune to that: it's drawn along the box's
+  actual rendered height, wrapped or not, and consecutive items with no
+  vertical gap read as one continuous line down the list. The active
+  section is a highlighted segment of that same line, not just a text
+  colour change.
+*/
+#toc .toc-link {
+  border-left: 2px solid var(--color-rule-soft);
+}
+
+#toc .toc-link.toc-active {
+  border-left-color: var(--color-accent);
+  color: var(--color-accent);
+  font-weight: 600;
+}
