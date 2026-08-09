@@ -1,10 +1,14 @@
 ---
 /*
-  Redesign /projects (redesign-plan.md §10): a monospace table for the
-  maintained open-source tools (version/installs from the build-time cache,
-  scripts/fetch-project-stats.mjs — "show a dash when unknown, never a
-  zero"), then a quieter list for professional/client work below, matching
-  "the archived or client work in a second quieter group." Replaces
+  Redesign /projects (redesign-plan.md §10). The plan's first draft used a
+  multi-column grid ("aligned like command output") for the open-source
+  list, but that read as an awkward, unevenly-spaced table once real
+  descriptions filled it in — replaced with the same stacked-list shape as
+  the professional-work section below (name + version/date on one line,
+  description, then a muted meta line), which the plan itself calls for
+  as "the archived or client work in a second quieter group." Version and
+  installs still come from the build-time cache (scripts/fetch-project-
+  stats.mjs — "show a dash when unknown, never a zero"). Replaces
   ProjectCard's rounded cards and icon set, both against the plan's
   constraints (§1: no card grids, no icon set).
 */
@@ -36,16 +40,18 @@ function hasSeparateDocs(project: (typeof projects)[number]) {
     <h2 class="font-mono text-xs uppercase tracking-[0.14em] text-ink dark:text-white font-semibold border-b border-rule pb-2 mb-2">
       Open source
     </h2>
-    <ul class="border-t border-rule font-mono text-sm">
+    <ul class="border-t border-rule-soft">
       {openSourceProjects.map((project) => {
         const stats = statsFor(project);
         return (
-          <li class="grid grid-cols-1 min-[900px]:grid-cols-[9rem_minmax(0,1fr)_4.5rem_5rem_auto] gap-x-5 gap-y-1.5 items-baseline py-4 border-b border-rule-soft">
-            <span class="font-sans text-base font-semibold text-ink dark:text-white">{project.name}</span>
-            <span class="text-ink-2">{project.description}</span>
-            <span class="text-muted whitespace-nowrap">{stats?.version ?? '—'}</span>
-            <span class="text-muted whitespace-nowrap">{stats?.installs != null ? stats.installs.toLocaleString('en-US') : '—'}</span>
-            <span class="flex flex-wrap gap-x-4 gap-y-1 whitespace-nowrap">
+          <li class="py-4 border-b border-rule-soft">
+            <div class="flex items-baseline justify-between gap-4">
+              <span class="font-sans text-base font-semibold text-ink dark:text-white">{project.name}</span>
+              <span class="font-mono text-xs text-muted whitespace-nowrap">{stats?.version ?? '—'}</span>
+            </div>
+            <p class="text-ink-2 mt-1 max-w-[64ch]">{project.description}</p>
+            <p class="font-mono text-xs text-muted mt-1.5 flex flex-wrap gap-x-4 gap-y-1">
+              <span>{stats?.installs != null ? `${stats.installs.toLocaleString('en-US')} installs` : '— installs'}</span>
               {project.github && (
                 <a href={project.github} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">GitHub</a>
               )}
@@ -55,7 +61,7 @@ function hasSeparateDocs(project: (typeof projects)[number]) {
               {project.postSlug && (
                 <a href={`/posts/${project.postSlug}/`} class="text-accent hover:underline">Post</a>
               )}
-            </span>
+            </p>
           </li>
         );
       })}
