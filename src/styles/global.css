@@ -74,6 +74,18 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /*
+      Without this, the vertical scrollbar only appears (and only reserves
+      its ~8px of width) on pages tall enough to need one — a shorter page
+      has that much more available width than a taller one, which shifts
+      every mx-auto-centred shell sideways between pages, most visible on
+      the rail's border since it's a hard vertical line. scrollbar-gutter:
+      stable is the modern fix for this but Chrome doesn't reserve it for
+      the root element unless a scrollbar is already needed, defeating the
+      point — forcing the scrollbar to always render is the older but
+      actually-reliable fix.
+    */
+    overflow-y: scroll;
   }
 
   body {
