@@ -1,6 +1,24 @@
 ---
+/*
+  Redesign (redesign-plan.md §10 /cheatsheets/*): moved from Shell A into
+  Shell B, the same rail | article | aside grid PostLayout.astro uses for
+  posts, so the site has one design system instead of two. The dense
+  definition lists stay as they are, the aside carries the section tree
+  (the same curated jump-to list that lived in an in-page sticky sidebar
+  before), and the print stylesheet stays intact — verified by actually
+  regenerating the PDF, not just building. Class names referenced by the
+  print stylesheet (cheatsheet-header, cheatsheet-card, cheatsheet-grid,
+  cheatsheet-flow, cheatsheet-callout, cheatsheet-pairs, cheatsheet-pair,
+  cheatsheet-entry, cheatsheet-shell, print-hide, print-only, doc-scroll,
+  font-medium on the pair caption) are kept verbatim; only the Tailwind
+  utility classes around them changed.
+*/
 import { getCollection } from 'astro:content';
-import Layout from '@/components/Layout.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Rail from '@/components/Rail.astro';
+import ThemeSwitcher from '@/components/ThemeSwitcher.astro';
+import Footer from '@/components/Footer.astro';
+import CookieConsent from '@/components/CookieConsent.astro';
 import NewsletterSignup from '@/components/NewsletterSignup.astro';
 import { siteConfig } from '@/utils/config';
 import { getPostSlug } from '@/utils/helpers';
@@ -26,6 +44,13 @@ const relatedPosts = relatedPostSlugs
 const pdfPath = '/downloads/spatie-event-sourcing-cheatsheet.pdf';
 const canonicalPath = '/cheatsheets/spatie-event-sourcing/';
 const canonicalURL = new URL(canonicalPath, siteConfig.url).toString();
+
+const sectionNav = [
+  { href: '#building-blocks', label: 'Building blocks' },
+  { href: '#wrong-right', label: 'Code samples' },
+  { href: '#automate', label: 'Automate' },
+  { href: '#related-reading', label: 'Related reading' },
+];
 
 const techArticleSchema = {
   '@context': 'https://schema.org',
@@ -54,251 +79,280 @@ const faqSchema = gotchasSection?.entries?.some((e) => e.question)
   : null;
 ---
 
-<Layout
+<BaseLayout
   title={spatieEventSourcingCheatsheet.title}
   description={spatieEventSourcingCheatsheet.description}
   image="/images/cheatsheets/spatie-event-sourcing/cover.jpg"
-  wide={true}
 >
   <script type="application/ld+json" set:html={JSON.stringify(techArticleSchema)} />
   {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
 
-  <div class="cheatsheet-header mb-10">
-    <p class="text-sm font-medium text-primary mb-2">Cheat sheet</p>
-    <h1 class="text-3xl lg:text-4xl font-bold text-dark dark:text-white mb-3">
-      {spatieEventSourcingCheatsheet.title}
-    </h1>
-    <p class="text-gray leading-relaxed max-w-2xl mb-2">
-      {spatieEventSourcingCheatsheet.description}
-    </p>
-    <p class="text-xs text-gray mb-2">
-      Covers spatie/laravel-event-sourcing {spatieEventSourcingCheatsheet.packageVersion} &middot; Last reviewed {spatieEventSourcingCheatsheet.lastReviewed}
-    </p>
-    <p class="text-gray leading-relaxed max-w-2xl mb-2">
-      {spatieEventSourcingCheatsheet.intro}
-    </p>
-    <p class="print-only text-xs text-gray mb-6">
-      Printed from <a href={canonicalURL}>{canonicalURL}</a> by {siteConfig.author.name}.
-    </p>
-    <a
-      href={pdfPath}
-      target="_blank"
-      rel="noopener noreferrer"
-      class="print-hide inline-flex items-center gap-2 px-4 py-2 mt-4 rounded-lg bg-primary text-white text-sm font-medium hover:bg-secondary transition-colors"
-    >
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16" />
-      </svg>
-      Download the printable PDF
-    </a>
-  </div>
-
-  <div class="lg:flex lg:items-start lg:gap-6">
-    <aside class="print-hide hidden lg:block lg:w-36 lg:shrink-0 lg:sticky lg:top-20">
-      <nav aria-label="Cheat sheet sections" class="text-sm space-y-2.5 border-l border-white-cloud dark:border-dark-cloud pl-4">
-        <a href="#building-blocks" class="block text-gray hover:text-primary transition-colors">Building blocks</a>
-        <a href="#wrong-right" class="block text-gray hover:text-primary transition-colors">Code samples</a>
-        <a href="#automate" class="block text-gray hover:text-primary transition-colors">Automate</a>
-        <a href="#related-reading" class="block text-gray hover:text-primary transition-colors">Related reading</a>
-      </nav>
-    </aside>
-
-    <div class="min-w-0 flex-1">
-      {calloutSection && (
-        <section class="cheatsheet-callout mb-10 rounded-lg border-2 border-primary/40 bg-primary/5 dark:bg-primary/10 p-5">
-          <h2 class="text-sm font-semibold uppercase tracking-wide text-primary mb-2">
-            {calloutSection.title}
-          </h2>
-          {calloutSection.entries!.map((entry) => (
-            <p class="text-sm leading-relaxed text-dark dark:text-white">{entry.text}</p>
-          ))}
-        </section>
-      )}
-
-      {flowSection && (
-        <section class="mb-10 cheatsheet-card rounded-lg border border-white-cloud dark:border-dark-cloud p-5">
-          <h2 class="text-sm font-semibold uppercase tracking-wide text-gray mb-4">
-            {flowSection.title}
-          </h2>
-          <div class="cheatsheet-flow flex flex-col gap-2 font-mono text-xs sm:text-sm">
-            {flowSection.flow!.map((step, i) => (
-              <>
-                <span
-                  class="px-3 py-1.5 rounded bg-gray-100 dark:bg-dark-cloud/60 text-dark dark:text-white w-fit"
-                  style={`margin-left: ${i * 20}px`}
-                >
-                  {step}
-                </span>
-                {i < flowSection.flow!.length - 1 && (
-                  <span class="text-gray" style={`margin-left: ${i * 20 + 12}px`} aria-hidden="true">&darr;</span>
-                )}
-              </>
-            ))}
-          </div>
-        </section>
-      )}
-
-      <div class="print-hide relative mb-6">
-        <input
-          type="search"
-          id="cheatsheet-filter"
-          placeholder="Filter this page&hellip; (press / to focus)"
-          aria-label="Filter cheat sheet entries"
-          class="w-full rounded-lg border border-white-cloud dark:border-dark-cloud bg-white dark:bg-dark px-4 py-2 text-sm text-dark dark:text-white placeholder:text-gray focus:outline-none focus:ring-2 focus:ring-primary/50"
-        />
+  <!-- Shell B, three column (redesign-plan.md §5): rail | article | aside -->
+  <div class="cheatsheet-shell min-[900px]:grid min-[900px]:grid-cols-[14rem_minmax(0,1fr)] min-[1180px]:grid-cols-[14rem_minmax(0,1fr)_15rem] max-w-[82rem] mx-auto">
+    <Rail />
+    <div class="min-w-0 min-[900px]:col-start-2">
+      <div class="print-hide flex justify-end px-6 pt-6 min-[900px]:px-8 min-[900px]:pt-8">
+        <ThemeSwitcher />
       </div>
-
-      <div class="cheatsheet-grid columns-1 sm:columns-2 gap-6 mb-12">
-        {cardSections.map((section) => (
-          <section id={section.id} class="cheatsheet-card break-inside-avoid mb-6 rounded-lg border border-white-cloud dark:border-dark-cloud p-5 scroll-mt-20">
-            <h2 class="text-sm font-semibold uppercase tracking-wide text-gray mb-3">
-              {section.title}
-            </h2>
-            <ul class="space-y-2.5">
-              {section.entries!.map((entry) => (
-                <li
-                  class="cheatsheet-entry text-sm leading-relaxed text-dark dark:text-white"
-                  data-filter-text={`${section.title} ${entry.term ?? ''} ${entry.code ?? ''} ${entry.text}`.toLowerCase()}
-                >
-                  {entry.code && (
-                    <code tabindex="0" class="doc-scroll block font-mono text-xs bg-gray-100 dark:bg-dark-cloud/60 rounded px-1.5 py-0.5 mb-1 overflow-x-auto whitespace-pre">{entry.code}</code>
-                  )}
-                  {entry.term && <strong class="font-semibold">{entry.term}:</strong>}{' '}
-                  <span class="text-gray">{entry.text}</span>
-                  {entry.href && (
-                    <a
-                      href={entry.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="doc-link print-hide inline-flex items-center align-middle ml-1 text-gray/70 hover:text-primary transition-colors"
-                      aria-label="View in Spatie docs"
-                      title="View in Spatie docs"
-                    >
-                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
-                    </a>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))}
-      </div>
-
-      {wrongRightPairs.length > 0 && (
-        <section id="wrong-right" class="cheatsheet-pairs mb-12 rounded-lg border border-white-cloud dark:border-dark-cloud p-5 scroll-mt-20">
-          <h2 class="text-lg font-semibold text-dark dark:text-white mb-4">
-            Wrong / right
-          </h2>
-          <div class="space-y-6">
-            {wrongRightPairs.map((pair) => (
-              <div class="cheatsheet-pair">
-                <p class="text-sm font-medium text-dark dark:text-white mb-2">{pair.caption}</p>
-                <div class="grid gap-3 sm:grid-cols-2">
-                  <div class="rounded-lg border-l-4 border-red-400 dark:border-red-500 bg-red-50/50 dark:bg-red-950/20 p-3">
-                    <pre tabindex="0" class="doc-scroll font-mono text-xs overflow-x-auto whitespace-pre text-dark dark:text-white">{pair.wrong.code}</pre>
-                    <p class="text-xs text-gray mt-2">{pair.wrong.note}</p>
-                  </div>
-                  <div class="rounded-lg border-l-4 border-green-400 dark:border-green-500 bg-green-50/50 dark:bg-green-950/20 p-3">
-                    <pre tabindex="0" class="doc-scroll font-mono text-xs overflow-x-auto whitespace-pre text-dark dark:text-white">{pair.right.code}</pre>
-                    <p class="text-xs text-gray mt-2">{pair.right.note}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      <section id="automate" class="mb-12 print-hide rounded-lg border border-white-cloud dark:border-dark-cloud p-5 scroll-mt-20">
-        <h2 class="text-lg font-semibold text-dark dark:text-white mb-3">
-          Automate all of this
-        </h2>
-        <div class="grid gap-3 sm:grid-cols-2">
-          {automateThisFooter.map((link) => (
+      <main id="main-content" class="px-6 pb-12 min-[900px]:px-8 min-[900px]:pb-16">
+        <article>
+          <header class="cheatsheet-header mb-10 max-w-[68ch]">
+            <p class="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-accent mb-3">Cheat sheet</p>
+            <h1 class="font-sans text-[clamp(1.75rem,3.4vw,2.5rem)] leading-[1.15] tracking-[-0.025em] font-[660] mb-4 text-ink dark:text-white">
+              {spatieEventSourcingCheatsheet.title}
+            </h1>
+            <p class="text-lg text-ink-2 mb-4">
+              {spatieEventSourcingCheatsheet.description}
+            </p>
+            <div class="font-mono text-xs text-muted flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-b border-rule py-3 mb-4">
+              <span>spatie/laravel-event-sourcing {spatieEventSourcingCheatsheet.packageVersion}</span>
+              <span>Last reviewed {spatieEventSourcingCheatsheet.lastReviewed}</span>
+            </div>
+            <p class="text-ink-2 mb-2">
+              {spatieEventSourcingCheatsheet.intro}
+            </p>
+            <p class="print-only text-xs text-muted mb-4">
+              Printed from <a href={canonicalURL}>{canonicalURL}</a> by {siteConfig.author.name}.
+            </p>
             <a
-              href={link.href}
+              href={pdfPath}
               target="_blank"
               rel="noopener noreferrer"
-              class="group rounded-lg border border-white-cloud dark:border-dark-cloud p-3 hover:border-primary/50 transition-colors"
+              class="print-hide font-mono text-sm text-accent hover:underline mt-2 inline-block"
             >
-              <span class="block font-mono text-sm text-dark dark:text-white group-hover:text-primary transition-colors underline underline-offset-2">{link.name}</span>
-              <span class="block text-sm text-gray mt-1">{link.text}</span>
+              Download the printable PDF &darr;
             </a>
-          ))}
-        </div>
-        <p class="text-sm text-gray mt-3">
-          Read the honest comparison: <a href="/posts/generator-vs-ai-skill/" class="hover:text-primary transition-colors underline underline-offset-2">which to reach for, and when</a>.
-        </p>
-      </section>
+          </header>
 
-      {relatedPosts.length > 0 && (
-        <section id="related-reading" class="mb-12 print-hide rounded-lg border border-white-cloud dark:border-dark-cloud p-5 scroll-mt-20">
-          <h2 class="text-lg font-semibold text-dark dark:text-white mb-3">
-            Related reading
-          </h2>
-          <div class="grid gap-3 sm:grid-cols-3">
-            {relatedPosts.map((post) => (
-              <a
-                href={`/posts/${getPostSlug(post)}/`}
-                class="group flex items-center gap-3 rounded-lg border border-white-cloud dark:border-dark-cloud p-3 hover:border-primary/50 transition-colors"
-              >
-                <img
-                  src={post.data.socialImage ?? siteConfig.author.photo}
-                  alt=""
-                  class="w-14 h-14 rounded object-cover shrink-0"
-                  loading="lazy"
-                />
-                <span class="text-sm font-medium text-dark dark:text-white group-hover:text-primary transition-colors">{post.data.title}</span>
-              </a>
+          {sectionNav.length > 0 && (
+            <details class="section-nav-mobile print-hide min-[1180px]:hidden mb-8 border border-rule px-4 py-3 not-prose">
+              <summary class="font-mono text-xs uppercase tracking-[0.1em] text-muted cursor-pointer">
+                On this page
+              </summary>
+              <ul class="mt-3 font-mono text-sm leading-relaxed">
+                {sectionNav.map((item) => (
+                  <li>
+                    <a href={item.href} class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">{item.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          )}
+
+          {calloutSection && (
+            <section class="cheatsheet-callout mb-10 border-l-2 border-accent bg-accent-soft pl-4 pr-5 py-4">
+              <h2 class="font-mono text-xs uppercase tracking-[0.12em] text-accent mb-2">
+                {calloutSection.title}
+              </h2>
+              {calloutSection.entries!.map((entry) => (
+                <p class="text-sm leading-relaxed text-ink dark:text-white">{entry.text}</p>
+              ))}
+            </section>
+          )}
+
+          {flowSection && (
+            <section class="cheatsheet-card mb-10 border border-rule px-5 py-5">
+              <h2 class="font-mono text-xs uppercase tracking-[0.12em] text-muted mb-4">
+                {flowSection.title}
+              </h2>
+              <div class="cheatsheet-flow flex flex-col gap-2 font-mono text-xs sm:text-sm">
+                {flowSection.flow!.map((step, i) => (
+                  <>
+                    <span
+                      class="px-3 py-1.5 border border-rule-soft text-ink dark:text-white w-fit"
+                      style={`margin-left: ${i * 20}px`}
+                    >
+                      {step}
+                    </span>
+                    {i < flowSection.flow!.length - 1 && (
+                      <span class="text-muted" style={`margin-left: ${i * 20 + 12}px`} aria-hidden="true">&darr;</span>
+                    )}
+                  </>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <div class="print-hide relative mb-6">
+            <input
+              type="search"
+              id="cheatsheet-filter"
+              placeholder="Filter this page&hellip; (press / to focus)"
+              aria-label="Filter cheat sheet entries"
+              class="w-full border border-rule bg-paper px-4 py-2 text-sm text-ink dark:text-white placeholder:text-muted focus:outline-none focus:border-accent"
+            />
+          </div>
+
+          <div class="cheatsheet-grid columns-1 sm:columns-2 gap-6 mb-12">
+            {cardSections.map((section) => (
+              <section id={section.id} class="cheatsheet-card break-inside-avoid mb-6 border border-rule px-5 py-5 scroll-mt-20">
+                <h2 class="font-mono text-xs uppercase tracking-[0.12em] text-muted mb-3">
+                  {section.title}
+                </h2>
+                <ul class="space-y-2.5">
+                  {section.entries!.map((entry) => (
+                    <li
+                      class="cheatsheet-entry text-sm leading-relaxed text-ink dark:text-white"
+                      data-filter-text={`${section.title} ${entry.term ?? ''} ${entry.code ?? ''} ${entry.text}`.toLowerCase()}
+                    >
+                      {entry.code && (
+                        <code tabindex="0" class="doc-scroll block font-mono text-xs bg-paper border border-rule-soft px-1.5 py-0.5 mb-1 overflow-x-auto whitespace-pre">{entry.code}</code>
+                      )}
+                      {entry.term && <strong class="font-semibold">{entry.term}:</strong>}{' '}
+                      <span class="text-ink-2">{entry.text}</span>
+                      {entry.href && (
+                        <a
+                          href={entry.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="doc-link print-hide font-mono text-[0.6875rem] text-muted hover:text-accent transition-colors ml-1.5"
+                        >
+                          docs
+                        </a>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </section>
             ))}
           </div>
-        </section>
-      )}
 
-      <div class="print-hide rounded-lg border border-white-cloud dark:border-dark-cloud p-5">
-        <h2 class="text-lg font-semibold text-dark dark:text-white mb-1">
-          Grab the printable PDF
-        </h2>
-        <p class="text-sm text-gray leading-relaxed mb-4">
-          Get notified the moment a new cheat sheet ships, plus practical notes on
-          Laravel tooling and AI-assisted development, roughly once a month. The
-          PDF above is already free, no opt-in required.
-        </p>
-        <NewsletterSignup />
-      </div>
+          {wrongRightPairs.length > 0 && (
+            <section id="wrong-right" class="cheatsheet-pairs mb-12 border border-rule px-5 py-5 scroll-mt-20">
+              <h2 class="font-sans text-lg font-semibold text-ink dark:text-white mb-4">
+                Wrong / right
+              </h2>
+              <div class="space-y-6">
+                {wrongRightPairs.map((pair) => (
+                  <div class="cheatsheet-pair">
+                    <p class="text-sm font-medium text-ink dark:text-white mb-2">{pair.caption}</p>
+                    <div class="grid gap-3 sm:grid-cols-2">
+                      <div class="border-l-2 border-red-400 dark:border-red-500 pl-3">
+                        <p class="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-red-500 dark:text-red-400 mb-1.5">Wrong</p>
+                        <pre tabindex="0" class="doc-scroll font-mono text-xs overflow-x-auto whitespace-pre text-ink dark:text-white bg-paper border border-rule-soft p-3">{pair.wrong.code}</pre>
+                        <p class="text-xs text-muted mt-2">{pair.wrong.note}</p>
+                      </div>
+                      <div class="border-l-2 border-ok pl-3">
+                        <p class="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-ok mb-1.5">Right</p>
+                        <pre tabindex="0" class="doc-scroll font-mono text-xs overflow-x-auto whitespace-pre text-ink dark:text-white bg-paper border border-rule-soft p-3">{pair.right.code}</pre>
+                        <p class="text-xs text-muted mt-2">{pair.right.note}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <section id="automate" class="mb-12 print-hide border border-rule px-5 py-5 scroll-mt-20">
+            <h2 class="font-sans text-lg font-semibold text-ink dark:text-white mb-3">
+              Automate all of this
+            </h2>
+            <div class="grid gap-3 sm:grid-cols-2">
+              {automateThisFooter.map((link) => (
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="group border border-rule-soft px-3 py-3 hover:border-accent transition-colors"
+                >
+                  <span class="block font-mono text-sm text-accent group-hover:underline underline-offset-2">{link.name}</span>
+                  <span class="block text-sm text-ink-2 mt-1">{link.text}</span>
+                </a>
+              ))}
+            </div>
+            <p class="text-sm text-ink-2 mt-3">
+              Read the honest comparison: <a href="/posts/generator-vs-ai-skill/" class="text-accent hover:underline">which to reach for, and when</a>.
+            </p>
+          </section>
+
+          {relatedPosts.length > 0 && (
+            <section id="related-reading" class="mb-12 print-hide border border-rule px-5 py-5 scroll-mt-20">
+              <h2 class="font-sans text-lg font-semibold text-ink dark:text-white mb-3">
+                Related reading
+              </h2>
+              <div class="grid gap-3 sm:grid-cols-3">
+                {relatedPosts.map((post) => (
+                  <a
+                    href={`/posts/${getPostSlug(post)}/`}
+                    class="group flex items-center gap-3 border border-rule-soft p-3 hover:border-accent transition-colors"
+                  >
+                    <img
+                      src={post.data.socialImage ?? siteConfig.author.photo}
+                      alt=""
+                      class="w-14 h-14 object-cover shrink-0"
+                      loading="lazy"
+                    />
+                    <span class="text-sm font-medium text-ink dark:text-white group-hover:text-accent transition-colors">{post.data.title}</span>
+                  </a>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <div class="print-hide border border-rule px-5 py-5">
+            <h2 class="font-sans text-lg font-semibold text-ink dark:text-white mb-1">
+              Grab the printable PDF
+            </h2>
+            <p class="text-sm text-ink-2 leading-relaxed mb-4">
+              Get notified the moment a new cheat sheet ships, plus practical notes on
+              Laravel tooling and AI-assisted development, roughly once a month. The
+              PDF above is already free, no opt-in required.
+            </p>
+            <NewsletterSignup />
+          </div>
+        </article>
+      </main>
+      <Footer />
     </div>
+
+    <aside class="print-hide hidden min-[1180px]:flex flex-col gap-8 border-l border-rule px-5 py-9 sticky top-0 self-start h-screen overflow-y-auto">
+      <div>
+        <h4 class="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted mb-2.5">On this page</h4>
+        <nav aria-label="Cheat sheet sections">
+          <ul class="font-mono text-xs leading-[1.55]">
+            {sectionNav.map((item) => (
+              <li>
+                <a href={item.href} class="block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors">{item.label}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </aside>
   </div>
 
-  <script>
-    const input = document.getElementById('cheatsheet-filter') as HTMLInputElement | null;
-    const cards = Array.from(document.querySelectorAll<HTMLElement>('.cheatsheet-card'));
+  <CookieConsent />
+</BaseLayout>
 
-    if (input) {
-      input.addEventListener('input', () => {
-        const query = input.value.trim().toLowerCase();
-        for (const card of cards) {
-          const cardEntries = Array.from(card.querySelectorAll<HTMLElement>('.cheatsheet-entry'));
-          let anyVisible = false;
-          for (const entry of cardEntries) {
-            const matches = !query || (entry.dataset.filterText ?? '').includes(query);
-            entry.style.display = matches ? '' : 'none';
-            if (matches) anyVisible = true;
-          }
-          card.style.display = anyVisible ? '' : 'none';
-        }
-      });
+<script>
+  const input = document.getElementById('cheatsheet-filter') as HTMLInputElement | null;
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('.cheatsheet-card'));
 
-      document.addEventListener('keydown', (event) => {
-        if (event.key === '/' && document.activeElement !== input) {
-          event.preventDefault();
-          input.focus();
+  if (input) {
+    input.addEventListener('input', () => {
+      const query = input.value.trim().toLowerCase();
+      for (const card of cards) {
+        const cardEntries = Array.from(card.querySelectorAll<HTMLElement>('.cheatsheet-entry'));
+        if (!cardEntries.length) continue;
+        let anyVisible = false;
+        for (const entry of cardEntries) {
+          const matches = !query || (entry.dataset.filterText ?? '').includes(query);
+          entry.style.display = matches ? '' : 'none';
+          if (matches) anyVisible = true;
         }
-      });
-    }
-  </script>
-</Layout>
+        card.style.display = anyVisible ? '' : 'none';
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === '/' && document.activeElement !== input) {
+        event.preventDefault();
+        input.focus();
+      }
+    });
+  }
+</script>
 
 <style is:global>
   .doc-scroll {
@@ -324,7 +378,6 @@ const faqSchema = gotchasSection?.entries?.some((e) => e.question)
   }
 
   @media print {
-    header,
     footer,
     #cookie-consent,
     .print-hide {
@@ -346,6 +399,11 @@ const faqSchema = gotchasSection?.entries?.some((e) => e.question)
 
     body {
       background: #fff !important;
+    }
+
+    .cheatsheet-shell {
+      display: block !important;
+      max-width: 100% !important;
     }
 
     main {
