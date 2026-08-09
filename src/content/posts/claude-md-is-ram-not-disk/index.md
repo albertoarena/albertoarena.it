@@ -13,6 +13,9 @@ tags:
 description: "Why a growing CLAUDE.md makes Claude Code worse, and a simple RAM/disk model for structuring your docs instead, plus a Laravel starter repo you can copy."
 socialImage: "/images/posts/claude-md-is-ram-not-disk/cover.jpg"
 coverAlt: "CLAUDE.md Is RAM, Not Disk: A Memory Model for Claude Code Projects"
+series:
+  slug: "claude-md"
+  order: 1
 ---
 
 > **Update**: this post covers two tiers, `CLAUDE.md` and `docs/`. There are two more once you add path-scoped rules and skills to the picture. See the follow-up, [CLAUDE.md Is RAM, Skills Are Not Disk](/posts/claude-md-skills-are-not-disk/), for the four-tier version, including a correction to the nested `CLAUDE.md` trick below.

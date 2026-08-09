@@ -12,6 +12,9 @@ tags:
 description: "Agentic development didn't make us prompt engineers. It made reviewing the job, and nobody built tooling yet for the real bottleneck: how long a human can stay sharp."
 socialImage: "/images/posts/we-became-editors-in-chief/cover.jpg"
 coverAlt: "A hand holding a red pen over a blank spiral notebook page on a wooden table"
+series:
+  slug: "how-to-use-ai"
+  order: 2
 ---
 
 Most of my working day now looks like this: I write a prompt describing what I want. An agent produces a diff. I read it, and either approve it or ask for a refinement. Repeat, dozens of times, until the feature is done.

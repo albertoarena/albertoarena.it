@@ -14,6 +14,9 @@ tags:
 description: "Skills look like the disk tier of the CLAUDE.md memory model. They are not. Here is the four-tier model that actually fits: RAM, path-scoped rules, skills, and disk."
 socialImage: "/images/posts/claude-md-skills-are-not-disk/cover.jpg"
 coverAlt: "CLAUDE.md Is RAM, Skills Are Not Disk: The Four-Tier Memory Model for Claude Code"
+series:
+  slug: "claude-md"
+  order: 3
 ---
 
 Claude Code loads `CLAUDE.md` in full at the start of every session and keeps it resident the whole time, so every line in it is a line you pay for on every turn, whether the task in front of you needs it or not. [CLAUDE.md Is RAM, Not Disk](/posts/claude-md-is-ram-not-disk/) split that into two tiers to deal with it: `CLAUDE.md` holds only what Claude needs every time, stack, commands, invariants; everything else moves to `docs/`, which loads only when something points Claude there. Working memory stays small and constantly paid for. Long-term memory stays cheap because it's optional.

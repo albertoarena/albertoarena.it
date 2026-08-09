@@ -13,6 +13,9 @@ tags:
   - "Claude Code"
 socialImage: "/images/posts/goal-command-claude-code/cover.jpg"
 coverAlt: "Claude Code /goal vs /loop: Stop Typing, Keep Going"
+series:
+  slug: "claude-goal-loop"
+  order: 1
 pinned: true
 ---
 

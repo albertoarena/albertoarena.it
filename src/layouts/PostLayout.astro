@@ -60,6 +60,9 @@ const toc = headings.filter((h) => h.depth === 2);
 const SERIES_LABELS: Record<string, string> = {
     truss: 'Truss series',
     'event-sourcing': 'event sourcing thread',
+    'claude-md': 'CLAUDE.md memory model series',
+    'claude-goal-loop': 'Claude Code automation thread',
+    'how-to-use-ai': 'how to use AI series',
 };
 
 const allPosts = await getCollection('posts', ({ data }) => !data.draft);
