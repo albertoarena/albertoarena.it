@@ -7,31 +7,24 @@ import { cheatsheets } from '@/data/cheatsheets/registry';
   title="Cheat sheets"
   description="Dense, printable reference sheets for the tools and patterns I use."
 >
-  <h1 class="text-3xl lg:text-4xl font-bold text-dark dark:text-white mb-3">
-    Cheat sheets
-  </h1>
-  <p class="text-gray leading-relaxed mb-10">
+  <h1 class="font-sans text-3xl font-bold text-ink dark:text-white mb-3">Cheat sheets</h1>
+  <p class="text-ink-2 mb-10 max-w-[60ch]">
     Dense, printable references, free to read, PDF included. More coming as I write them.
   </p>
 
-  <div class="space-y-6">
+  <ul class="border-t border-rule">
     {cheatsheets.map((sheet) => (
-      <a
-        href={`/cheatsheets/${sheet.slug}/`}
-        class="group flex items-center gap-4 rounded-lg border border-white-cloud dark:border-dark-cloud p-4 hover:border-primary/50 transition-colors"
-      >
-        <div class="w-11 h-11 rounded-lg bg-primary/10 dark:bg-primary/15 flex items-center justify-center shrink-0">
-          <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-        </div>
-        <div class="min-w-0">
-          <h2 class="text-lg font-semibold text-dark dark:text-white group-hover:text-primary transition-colors">
-            {sheet.title}
-          </h2>
-          <p class="text-sm text-gray mt-1 line-clamp-2">{sheet.description}</p>
-        </div>
-      </a>
+      <li class="border-b border-rule py-5">
+        <a href={`/cheatsheets/${sheet.slug}/`} class="group flex items-baseline justify-between gap-4">
+          <span>
+            <span class="font-sans text-lg font-semibold text-ink dark:text-white group-hover:text-accent transition-colors">
+              {sheet.title}
+            </span>
+            <span class="block text-ink-2 mt-1 max-w-[52ch]">{sheet.description}</span>
+          </span>
+          <span class="font-mono text-xs text-muted whitespace-nowrap shrink-0">Read &rarr;</span>
+        </a>
+      </li>
     ))}
-  </div>
+  </ul>
 </Layout>
