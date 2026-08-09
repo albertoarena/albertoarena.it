@@ -15,9 +15,8 @@ tags:
   - "EC2"
 description: "When IT blocks SSH for compliance, your manual Artisan operations go dark. Here is how AWS Systems Manager Run Command replaces the bastion host with an IAM-authenticated, CloudTrail-audited alternative, and the engineering decisions behind building a reusable toolkit around it."
 socialImage: "/images/posts/beyond-the-bastion-aws-ssm-laravel-artisan/cover.jpg"
+coverAlt: "Beyond the Bastion: Secure Artisan Command Execution with AWS Systems Manager"
 ---
-
-![Beyond the Bastion: Secure Artisan Command Execution with AWS Systems Manager](/images/posts/beyond-the-bastion-aws-ssm-laravel-artisan/cover.jpg)
 
 One day IT tells you SSH is going away. Not because anything broke, but because compliance
 and security hardening demand it. Port 22 gets closed. The bastion host or jump box

@@ -12,9 +12,12 @@ tags:
   - "Database"
 description: "Laravel Truss 1.5 adds truss:doctor: a deterministic, structure-only review of your database schema, thirteen rules deep, that can fail your CI build."
 socialImage: "/images/posts/the-schema-doctor-is-in/cover.jpg"
+coverAlt: "A stethoscope resting on a handwritten notebook next to a laptop keyboard, in black and white"
+series:
+  slug: "truss"
+  order: 2
+discussion: "albertoarena/laravel-truss"
 ---
-
-![A stethoscope resting on a handwritten notebook next to a laptop keyboard, in black and white](/images/posts/the-schema-doctor-is-in/cover.jpg)
 
 A migration that adds a `user_id` column with no supporting index passes review every time. It looks fine. Laravel doesn't complain, the migration runs clean, CI is green. Then a few months later someone's staring at a JOIN that touches two hundred rows and takes eight seconds, and nobody remembers why.
 

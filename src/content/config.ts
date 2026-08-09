@@ -14,9 +14,27 @@ const postsCollection = defineCollection({
     description: z.string().optional(),
     socialImage: z.string().optional(),
     cover: z.string().optional(),
+    coverAlt: z.string().optional(),
     pinned: z.boolean().default(false),
     lang: z.enum(['en', 'it']).default('en'),
-    translationOf: z.string().optional()
+    translationOf: z.string().optional(),
+    /*
+      Generalised series (redesign-plan.md §7, §10). `slug` groups posts,
+      `order` sequences them. Truss's series is migrated here in Phase 3;
+      src/data/trussSeries.ts stays authoritative for the home page's Truss
+      block until Phase 5 retires it and builds /series.
+    */
+    series: z.object({
+      slug: z.string(),
+      order: z.number(),
+    }).optional(),
+    /*
+      GitHub repo ("owner/name") to link "open a discussion" at, in place of
+      Disqus. Only set this where Discussions are actually enabled on that
+      repo — there is no site-level fallback repo (albertoarena.it itself
+      has Discussions disabled), so an unset field means email-only.
+    */
+    discussion: z.string().optional(),
   })
 });
 

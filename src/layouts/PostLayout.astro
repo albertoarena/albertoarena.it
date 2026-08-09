@@ -4,15 +4,20 @@ import Rail from "../components/Rail.astro";
 import ThemeSwitcher from "../components/ThemeSwitcher.astro";
 import Footer from "../components/Footer.astro";
 import CookieConsent from "../components/CookieConsent.astro";
+import PostLangSwitch from "../components/PostLangSwitch.astro";
+import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import { siteConfig } from "../utils/config";
-import DisqusComments from "../components/DisqusComments.astro";
-import LanguageToggle from "../components/LanguageToggle.astro";
 import NewsletterSignup from "../components/NewsletterSignup.astro";
 import ReadingModeToggle from "../components/ReadingModeToggle.astro";
-import TrussSeriesNav from "../components/TrussSeriesNav.astro";
-import { trussSeries } from "../data/trussSeries";
+import { getPostSlug } from "../utils/helpers";
 import readingTime from "reading-time";
+
+interface Heading {
+    depth: number;
+    slug: string;
+    text: string;
+}
 
 interface Props {
     post: CollectionEntry<"posts">;
@@ -20,10 +25,10 @@ interface Props {
     lang?: 'en' | 'it';
     englishUrl?: string;
     italianUrl?: string;
-    disqusSlug?: string;
+    headings?: Heading[];
 }
 
-const { post, slug, lang = 'en', englishUrl, italianUrl, disqusSlug } = Astro.props;
+const { post, slug, lang = 'en', englishUrl, italianUrl, headings = [] } = Astro.props;
 
 const locale = lang === 'it' ? 'it-IT' : 'en-US';
 const formattedDate = post.data.date.toLocaleDateString(locale, {
@@ -35,13 +40,85 @@ const formattedDate = post.data.date.toLocaleDateString(locale, {
 const categorySlug = post.data.category?.toLowerCase().replace(/\s+/g, '-');
 const readTime = readingTime(post.body).text;
 
-const canonicalEnglishSlug = disqusSlug ?? slug;
-const disqusPostUrl = `${siteConfig.url}/posts/${canonicalEnglishSlug}/`;
-
-const hasTranslation = !!(englishUrl && italianUrl);
-const isTrussSeriesPost = trussSeries.some((entry) => entry.slug === slug);
 const hreflangEn = englishUrl ? `${siteConfig.url}${englishUrl}` : undefined;
 const hreflangIt = italianUrl ? `${siteConfig.url}${italianUrl}` : undefined;
+
+// Always resolvable regardless of which route rendered this page, unlike the
+// hreflang props above (only set when Astro.props supplies them).
+const postEnglishUrl = `/posts/${slug}/`;
+const postItalianUrl = (englishUrl && italianUrl) || lang === 'it' ? `/posts/${slug}/it/` : undefined;
+
+const coverSrc = post.data.cover
+    ? (post.data.cover.startsWith('http') ? post.data.cover : `/images/posts/${post.data.cover}`)
+    : post.data.socialImage;
+
+const toc = headings.filter((h) => h.depth === 2);
+
+// Series thread + pager (redesign-plan.md §7): series wins, chronological is
+// the fallback per side. Pager is English-only for now — the small set of
+// translated posts don't have a bilingual reading order worth inventing.
+const SERIES_LABELS: Record<string, string> = {
+    truss: 'Truss series',
+    'event-sourcing': 'event sourcing thread',
+};
+
+const allPosts = await getCollection('posts', ({ data }) => !data.draft);
+const enPosts = allPosts
+    .filter((p) => (p.data.lang ?? 'en') === 'en')
+    .sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
+
+let seriesMeta: { label: string; position: number; posts: { slug: string; title: string; order: number; isCurrent: boolean }[] } | null = null;
+if (post.data.series) {
+    const seriesSlug = post.data.series.slug;
+    const seriesPosts = enPosts
+        .filter((p) => p.data.series?.slug === seriesSlug)
+        .sort((a, b) => (a.data.series?.order ?? 0) - (b.data.series?.order ?? 0));
+    const idx = seriesPosts.findIndex((p) => getPostSlug(p) === slug);
+    seriesMeta = {
+        label: SERIES_LABELS[seriesSlug] ?? seriesSlug,
+        position: idx + 1,
+        posts: seriesPosts.map((p, i) => ({
+            slug: getPostSlug(p),
+            title: p.data.title,
+            order: i + 1,
+            isCurrent: getPostSlug(p) === slug,
+        })),
+    };
+}
+
+let prevPost: CollectionEntry<'posts'> | undefined;
+let nextPost: CollectionEntry<'posts'> | undefined;
+let prevViaSeries = false;
+let nextViaSeries = false;
+
+if (lang === 'en') {
+    if (seriesMeta) {
+        const sIdx = seriesMeta.position - 1;
+        if (sIdx > 0) {
+            prevPost = enPosts.find((p) => getPostSlug(p) === seriesMeta!.posts[sIdx - 1].slug);
+            prevViaSeries = true;
+        }
+        if (sIdx < seriesMeta.posts.length - 1) {
+            nextPost = enPosts.find((p) => getPostSlug(p) === seriesMeta!.posts[sIdx + 1].slug);
+            nextViaSeries = true;
+        }
+    }
+    const chronoIdx = enPosts.findIndex((p) => getPostSlug(p) === slug);
+    if (!prevPost && chronoIdx > 0) prevPost = enPosts[chronoIdx - 1];
+    if (!nextPost && chronoIdx < enPosts.length - 1) nextPost = enPosts[chronoIdx + 1];
+}
+
+function ordinal(n: number, lang: 'en' | 'it'): string {
+    if (lang === 'it') return `${n}°`;
+    const j = n % 10;
+    const k = n % 100;
+    if (j === 1 && k !== 11) return `${n}st`;
+    if (j === 2 && k !== 12) return `${n}nd`;
+    if (j === 3 && k !== 13) return `${n}rd`;
+    return `${n}th`;
+}
+
+const discussionUrl = post.data.discussion ? `https://github.com/${post.data.discussion}/discussions` : undefined;
 
 const articleImageURL = new URL(post.data.socialImage ?? siteConfig.author.photo, siteConfig.url).toString();
 const postCanonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
@@ -68,7 +145,7 @@ const blogPostingSchema = {
 >
   <!-- Shell B, three column (redesign-plan.md §5): rail | article | aside -->
   <div class="post-shell min-[900px]:grid min-[900px]:grid-cols-[14rem_minmax(0,1fr)] min-[1180px]:grid-cols-[14rem_minmax(0,1fr)_15rem] max-w-[82rem] mx-auto">
-    <Rail hreflangEn={hreflangEn} hreflangIt={hreflangIt} />
+    <Rail />
     <div class="post-shell-main min-w-0 min-[900px]:col-start-2">
       <div class="flex justify-end px-6 pt-6 min-[900px]:px-8 min-[900px]:pt-8">
         <ThemeSwitcher />
@@ -77,111 +154,221 @@ const blogPostingSchema = {
     <article class="post-content">
         <script type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
 
-        <!-- Full-width post header -->
-        <header class="mb-10">
-            {(hasTranslation || isTrussSeriesPost) && (
-                <div class="flex items-center justify-between gap-4 mb-6 not-prose">
-                    {hasTranslation ? (
-                        <LanguageToggle
-                            currentLang={lang}
-                            englishUrl={englishUrl!}
-                            italianUrl={italianUrl!}
-                        />
-                    ) : <span />}
-                    {isTrussSeriesPost && (
-                        <a
-                            href="#truss-series"
-                            class="text-sm font-medium text-gray hover:text-primary transition-colors whitespace-nowrap"
-                        >
-                            {lang === 'it' ? 'Serie Truss ↓' : 'Truss series ↓'}
-                        </a>
-                    )}
-                </div>
+        <header class="mb-8 max-w-[68ch]">
+            {post.data.category && (
+                <p class="eyebrow font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-accent mb-3">
+                    {post.data.category}
+                </p>
             )}
-            <h1 class="text-4xl font-bold leading-tight mb-4 text-dark dark:text-white">{post.data.title}</h1>
-            <div class="flex flex-wrap items-center gap-4 text-sm font-mono text-gray">
-                <time datetime={post.data.date.toISOString()} class="no-underline">
-                    {formattedDate}
-                </time>
-                {post.data.category && (
-                    <a
-                        href={`/category/${categorySlug}/`}
-                        class="px-2 py-1 bg-primary/10 dark:bg-dark-cloud text-primary dark:text-white-cloud rounded font-medium hover:bg-primary/20 transition-colors"
-                    >
-                        {post.data.category}
-                    </a>
-                )}
+            <h1 class="font-sans text-[clamp(1.75rem,3.4vw,2.5rem)] leading-[1.15] tracking-[-0.025em] font-[660] mb-4 max-w-[26ch] text-ink dark:text-white">
+                {post.data.title}
+            </h1>
+            {post.data.description && (
+                <p class="standfirst text-lg text-ink-2 mb-6 max-w-[60ch]">
+                    {post.data.description}
+                </p>
+            )}
+            <div class="meta font-mono text-xs text-muted flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-b border-rule py-3">
+                <time datetime={post.data.date.toISOString()}>{formattedDate}</time>
                 <span>{readTime}</span>
+                <PostLangSwitch lang={lang} englishUrl={postEnglishUrl} italianUrl={postItalianUrl} />
+                {seriesMeta && (
+                    <span>{ordinal(seriesMeta.position, lang)} {lang === 'it' ? 'in' : 'in the'} {seriesMeta.label}</span>
+                )}
             </div>
         </header>
+
+        {coverSrc && (
+            <figure class="mb-10">
+                <img
+                    src={coverSrc}
+                    alt={post.data.coverAlt ?? post.data.title}
+                    width="1200"
+                    height="628"
+                    loading="eager"
+                    fetchpriority="high"
+                    class="w-full aspect-[1.91/1] object-cover border border-rule"
+                />
+            </figure>
+        )}
+
+        {toc.length > 0 && (
+            <details class="toc-mobile min-[1180px]:hidden mb-8 border border-rule px-4 py-3 not-prose">
+                <summary class="font-mono text-xs uppercase tracking-[0.1em] text-muted cursor-pointer">
+                    {lang === 'it' ? 'In questa pagina' : 'On this page'}
+                </summary>
+                <ul class="toc-list mt-3 font-mono text-sm leading-relaxed">
+                    {toc.map((h, i) => (
+                        <li class="flex gap-[0.25ch]">
+                            <span class="text-rule shrink-0" aria-hidden="true">{i === toc.length - 1 ? '└─' : '├─'}</span>
+                            <a href={`#${h.slug}`} class="text-ink-2 hover:text-ink">{h.text}</a>
+                        </li>
+                    ))}
+                </ul>
+            </details>
+        )}
 
         <!-- Prose body at reading measure -->
         <div class="prose dark:prose-invert max-w-[68ch]">
             <slot />
         </div>
 
-        {isTrussSeriesPost && (
-            <TrussSeriesNav currentSlug={slug} lang={lang} />
-        )}
-
-        <!-- Full-width post footer -->
-        {post.data.tags && post.data.tags.length > 0 && (
-            <footer class="post-tags mt-12 pt-6 border-t border-white-cloud dark:border-dark-cloud">
-                <div class="flex flex-wrap gap-2">
+        <!-- Endnote block (redesign-plan.md §7): tags, author, subscribe, discussion, pager -->
+        <div class="endnote mt-12 pt-6 border-t border-rule max-w-[68ch]">
+            {post.data.tags && post.data.tags.length > 0 && (
+                <div class="post-tags flex flex-wrap gap-2 mb-7 font-mono text-xs">
                     {post.data.tags.map((tag) => (
                         <a
                             href={`/tag/${tag.toLowerCase().replace(/\s+/g, '-')}/`}
-                            class="px-3 py-1 bg-gray-100 dark:bg-dark-cloud text-gray-700 dark:text-white-cloud rounded-full text-sm hover:bg-secondary hover:text-white transition-colors"
+                            class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors"
                         >
                             #{tag}
                         </a>
                     ))}
                 </div>
-            </footer>
-        )}
+            )}
 
-        <div class="post-author mt-12 pt-6 border-t border-white-cloud dark:border-dark-cloud">
-            <div class="flex items-center gap-4">
+            <div class="post-author flex items-center gap-3 mb-7">
                 <img
                     src={siteConfig.author.photo}
                     alt={siteConfig.author.name}
-                    class="w-14 h-14 rounded-full"
+                    class="w-11 h-11 rounded-full"
                 />
                 <div>
-                    <p class="font-semibold text-dark dark:text-white">{siteConfig.author.name}</p>
-                    <p class="text-sm text-gray">{siteConfig.author.bio}</p>
+                    <p class="font-sans font-semibold text-sm text-ink dark:text-white">{siteConfig.author.name}</p>
+                    <p class="text-sm text-muted">{siteConfig.author.bio}</p>
                 </div>
             </div>
-        </div>
 
-        <div
-            class="post-newsletter mt-12 pt-6 border-t border-white-cloud dark:border-dark-cloud"
-            transition:persist
-            transition:name="newsletter-signup"
-        >
-            <h2 class="text-lg font-semibold text-dark dark:text-white mb-1">Liked this? Get the next one.</h2>
-            <p class="text-sm text-gray leading-relaxed mb-4">
-                Practical notes on Laravel tooling and AI-assisted development, about once a month.
-                Join the list and I'll send you my
-                <a href="/cheatsheets/spatie-event-sourcing/" class="hover:text-primary transition-colors underline underline-offset-2">Spatie Event Sourcing cheat sheet</a>
-                to start.
-            </p>
-            <NewsletterSignup />
-        </div>
+            <div
+                class="post-newsletter border border-rule px-5 py-5 mb-6"
+                transition:persist
+                transition:name="newsletter-signup"
+            >
+                <h2 class="text-base font-semibold text-ink dark:text-white mb-1">Liked this? Get the next one.</h2>
+                <p class="text-sm text-ink-2 leading-relaxed mb-4">
+                    Practical notes on Laravel tooling and AI-assisted development, about once a month.
+                    Join the list and I'll send you my
+                    <a href="/cheatsheets/spatie-event-sourcing/" class="text-accent hover:underline">Spatie Event Sourcing cheat sheet</a>
+                    to start.
+                </p>
+                <NewsletterSignup />
+            </div>
 
-        <DisqusComments
-            url={disqusPostUrl}
-            identifier={canonicalEnglishSlug}
-            title={post.data.title}
-        />
+            <div class="discuss border-t border-rule-soft pt-4 mb-7 font-mono text-sm text-muted leading-relaxed">
+                {lang === 'it' ? 'Hai trovato un errore, o non sei d’accordo?' : 'Found a mistake, or disagree?'}{' '}
+                {discussionUrl && (
+                    <>
+                        <a href={discussionUrl} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
+                            {lang === 'it' ? 'Apri una discussione su GitHub' : 'Open a discussion on GitHub'}
+                        </a>{' '}
+                        {lang === 'it' ? 'o ' : 'or '}
+                    </>
+                )}
+                <a href="mailto:hello@albertoarena.it" class="text-accent hover:underline">
+                    {lang === 'it' ? 'inviami un’email' : 'send me an email'}
+                </a>.
+            </div>
+
+            {(prevPost || nextPost) && (
+                <nav class="pager grid grid-cols-1 min-[560px]:grid-cols-2 gap-5" aria-label="Post navigation">
+                    {prevPost ? (
+                        <a href={`/posts/${getPostSlug(prevPost)}/`} class="border-t border-rule pt-3 group">
+                            <span class="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-muted block">
+                                &larr; {prevViaSeries ? 'Previous in thread' : 'Previous post'}
+                            </span>
+                            <span class="font-sans text-[0.9375rem] font-medium leading-snug mt-1 block group-hover:text-accent">
+                                {prevPost.data.title}
+                            </span>
+                        </a>
+                    ) : <span />}
+                    {nextPost && (
+                        <a href={`/posts/${getPostSlug(nextPost)}/`} class="border-t border-rule pt-3 text-right group">
+                            <span class="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-muted block">
+                                {nextViaSeries ? 'Next in thread' : 'Next post'} &rarr;
+                            </span>
+                            <span class="font-sans text-[0.9375rem] font-medium leading-snug mt-1 block group-hover:text-accent">
+                                {nextPost.data.title}
+                            </span>
+                        </a>
+                    )}
+                </nav>
+            )}
+        </div>
     </article>
     </main>
       <Footer />
     </div>
-    <!-- Aside content (On this page, series thread, Reference) lands in Phase 3 -->
-    <aside class="hidden min-[1180px]:block border-l border-rule px-5 py-9"></aside>
+
+    <aside class="hidden min-[1180px]:flex flex-col gap-8 border-l border-rule px-5 py-9 sticky top-0 self-start h-screen overflow-y-auto">
+        {toc.length > 0 && (
+            <div>
+                <h4 class="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted mb-2.5">
+                    {lang === 'it' ? 'In questa pagina' : 'On this page'}
+                </h4>
+                <ul id="toc" class="font-mono text-xs leading-[1.55]">
+                    {toc.map((h, i) => (
+                        <li class="flex gap-[0.25ch]">
+                            <span class="text-rule shrink-0" aria-hidden="true">{i === toc.length - 1 ? '└─' : '├─'}</span>
+                            <a href={`#${h.slug}`} class="toc-link text-muted hover:text-ink py-[0.2rem] block" data-target={h.slug}>{h.text}</a>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        )}
+
+        {seriesMeta && (
+            <div>
+                <h4 class="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted mb-2.5">{seriesMeta.label}</h4>
+                <ul class="font-mono text-xs leading-[1.5]">
+                    {seriesMeta.posts.map((p) => (
+                        <li class="flex gap-[0.5ch] py-[0.3rem]">
+                            <span class="text-muted shrink-0">{p.order}</span>
+                            {p.isCurrent ? (
+                                <span class="text-accent font-semibold">{p.title}</span>
+                            ) : (
+                                <a href={`/posts/${p.slug}/`} class="text-ink-2 hover:text-accent">{p.title}</a>
+                            )}
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        )}
+    </aside>
   </div>
 
   <ReadingModeToggle />
   <CookieConsent />
 </BaseLayout>
+
+<script>
+  let currentObserver: IntersectionObserver | undefined;
+
+  function initToc() {
+    currentObserver?.disconnect();
+
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('#toc a[data-target]'));
+    const headingEls = links
+      .map((a) => document.getElementById(a.dataset.target!))
+      .filter((el): el is HTMLElement => !!el);
+
+    if (!('IntersectionObserver' in window) || !headingEls.length) return;
+
+    const ratios = new Map<string, number>();
+    currentObserver = new IntersectionObserver((entries) => {
+      entries.forEach((e) => ratios.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0));
+      let best: string | null = null;
+      let bestRatio = 0;
+      ratios.forEach((ratio, id) => { if (ratio > bestRatio) { bestRatio = ratio; best = id; } });
+      links.forEach((a) => {
+        const active = a.dataset.target === best;
+        a.classList.toggle('text-accent', active);
+        a.classList.toggle('font-semibold', active);
+      });
+    }, { rootMargin: '-10% 0px -70% 0px', threshold: [0, 0.5, 1] });
+    headingEls.forEach((el) => currentObserver!.observe(el));
+  }
+
+  initToc();
+  document.addEventListener('astro:after-swap', initToc);
+</script>

@@ -13,9 +13,11 @@ tags:
   - "Spatie"
 description: "A Filament plugin that routes every create, edit, and delete through your domain aggregates, without giving up the admin panel you already love."
 socialImage: "/images/posts/introducing-filament-event-sourcing/cover.jpg"
+coverAlt: "Filament Event Sourcing plugin"
+series:
+  slug: "event-sourcing"
+  order: 3
 ---
-
-![Filament Event Sourcing plugin](/images/posts/introducing-filament-event-sourcing/cover.jpg)
 
 Filament is a great admin panel. Event sourcing is a great architectural pattern. Getting the two to work together, though, has always meant compromises: either you bypass your aggregates and write directly to the database, or you ditch Filament's create/edit flows and build everything from scratch. I've been using both in the same projects for a while, and that friction kept bothering me. So I built a plugin to remove it.
 

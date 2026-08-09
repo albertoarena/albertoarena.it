@@ -5,7 +5,6 @@ export const siteConfig = {
   copyright: '© All rights reserved.',
   gtmContainerId: 'GTM-PDQBJBL3',
   googleAnalyticsId: 'G-PJGZWDSK4K', // managed via GTM, kept for reference
-  disqusShortname: 'albertoarena-it',
   postsLimit: 6,
   /*
     Grouped nav for the redesign rail (redesign-plan.md §6). `/writing` points

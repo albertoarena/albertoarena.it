@@ -401,7 +401,7 @@ html[data-reading] .site-footer,
 html[data-reading] .post-tags,
 html[data-reading] .post-author,
 html[data-reading] .post-newsletter,
-html[data-reading] #disqus_thread {
+html[data-reading] .discuss {
   display: none;
 }
 
@@ -445,4 +445,52 @@ html[data-reading] .post-content .prose {
 
 html[data-reading] .post-content pre {
   font-size: 0.95rem;
+}
+
+/*
+  Post redesign additions (redesign-plan.md §7). Give every h2 in the post
+  body a stable scroll target for the TOC's anchor links.
+*/
+.prose h2 {
+  scroll-margin-top: 1.5rem;
+}
+
+/*
+  Code block label, taken from the fence info string via Shiki's own
+  data-language attribute on <pre> — no rehype plugin needed. "plaintext" is
+  what a bare ``` fence resolves to and carries no information, so it's
+  excluded rather than shown as a label reading "PLAINTEXT".
+*/
+.prose pre[data-language] {
+  position: relative;
+  margin-top: 1.75rem;
+}
+
+.prose pre[data-language]:not([data-language="plaintext"])::before {
+  content: attr(data-language);
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-muted);
+  margin-bottom: 0.4rem;
+}
+
+/*
+  Callout: the plan's single variant (2px accent left border on
+  --accent-soft) is mapped onto markdown blockquotes rather than inventing a
+  new fenced syntax, since blockquote is already the natural "aside" mark in
+  Markdown and the typography plugin's default quote styling is overridden
+  below anyway.
+*/
+.prose blockquote {
+  border-left: 2px solid var(--color-accent);
+  background: var(--color-accent-soft);
+  padding: 0.9rem 1.1rem;
+  margin: 1.75rem 0;
+}
+
+.prose blockquote p {
+  margin: 0;
 }

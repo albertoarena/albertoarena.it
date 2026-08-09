@@ -11,12 +11,15 @@ tags:
   - "Database"
 description: "Un diagramma ER live e zoomabile dello schema reale del database della tua app Laravel, sicuro da eseguire in produzione perché legge solo la struttura, mai le righe."
 socialImage: "/images/posts/introducing-truss/cover.jpg"
+coverAlt: "Un reticolo di travi in acciaio ripreso dal basso contro un cielo luminoso, con giunti imbullonati che formano una griglia"
 pinned: true
 lang: it
 translationOf: introducing-truss
+series:
+  slug: "truss"
+  order: 1
+discussion: "albertoarena/laravel-truss"
 ---
-
-![Un reticolo di travi in acciaio ripreso dal basso contro un cielo luminoso, con giunti imbullonati che formano una griglia](/images/posts/introducing-truss/cover.jpg)
 
 > **Aggiornamento**: Truss ha ora un sito di documentazione dedicato e una roadmap pubblica. Vedi le note in fondo a questo post per cosa è cambiato dalla pubblicazione.
 

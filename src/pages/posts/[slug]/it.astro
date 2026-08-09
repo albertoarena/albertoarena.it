@@ -13,7 +13,7 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 
 const slug = post.data.translationOf!;
 const englishPath = `/posts/${slug}/`;
@@ -26,7 +26,7 @@ const italianPath = `/posts/${slug}/it/`;
     lang="it"
     englishUrl={englishPath}
     italianUrl={italianPath}
-    disqusSlug={slug}
+    headings={headings}
 >
     <Content />
 </PostLayout>

@@ -14,9 +14,11 @@ tags:
   - "Claude"
 description: "A Claude Code skill for Spatie Laravel event sourcing: it designs your domain in conversation, then generates aggregates, events, and projectors."
 socialImage: "/images/posts/ai-laravel-event-sourcing/cover.jpg"
+coverAlt: "Event Sourcing with a Little Help from AI (a Claude Code Skill)"
+series:
+  slug: "event-sourcing"
+  order: 2
 ---
-
-![Event Sourcing with a Little Help from AI (a Claude Code Skill)](/images/posts/ai-laravel-event-sourcing/cover.jpg)
 
 A while back I published a [Laravel package to generate event-sourcing domains using Spatie's library](https://github.com/albertoarena/laravel-event-sourcing-generator/) (full walkthrough: [creating a domain with Spatie event sourcing](/posts/domain-using-spatie-event-sourcing/)). You describe your model, run one artisan command, and get aggregates, events, projectors and all the accompanying boilerplate. It crossed 8,000 downloads on Packagist, which was a nice surprise.
 

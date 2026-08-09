@@ -12,9 +12,8 @@ tags:
   - "Developer Tools"
   - "Claude Code"
 socialImage: "/images/posts/claude-code-routines-vs-goal-loop/cover.jpg"
+coverAlt: "Claude Code Routines: A Third Way Beyond /goal and /loop"
 ---
-
-![Claude Code Routines: A Third Way Beyond /goal and /loop](/images/posts/claude-code-routines-vs-goal-loop/cover.jpg)
 
 A few months ago, Claude Code shipped [`/goal`](/posts/goal-command-claude-code/), a way to stop typing "keep going" every turn and let Claude work until a condition was actually met. That solved a real problem: staying in the loop with an open session so you didn't have to babysit it turn by turn. It didn't solve a different problem, the one where you want Claude to do something and you're not even at your laptop.
 

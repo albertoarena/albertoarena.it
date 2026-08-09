@@ -34,7 +34,7 @@ const TEST_POSTS: TestPost[] = [
   },
 ];
 
-const NAV_LABELS = siteConfig.menu.map((item) => item.label);
+const NAV_LABELS = siteConfig.railNav.flatMap((group) => group.items.map((item) => item.label));
 const AUTHOR_BIO = siteConfig.author.bio;
 const COOKIE_BANNER_COPY =
   'We use analytics cookies to understand how you use this site';

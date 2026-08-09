@@ -14,9 +14,8 @@ tags:
   - "Claude"
 description: "I built a deterministic Laravel event-sourcing generator, then a Claude Code skill that does the same job through a design conversation. Which one wins? Wrong question."
 socialImage: "/images/posts/generator-vs-ai-skill/cover.jpg"
+coverAlt: "I built a Laravel event-sourcing generator, then the AI version"
 ---
-
-![I built a Laravel event-sourcing generator, then the AI version](/images/posts/generator-vs-ai-skill/cover.jpg)
 
 A while back I built a [code generator for event sourcing in Laravel](/posts/laravel-event-sourcing-generator-10k/): run one artisan command against `spatie/laravel-event-sourcing`, get aggregates, events, projectors, and reactors scaffolded out. It's deterministic. Same inputs, same output, every time. It just crossed 10,000 downloads on Packagist.
 
