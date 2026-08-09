@@ -1,5 +1,9 @@
 ---
-import Layout from "../components/Layout.astro";
+import BaseLayout from "./BaseLayout.astro";
+import Rail from "../components/Rail.astro";
+import ThemeSwitcher from "../components/ThemeSwitcher.astro";
+import Footer from "../components/Footer.astro";
+import CookieConsent from "../components/CookieConsent.astro";
 import type { CollectionEntry } from "astro:content";
 import { siteConfig } from "../utils/config";
 import DisqusComments from "../components/DisqusComments.astro";
@@ -53,7 +57,7 @@ const blogPostingSchema = {
 };
 ---
 
-<Layout
+<BaseLayout
     title={post.data.title}
     description={post.data.description}
     image={post.data.socialImage}
@@ -62,6 +66,14 @@ const blogPostingSchema = {
     hreflangEn={hreflangEn}
     hreflangIt={hreflangIt}
 >
+  <!-- Shell B, three column (redesign-plan.md §5): rail | article | aside -->
+  <div class="post-shell min-[900px]:grid min-[900px]:grid-cols-[14rem_minmax(0,1fr)] min-[1180px]:grid-cols-[14rem_minmax(0,1fr)_15rem] max-w-[82rem] mx-auto">
+    <Rail hreflangEn={hreflangEn} hreflangIt={hreflangIt} />
+    <div class="post-shell-main min-w-0 min-[900px]:col-start-2">
+      <div class="flex justify-end px-6 pt-6 min-[900px]:px-8 min-[900px]:pt-8">
+        <ThemeSwitcher />
+      </div>
+    <main id="main-content" class="px-6 pb-12 min-[900px]:px-8 min-[900px]:pb-16">
     <article class="post-content">
         <script type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
 
@@ -163,6 +175,13 @@ const blogPostingSchema = {
             title={post.data.title}
         />
     </article>
+    </main>
+      <Footer />
+    </div>
+    <!-- Aside content (On this page, series thread, Reference) lands in Phase 3 -->
+    <aside class="hidden min-[1180px]:block border-l border-rule px-5 py-9"></aside>
+  </div>
 
-    <ReadingModeToggle />
-</Layout>
+  <ReadingModeToggle />
+  <CookieConsent />
+</BaseLayout>

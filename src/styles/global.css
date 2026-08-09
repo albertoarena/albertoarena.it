@@ -390,14 +390,40 @@
   }
 }
 
-/* Reading mode (post pages only, see ReadingModeToggle.astro) */
-html[data-reading] body > header,
-html[data-reading] body > footer,
+/*
+  Reading mode (post pages only, see ReadingModeToggle.astro). `aside` covers
+  both the rail and the post's TOC/series column (Shell B, redesign-plan.md
+  §5) — both are the only <aside> elements PostLayout ever renders, so this
+  is safe as a blanket selector without needing an extra marker attribute.
+*/
+html[data-reading] aside,
+html[data-reading] .site-footer,
 html[data-reading] .post-tags,
 html[data-reading] .post-author,
 html[data-reading] .post-newsletter,
 html[data-reading] #disqus_thread {
   display: none;
+}
+
+/*
+  Hiding the rail/aside above removes them as grid items, but .post-shell's
+  own grid-template-columns (set by Tailwind) still reserves their tracks,
+  which would leave two empty gutters either side of the article. Collapse
+  to one column and narrow to the reading measure instead.
+*/
+html[data-reading] .post-shell {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 46rem;
+}
+
+/*
+  .post-shell-main still carries min-[900px]:col-start-2 to sit in the
+  middle column normally. With only one explicit column left above, that
+  pin would force the grid to fabricate an implicit second column to
+  satisfy it (visible as two mismatched tracks) instead of collapsing.
+*/
+html[data-reading] .post-shell-main {
+  grid-column: auto;
 }
 
 html[data-reading] .post-content {
