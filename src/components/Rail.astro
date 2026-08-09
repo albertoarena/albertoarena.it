@@ -1,0 +1,100 @@
+---
+import { siteConfig } from '@/utils/config';
+
+interface Props {
+  hreflangEn?: string;
+  hreflangIt?: string;
+}
+
+const { hreflangEn, hreflangIt } = Astro.props;
+const currentPath = Astro.url.pathname;
+
+function isActive(path: string) {
+  if (path === '/') return currentPath === '/' || /^\/page\/\d+$/.test(currentPath);
+  return currentPath === path || currentPath.startsWith(path);
+}
+
+function isExternal(path: string) {
+  return path.startsWith('http://') || path.startsWith('https://');
+}
+
+// Both are same-origin URLs built from Astro.site elsewhere, safe to read the pathname off directly.
+const currentIsEnglish = hreflangEn ? new URL(hreflangEn).pathname === currentPath : false;
+---
+
+<aside
+  class="border-b min-[900px]:border-b-0 min-[900px]:border-r border-rule
+    flex flex-row min-[900px]:flex-col flex-wrap min-[900px]:flex-nowrap
+    items-start gap-x-7 gap-y-3 min-[900px]:gap-y-6
+    px-5 py-5 min-[900px]:pl-5 min-[900px]:pr-6 min-[900px]:pt-9 min-[900px]:pb-8
+    min-[900px]:sticky min-[900px]:top-0 min-[900px]:self-start
+    min-[900px]:h-screen min-[900px]:w-56 min-[900px]:shrink-0"
+>
+  <div class="w-full min-[900px]:w-auto">
+    <a
+      href="/"
+      class="font-sans font-semibold text-base leading-tight tracking-tight text-ink dark:text-white hover:text-accent transition-colors"
+    >
+      {siteConfig.author.name}
+    </a>
+    <div class="font-mono text-[0.6875rem] uppercase tracking-[0.11em] text-muted mt-1.5">
+      {siteConfig.author.bio}
+    </div>
+  </div>
+
+  {siteConfig.railNav.map((group) => (
+    <nav
+      class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch"
+      aria-label={group.ariaLabel}
+    >
+      <div
+        class="hidden min-[900px]:block font-mono text-[0.625rem] uppercase tracking-[0.16em] text-muted/75 mb-1"
+        aria-hidden="true"
+      >
+        {group.label}
+      </div>
+      {group.items.map((item) => (
+        <a
+          href={item.path}
+          target={isExternal(item.path) ? '_blank' : undefined}
+          rel={isExternal(item.path) ? 'noopener noreferrer' : undefined}
+          class:list={[
+            'font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors',
+            isActive(item.path)
+              ? 'text-ink dark:text-white font-semibold'
+              : 'text-ink-2 dark:text-ink-2 hover:text-accent',
+          ]}
+          aria-current={isActive(item.path) ? 'page' : undefined}
+        >
+          <span
+            class:list={['text-muted', isActive(item.path) && 'text-accent']}
+            aria-hidden="true"
+          >/</span>{item.label}
+        </a>
+      ))}
+    </nav>
+  ))}
+
+  <div class="w-full min-[900px]:w-auto min-[900px]:mt-auto font-mono text-[0.6875rem] leading-relaxed text-muted flex flex-col gap-1">
+    <span>Sicily, Italy</span>
+    <span class="flex items-center gap-1.5">
+      <span class="inline-block w-[0.45rem] h-[0.45rem] rounded-full bg-ok shrink-0" aria-hidden="true"></span>
+      Available for freelance
+    </span>
+    {hreflangEn && hreflangIt && (
+      <span>
+        <a
+          href={hreflangEn}
+          class:list={currentIsEnglish ? 'text-ink dark:text-white font-semibold' : 'hover:text-accent'}
+          aria-current={currentIsEnglish ? 'page' : undefined}
+        >EN</a>
+        {' · '}
+        <a
+          href={hreflangIt}
+          class:list={!currentIsEnglish ? 'text-ink dark:text-white font-semibold' : 'hover:text-accent'}
+          aria-current={!currentIsEnglish ? 'page' : undefined}
+        >IT</a>
+      </span>
+    )}
+  </div>
+</aside>

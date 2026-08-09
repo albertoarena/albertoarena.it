@@ -7,13 +7,37 @@ export const siteConfig = {
   googleAnalyticsId: 'G-PJGZWDSK4K', // managed via GTM, kept for reference
   disqusShortname: 'albertoarena-it',
   postsLimit: 6,
-  menu: [
-    { label: 'Articles', path: '/' },
-    { label: 'Projects', path: '/projects/' },
-    { label: 'Truss', path: 'https://trussphp.com/' },
-    { label: 'About me', path: '/pages/about/' },
-    { label: 'Consulting', path: '/pages/consulting/' },
-    { label: 'Subscribe', path: '/subscribe/' },
+  /*
+    Grouped nav for the redesign rail (redesign-plan.md §6). `/writing` points
+    at `/` until Phase 4 splits the paginated index out of the home page, and
+    `/series` is added once Phase 5 builds it — eight items is the hard cap.
+  */
+  railNav: [
+    {
+      label: 'read',
+      ariaLabel: 'Reading',
+      items: [
+        { label: 'writing', path: '/' },
+        { label: 'cheatsheets', path: '/cheatsheets/' },
+      ],
+    },
+    {
+      label: 'build',
+      ariaLabel: 'Projects',
+      items: [
+        { label: 'truss', path: 'https://trussphp.com/' },
+        { label: 'projects', path: '/projects/' },
+      ],
+    },
+    {
+      label: 'work',
+      ariaLabel: 'Work with me',
+      items: [
+        { label: 'consulting', path: '/pages/consulting/' },
+        { label: 'subscribe', path: '/subscribe/' },
+        { label: 'about', path: '/pages/about/' },
+      ],
+    },
   ],
   mailerlite: {
     accountId: '2474575',

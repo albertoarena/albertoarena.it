@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Header from '@/components/Header.astro';
+import Rail from '@/components/Rail.astro';
+import ThemeSwitcher from '@/components/ThemeSwitcher.astro';
 import Footer from '@/components/Footer.astro';
 import CookieConsent from '@/components/CookieConsent.astro';
 
@@ -31,10 +32,18 @@ const { title, description, image, article = false, lang = 'en', hreflangEn, hre
   noViewTransitions={noViewTransitions}
   noindex={noindex}
 >
-  <Header />
-  <main id="main-content" class:list={[wide ? 'max-w-5xl' : 'max-w-3xl', 'mx-auto px-6 py-12 animate-fade-in']}>
-    <slot />
-  </main>
-  <Footer />
+  <!-- Shell A, two column (redesign-plan.md §5): rail | main -->
+  <div class="min-[900px]:grid min-[900px]:grid-cols-[14rem_minmax(0,1fr)] max-w-[82rem] mx-auto">
+    <Rail hreflangEn={hreflangEn} hreflangIt={hreflangIt} />
+    <div class="min-w-0 min-[900px]:col-start-2">
+      <div class="flex justify-end px-6 pt-6 min-[900px]:px-8 min-[900px]:pt-8">
+        <ThemeSwitcher />
+      </div>
+      <main id="main-content" class:list={[wide ? 'max-w-5xl' : 'max-w-3xl', 'mx-auto px-6 pb-12 animate-fade-in']}>
+        <slot />
+      </main>
+      <Footer />
+    </div>
+  </div>
   <CookieConsent />
 </BaseLayout>
