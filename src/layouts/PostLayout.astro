@@ -63,7 +63,17 @@ const enPosts = allPosts
     .filter((p) => (p.data.lang ?? 'en') === 'en')
     .sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
 
-let seriesMeta: { slug: string; label: string; position: number; posts: { slug: string; title: string; order: number; isCurrent: boolean }[] } | null = null;
+// English slug -> its Italian translation entry, if one exists — lets the
+// series aside show localized titles/links when reading the Italian version
+// of a post, even though series membership and order only live on the
+// English frontmatter (comment above enPosts).
+const itPostBySourceSlug = new Map(
+    allPosts
+        .filter((p): p is typeof p & { data: { translationOf: string } } => p.data.lang === 'it' && !!p.data.translationOf)
+        .map((p) => [p.data.translationOf, p]),
+);
+
+let seriesMeta: { slug: string; label: string; position: number; posts: { slug: string; title: string; href: string; order: number; isCurrent: boolean }[] } | null = null;
 if (post.data.series) {
     const seriesSlug = post.data.series.slug;
     const seriesPosts = enPosts
@@ -74,12 +84,19 @@ if (post.data.series) {
         slug: seriesSlug,
         label: getSeriesEntry(seriesSlug)?.metaLabel ?? seriesSlug,
         position: idx + 1,
-        posts: seriesPosts.map((p, i) => ({
-            slug: getPostSlug(p),
-            title: p.data.title,
-            order: i + 1,
-            isCurrent: getPostSlug(p) === slug,
-        })),
+        posts: seriesPosts.map((p, i) => {
+            const pSlug = getPostSlug(p);
+            const isCurrent = pSlug === slug;
+            const itPost = itPostBySourceSlug.get(pSlug);
+            const useIt = lang === 'it' && !!itPost;
+            return {
+                slug: pSlug,
+                title: isCurrent ? post.data.title : useIt ? itPost!.data.title : p.data.title,
+                href: useIt ? `/posts/${pSlug}/it/` : `/posts/${pSlug}/`,
+                order: i + 1,
+                isCurrent,
+            };
+        }),
     };
 }
 
@@ -321,7 +338,7 @@ const blogPostingSchema = {
                             {p.isCurrent ? (
                                 <span class="text-accent font-semibold">{p.title}</span>
                             ) : (
-                                <a href={`/posts/${p.slug}/`} class="text-ink-2 hover:text-accent">{p.title}</a>
+                                <a href={p.href} class="text-ink-2 hover:text-accent">{p.title}</a>
                             )}
                         </li>
                     ))}
