@@ -10,6 +10,7 @@ tags:
   - "Titanium"
   - "gitTio"
 description: "A brief tutorial about how to install Store Kit module in Titanium Studio with gitTio."
+socialImage: "/images/posts/installing-store-kit-in-titanium-studio/cover.png"
 ---
 
 Notwithstanding I'm a full-stack Web developer and despite I **don't** develop for mobile, I was asked to upgrade a

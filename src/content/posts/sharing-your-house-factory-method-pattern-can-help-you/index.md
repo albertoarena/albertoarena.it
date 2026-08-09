@@ -9,6 +9,7 @@ tags:
   - "PHP"
   - "Design Patterns"
 description: "An implementation of the Factory method pattern while maintaining a web-application developed in PHP and Zend Framework 1."
+socialImage: "/images/posts/sharing-your-house-factory-method-pattern-can-help-you/cover.png"
 ---
 
 In a web-application that I developed in Zend Framework 1 and that I'm still maintaining, I had to face a challenge: the

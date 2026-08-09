@@ -10,6 +10,7 @@ tags:
   - "Javascript"
   - "Ruby"
 description: "How to check if a variable is really an integer or a float in Javascript, and some considerations on data types."
+socialImage: "/images/posts/is-it-really-an-integer/cover.png"
 ---
 
 Recently, while working on a Node.js application, I met a serious problem: how can I check an integer … being really an

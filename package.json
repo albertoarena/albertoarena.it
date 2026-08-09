@@ -17,7 +17,8 @@
     "test:cheatsheet-pdf": "vitest run tests/cheatsheet-pdf.test.ts",
     "test:profile-readme": "vitest run tests/update-profile-readme.test.ts",
     "test": "npm run test:eligibility && npm run test:seo-indexing && npm run test:geo-aeo && npm run test:cheatsheet-pdf && npm run test:profile-readme",
-    "pdf:cheatsheet": "node scripts/generate-cheatsheet-pdf.mjs"
+    "pdf:cheatsheet": "node scripts/generate-cheatsheet-pdf.mjs",
+    "covers:generate": "node scripts/generate-covers.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.0.0",
@@ -32,15 +33,19 @@
     "rehype-external-links": "^3.0.0"
   },
   "devDependencies": {
+    "@fontsource/ibm-plex-sans": "^5.3.0",
     "@mozilla/readability": "^0.6.0",
+    "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/typography": "^0.5.20",
     "@types/jsdom": "^28.0.3",
     "fast-xml-parser": "^5.10.1",
     "jsdom": "^27.0.1",
     "pdf-lib": "^1.17.1",
     "puppeteer": "^24.43.1",
+    "satori": "^0.29.0",
     "sharp": "^0.33.5",
     "tailwindcss": "^4.3.1",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.10",
+    "yaml": "^2.9.0"
   }
 }

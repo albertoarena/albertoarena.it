@@ -8,6 +8,7 @@ category: "Static Websites"
 tags:
   - "Jekyll"
 description: "Four reasons for which I decided to move my blog from WordPress to Jekyll."
+socialImage: "/images/posts/i-moved-to-jekyll/cover.png"
 ---
 
 I decided to move from WordPress to [Jekyll](https://jekyllrb.com/). There are a couple of good reasons for this big change.
