@@ -58,3 +58,29 @@ export const seriesRegistry: SeriesEntry[] = [
 export function getSeriesEntry(slug: string): SeriesEntry | undefined {
   return seriesRegistry.find((entry) => entry.slug === slug);
 }
+
+/*
+  Series position markers ("Truss 3/3") need a total per series, computed
+  once against the full post set a page already has in hand rather than
+  re-querying the collection per row. Callers build this once per page and
+  pass the per-post marker down to whichever list component renders it.
+*/
+export function buildSeriesTotals(posts: { data: { series?: { slug: string } } }[]): Map<string, number> {
+  const totals = new Map<string, number>();
+  for (const post of posts) {
+    if (post.data.series) {
+      totals.set(post.data.series.slug, (totals.get(post.data.series.slug) ?? 0) + 1);
+    }
+  }
+  return totals;
+}
+
+export function getSeriesMarker(
+  post: { data: { series?: { slug: string; order: number } } },
+  seriesTotals: Map<string, number>,
+): string | undefined {
+  if (!post.data.series) return undefined;
+  const entry = getSeriesEntry(post.data.series.slug);
+  const total = seriesTotals.get(post.data.series.slug) ?? post.data.series.order;
+  return `${entry?.title ?? post.data.series.slug} ${post.data.series.order}/${total}`;
+}

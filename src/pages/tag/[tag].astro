@@ -1,7 +1,8 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../../components/Layout.astro";
-import PostCard from "../../components/PostCard.astro";
+import PostListRow from "../../components/PostListRow.astro";
+import { buildSeriesTotals, getSeriesMarker } from "../../data/series";
 
 export async function getStaticPaths() {
     const posts = await getCollection("posts");
@@ -9,28 +10,33 @@ export async function getStaticPaths() {
     const allTags = englishPosts.flatMap((post) => post.data.tags || []);
     const uniqueTags = [...new Set(allTags)];
 
+    // Same reasoning as category/[category].astro: totals need every post
+    // site-wide, a series can span tags just like it can span categories.
+    const seriesTotals = buildSeriesTotals(englishPosts.filter((post) => !post.data.draft));
+
     return uniqueTags.map((tag) => ({
         params: { tag: tag.toLowerCase().replace(/\s+/g, '-') },
         props: {
             tag,
             posts: englishPosts
                 .filter((post) => post.data.tags?.includes(tag) && !post.data.draft)
-                .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+                .sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
+            seriesTotals,
         },
     }));
 }
 
-const { tag, posts } = Astro.props;
+const { tag, posts, seriesTotals } = Astro.props;
 ---
 
 <Layout title={`Tag: ${tag}`} noindex>
-    <h1 class="text-3xl font-bold mb-4">
-        Tag: <span class="text-secondary">{tag}</span>
+    <h1 class="font-sans text-3xl font-bold text-ink dark:text-white mb-3">
+        #{tag}
     </h1>
-    <p class="text-gray-600 dark:text-gray-400 mb-8">
-        {posts.length} {posts.length === 1 ? 'post' : 'posts'} with this tag
+    <p class="text-ink-2 mb-10">
+        {posts.length} {posts.length === 1 ? 'post' : 'posts'} with this tag.
     </p>
-    <div class="space-y-10">
-        {posts.map((post) => <PostCard post={post} />)}
-    </div>
+    <ul class="border-t border-rule">
+        {posts.map((post) => <PostListRow post={post} seriesMarker={getSeriesMarker(post, seriesTotals)} />)}
+    </ul>
 </Layout>

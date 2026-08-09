@@ -1,0 +1,40 @@
+---
+import Layout from "@/components/Layout.astro";
+import PostListRow from "@/components/PostListRow.astro";
+import { getCollection } from "astro:content";
+import { siteConfig } from "@/utils/config";
+import { buildSeriesTotals, getSeriesMarker } from "@/data/series";
+
+const posts = await getCollection("posts", ({ data }) => !data.draft && (data.lang ?? 'en') === 'en');
+const sortedPosts = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const seriesTotals = buildSeriesTotals(sortedPosts);
+
+const byYear = new Map<number, typeof sortedPosts>();
+for (const post of sortedPosts) {
+  const year = post.data.date.getFullYear();
+  if (!byYear.has(year)) byYear.set(year, []);
+  byYear.get(year)!.push(post);
+}
+const years = [...byYear.keys()].sort((a, b) => b - a);
+---
+
+<Layout
+  title={`Archive — ${siteConfig.title}`}
+  description="Every post, grouped by year, no pagination."
+>
+  <h1 class="font-sans text-3xl font-bold text-ink dark:text-white mb-3">Archive</h1>
+  <p class="text-ink-2 mb-10 max-w-[60ch]">
+    All {sortedPosts.length} posts, one page, grouped by year.
+  </p>
+
+  {years.map((year) => (
+    <section class="mb-10">
+      <h2 class="font-mono text-xs uppercase tracking-[0.14em] text-muted mb-3">{year}</h2>
+      <ul class="border-t border-rule">
+        {byYear.get(year)!.map((post) => (
+          <PostListRow post={post} seriesMarker={getSeriesMarker(post, seriesTotals)} />
+        ))}
+      </ul>
+    </section>
+  ))}
+</Layout>

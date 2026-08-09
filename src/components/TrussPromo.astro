@@ -1,7 +1,21 @@
 ---
+/*
+  Redesign home page's one filled block (redesign-plan.md §3, §9.2): the
+  only element on the page allowed to use --surface as a background. No
+  icon set per the plan's constraints (§1), so the previous SVG icons are
+  gone in favour of plain mono links, matching every other link row built
+  so far (post tags, endnote, etc).
+
+  Version is hardcoded for now — live Packagist fetch at build time is
+  Phase 7 scope (redesign-plan.md §9.2, §10 /projects), with this exact
+  string as the documented fallback so a failed request never breaks the
+  build.
+*/
 import { getCollection } from "astro:content";
 import { getPostSlug } from "../utils/helpers";
 import { trussSeries as trussSeriesData } from "../data/trussSeries";
+
+const TRUSS_VERSION = "v1.6.1";
 
 const posts = await getCollection("posts");
 
@@ -10,126 +24,48 @@ const trussSeries = trussSeriesData.map((entry) => ({
 	date: posts.find((p) => getPostSlug(p) === entry.slug)?.data.date,
 	hasItalian: posts.some((p) => p.data.lang === "it" && p.data.translationOf === entry.slug),
 }));
-const trussLatestSlug = trussSeries[trussSeries.length - 1].slug;
 ---
 
-<div class="mb-12 p-5 rounded-lg border border-white-cloud dark:border-dark-cloud border-l-4 border-l-primary dark:border-l-primary bg-primary/5 dark:bg-primary/10 flex items-start gap-4">
-	<svg class="truss-icon w-10 h-10 flex-shrink-0" viewBox="0 0 32 32" aria-hidden="true">
-		<path d="M16 5 L27 26 H5 Z" />
-		<path d="M16 5 V17" />
-		<path d="M5 26 L16 17" />
-		<path d="M27 26 L16 17" />
-		<circle cx="16" cy="5" r="2.4" />
-		<circle cx="5" cy="26" r="2.4" />
-		<circle cx="27" cy="26" r="2.4" />
-		<circle cx="16" cy="17" r="2.4" />
-	</svg>
-	<div>
-		<h2 class="text-lg font-semibold text-dark dark:text-white">Truss</h2>
-		<p class="mt-1 text-gray leading-relaxed">
-			A live, zoomable ER diagram of your Laravel app's actual database schema, safe to run in production because it only ever reads structure, never rows. <strong>Now themeable to match your app, with <span class="font-mono">truss:export</span> for CI.</strong>
-		</p>
-		<div class="mt-3 flex flex-wrap items-center gap-4 text-sm">
-			<a
-				href="https://github.com/albertoarena/laravel-truss"
-				target="_blank"
-				rel="noopener noreferrer"
-				class="inline-flex items-center gap-1.5 text-gray hover:text-primary transition-colors"
-			>
-				<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-					<path
-						fill-rule="evenodd"
-						d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-						clip-rule="evenodd"
-					/>
-				</svg>
-				GitHub
-			</a>
-			<a
-				href="https://trussphp.com/"
-				target="_blank"
-				rel="noopener noreferrer"
-				class="inline-flex items-center gap-1.5 text-gray hover:text-primary transition-colors"
-			>
-				<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-					/>
-				</svg>
-				Docs
-			</a>
-			<a
-				href={`/posts/${trussLatestSlug}/`}
-				class="inline-flex items-center gap-1.5 text-gray hover:text-primary transition-colors"
-			>
-				<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
-					/>
-				</svg>
-				Read more
-			</a>
-			<a
-				href="https://ko-fi.com/albertoarena"
-				target="_blank"
-				rel="noopener noreferrer"
-				class="inline-flex items-center gap-1.5 text-gray hover:text-primary transition-colors"
-			>
-				<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-					/>
-				</svg>
-				Support
-			</a>
-		</div>
-		<div class="mt-3 pt-3 border-t border-white-cloud dark:border-dark-cloud">
-			<h3 class="text-sm font-mono font-semibold text-secondary uppercase tracking-widest mb-2">Truss series</h3>
-			<ol class="list-decimal list-inside space-y-1.5 text-base">
-				{trussSeries.map((post) => (
-					<li class="flex items-baseline justify-between gap-2">
-						<span>
-							<a href={`/posts/${post.slug}/`} class="text-gray hover:text-primary transition-colors">
-								{post.title}
-							</a>
-							{post.date && (
-								<time datetime={post.date.toISOString()} class="ml-1.5 text-xs font-mono text-gray whitespace-nowrap">
-									{post.date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
-								</time>
-							)}
-						</span>
-						{post.hasItalian && (
-							<a
-								href={`/posts/${post.slug}/it/`}
-								class="flex-shrink-0 font-mono text-[0.66rem] tracking-wide text-gray border border-white-cloud dark:border-dark-cloud rounded-full px-1.5 py-0.5 hover:text-primary hover:border-primary transition-colors"
-							>
-								IT
-							</a>
+<div class="border border-rule bg-surface px-6 py-5">
+	<div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-2.5">
+		<h3 class="font-sans text-xl font-semibold text-ink dark:text-white">Laravel Truss</h3>
+		<span class="font-mono text-xs text-accent border border-accent px-1.5 py-0.5">{TRUSS_VERSION}</span>
+	</div>
+	<p class="text-ink-2 max-w-[48ch] mb-5">
+		A live, zoomable ER diagram of your Laravel app's actual database schema, safe to run in production because it only ever reads structure, never rows. <strong class="font-semibold text-ink dark:text-white">Now themeable to match your app, with <code class="font-mono text-[0.85em] bg-paper border border-rule px-1 py-0.5">truss:export</code> for CI.</strong>
+	</p>
+	<div class="flex flex-wrap gap-x-6 gap-y-2 font-mono text-sm mb-5">
+		<a href="https://trussphp.com/docs" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">Docs</a>
+		<a href="https://github.com/albertoarena/laravel-truss" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">GitHub</a>
+		<a href="https://packagist.org/packages/albertoarena/laravel-truss" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">Install</a>
+		<a href="https://ko-fi.com/albertoarena" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">Support on Ko-fi</a>
+	</div>
+	<div class="pt-4 border-t border-rule">
+		<h4 class="font-mono text-xs uppercase tracking-[0.14em] text-muted mb-2">How it got here</h4>
+		<ol class="font-mono text-sm">
+			{trussSeries.map((post, i) => (
+				<li class="flex items-baseline justify-between gap-2 py-1">
+					<span class="min-w-0">
+						<span class="text-muted mr-2">{i + 1}</span>
+						<a href={`/posts/${post.slug}/`} class="text-ink-2 hover:text-accent transition-colors">
+							{post.title}
+						</a>
+						{post.date && (
+							<time datetime={post.date.toISOString()} class="ml-2 text-xs text-muted whitespace-nowrap">
+								{post.date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+							</time>
 						)}
-					</li>
-				))}
-			</ol>
-		</div>
+					</span>
+					{post.hasItalian && (
+						<a
+							href={`/posts/${post.slug}/it/`}
+							class="shrink-0 text-[0.6875rem] tracking-wide text-muted border border-rule px-1.5 py-0.5 hover:text-accent hover:border-accent transition-colors"
+						>
+							IT
+						</a>
+					)}
+				</li>
+			))}
+		</ol>
 	</div>
 </div>
-
-<style>
-	.truss-icon path {
-		fill: none;
-		stroke: var(--color-primary);
-		stroke-width: 1.7;
-		stroke-linejoin: miter;
-	}
-	.truss-icon circle {
-		fill: var(--color-primary);
-	}
-</style>
