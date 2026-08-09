@@ -14,8 +14,30 @@
   --color-white-cloud: hsl(240, 1%, 92%);
   --color-gray: hsl(220, 17%, 45%);
 
-  --font-sans: 'Geist Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
+  /*
+    Redesign type roles (.docs/plans/redesign/redesign-plan.md §4): serif body,
+    sans headings/interface, mono nav/metadata/code. Fixed roles, no user toggle.
+  */
+  --font-serif: 'Source Serif 4 Variable', 'Iowan Old Style', 'Charter', Georgia, 'Times New Roman', serif;
+  --font-sans: 'IBM Plex Sans Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /*
+    Redesign design tokens (redesign-plan.md §3). --color- prefix so Tailwind
+    generates utilities (bg-paper, text-ink, border-rule, ...) for the Shell A/B
+    components built in later phases. Additive for now: existing --color-primary
+    etc. are untouched until components are migrated to consume these.
+  */
+  --color-paper: #ffffff;
+  --color-surface: #f4f7f9;
+  --color-ink: #13171d;
+  --color-ink-2: #3b4552;
+  --color-muted: #6c7783;
+  --color-rule: #e2e8ee;
+  --color-rule-soft: #eef2f6;
+  --color-accent: #0b5fd0;
+  --color-accent-soft: #eaf2fd;
+  --color-ok: #1f8a55;
 
   /*
     Override Tailwind v4's OKLCH default palette with HSL for the colours we
@@ -56,7 +78,13 @@
 
   body {
     @apply bg-white text-dark antialiased;
+    font-family: var(--font-serif);
     transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  /* Headings and interface elements read as sans, body copy stays serif */
+  h1, h2, h3, h4, h5, h6, button {
+    font-family: var(--font-sans);
   }
 
   @variant dark {
@@ -83,6 +111,18 @@
     --color-primary: hsl(220, 100%, 68%);
     --color-secondary: hsl(31, 92%, 62%);
     --color-gray: hsl(220, 17%, 57%);
+
+    /* Redesign tokens, dark values (redesign-plan.md §3) */
+    --color-paper: #0e1117;
+    --color-surface: #151b23;
+    --color-ink: #e7ecf2;
+    --color-ink-2: #c2ccd8;
+    --color-muted: #8b97a5;
+    --color-rule: #232c37;
+    --color-rule-soft: #1b222b;
+    --color-accent: #5eb3ff;
+    --color-accent-soft: #132437;
+    --color-ok: #4fc98a;
   }
 
   /* time element in dark mode */
@@ -242,6 +282,31 @@
   font-weight: 600;
 }
 
+/*
+  Post reading measure (redesign-plan.md §4): 19px/1.7 on desktop, down to
+  18px below 900px. Scoped to .post-content so index/home copy (still default
+  sized until Phase 4 rebuilds those pages) is unaffected.
+*/
+.post-content .prose {
+  font-size: 1.1875rem;
+  line-height: 1.7;
+}
+
+@media (max-width: 900px) {
+  .post-content .prose {
+    font-size: 1.125rem;
+  }
+}
+
+/* h2 spacing/weight inside post body, matching the mockup's .prose h2 */
+.prose h2 {
+  font-size: 1.3125rem;
+  line-height: 1.3;
+  font-weight: 620;
+  letter-spacing: -0.015em;
+  margin-top: 2.75rem;
+}
+
 @layer components {
   .link-underline {
     @apply relative;
@@ -338,6 +403,16 @@ html[data-reading] #disqus_thread {
 html[data-reading] .post-content {
   max-width: 38rem;
   margin-inline: auto;
+  font-size: 1.15rem;
+  line-height: 1.75;
+}
+
+/*
+  .post-content .prose (above) sets its own explicit font-size, which would
+  otherwise override the inherited 1.15rem here on the element it's actually
+  set on rather than .post-content itself.
+*/
+html[data-reading] .post-content .prose {
   font-size: 1.15rem;
   line-height: 1.75;
 }

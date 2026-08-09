@@ -1,9 +1,13 @@
 ---
 import { ViewTransitions } from 'astro:transitions';
 import { siteConfig } from '@/utils/config';
-import '@fontsource-variable/geist';
-import '@fontsource-variable/jetbrains-mono';
+import '@fontsource-variable/source-serif-4';
+import '@fontsource-variable/ibm-plex-sans';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/600.css';
 import '@/styles/global.css';
+import serifPreloadUrl from '@fontsource-variable/source-serif-4/files/source-serif-4-latin-wght-normal.woff2?url';
+import monoPreloadUrl from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2?url';
 
 interface Props {
   title?: string;
@@ -78,7 +82,11 @@ const jsonLdGraph = {
     {noindex && <meta name="robots" content="noindex,follow" />}
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="alternate" type="application/rss+xml" title={siteConfig.title} href="/rss.xml" />
-    
+
+    <!-- Preload the body serif and the mono weight actually used at first paint -->
+    <link rel="preload" as="font" type="font/woff2" href={serifPreloadUrl} crossorigin="anonymous" />
+    <link rel="preload" as="font" type="font/woff2" href={monoPreloadUrl} crossorigin="anonymous" />
+
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content={siteConfig.author.name} />
@@ -102,11 +110,18 @@ const jsonLdGraph = {
     <!-- Structured data -->
     <script type="application/ld+json" set:html={JSON.stringify(jsonLdGraph)} />
 
-    <!-- Theme color -->
-    <meta name="theme-color" content="#5eb3ff" />
-    
+    <!-- Theme color, kept in sync with the --accent token per theme -->
+    <meta name="theme-color" content="#0b5fd0" />
+
     <!-- Theme script (prevent flash) -->
     <script is:inline>
+      const THEME_COLOR = { light: '#0b5fd0', dark: '#5eb3ff' };
+
+      function setThemeColorMeta(theme) {
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', THEME_COLOR[theme]);
+      }
+
       function applyTheme() {
         const theme = (() => {
           if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
@@ -125,6 +140,7 @@ const jsonLdGraph = {
           document.documentElement.classList.add('light');
           document.documentElement.classList.remove('dark');
         }
+        setThemeColorMeta(theme);
       }
 
       // Apply theme immediately
@@ -140,6 +156,9 @@ const jsonLdGraph = {
         event.newDocument.documentElement.classList.toggle('dark', theme === 'dark');
         event.newDocument.documentElement.classList.toggle('light', theme === 'light');
       });
+
+      // Reflect an in-page toggle click immediately, no swap involved
+      document.addEventListener('theme-changed', (event) => setThemeColorMeta(event.detail.theme));
     </script>
 
     <!-- Reading mode script (prevent flash, post pages only) -->
