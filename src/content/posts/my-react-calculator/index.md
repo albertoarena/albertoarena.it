@@ -17,10 +17,6 @@ socialImage: "/images/posts/my-react-calculator/react-calculator.webp"
 I am currently learning [React](https://react.dev/). I enjoy it. I'd like to use more and more in next projects, as it
 is already part of the future of web development.
 
-<figure class="float-right" style="width: 240px">
-	<img src="/images/posts/my-react-calculator/react-calculator.webp" alt="React Calculator">
-</figure>
-
 For that reason, I decided to create my own implementation of a calculator, extending
 the [calculator](https://github.com/andrewagain/calculator) created by Andrew Farmer. Earlier, I had already created a
 simple [PHP calculator](https://github.com/albertoarena/calculator) inspired

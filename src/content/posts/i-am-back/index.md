@@ -19,10 +19,6 @@ said. My time, unfortunately, it isn't.
 
 In the meantime, I've done new experiences, read new books, and learnt new lessons.
 
-<figure class="float-right" style="width: 240px">
-	<img src="/images/posts/i-am-back/clean-coder.webp" alt="Clean Coder">
-</figure>
-
 One of the most influential book I read is
 _[The Clean Coder. A Code of Conduct for Professional Programmers](https://www.amazon.com/Clean-Coder-Conduct-Professional-Programmers/dp/0137081073)_,
 by Robert C. Martin, a.k.a. Uncle Bob. He has been a developer since 1970, and he faced with the same challenges that
