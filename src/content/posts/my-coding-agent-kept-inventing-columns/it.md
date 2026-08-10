@@ -1,6 +1,6 @@
 ---
 title: "Il mio agente di coding inventava le colonne"
-date: "2026-08-10T10:00:00.000Z"
+date: "2026-08-10T16:00:00.000Z"
 template: "post"
 draft: false
 category: "Laravel"

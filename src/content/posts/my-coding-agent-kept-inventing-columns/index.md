@@ -1,6 +1,6 @@
 ---
 title: "My coding agent kept inventing columns"
-date: "2026-08-10T10:00:00.000Z"
+date: "2026-08-10T16:00:00.000Z"
 template: "post"
 draft: false
 slug: "my-coding-agent-kept-inventing-columns"
