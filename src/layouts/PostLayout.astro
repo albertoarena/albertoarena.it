@@ -224,6 +224,29 @@ const blogPostingSchema = {
             </details>
         )}
 
+        {seriesMeta && (
+            <details class="series-mobile min-[1180px]:hidden mb-8 border border-rule px-4 py-3 not-prose">
+                <summary class="font-mono text-xs uppercase tracking-[0.1em] text-muted cursor-pointer">
+                    {seriesMeta.label}
+                </summary>
+                <ul class="mt-3 font-mono text-sm leading-relaxed">
+                    {seriesMeta.posts.map((p) => (
+                        <li class="flex py-[0.25rem]">
+                            <span class="text-muted shrink-0 w-3">{p.order}</span>
+                            {p.isCurrent ? (
+                                <span class="text-accent font-semibold">{p.title}</span>
+                            ) : (
+                                <a href={p.href} class="text-ink-2 hover:text-accent">{p.title}</a>
+                            )}
+                        </li>
+                    ))}
+                </ul>
+                <a href={`/series/${seriesMeta.slug}/`} class="block mt-3 pt-3 border-t border-rule-soft font-mono text-sm text-accent hover:underline">
+                    {lang === 'it' ? 'Vedi la serie' : 'View series'} &rarr;
+                </a>
+            </details>
+        )}
+
         <!-- Prose body at reading measure -->
         <div class="prose dark:prose-invert max-w-[68ch]">
             <slot />
