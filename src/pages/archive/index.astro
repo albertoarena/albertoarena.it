@@ -9,8 +9,11 @@ const posts = await getCollection("posts", ({ data }) => !data.draft && (data.la
 const sortedPosts = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 const seriesTotals = buildSeriesTotals(sortedPosts);
 
-const byYear = new Map<number, typeof sortedPosts>();
-for (const post of sortedPosts) {
+const pinnedPosts = sortedPosts.filter((p) => p.data.pinned);
+const regularPosts = sortedPosts.filter((p) => !p.data.pinned);
+
+const byYear = new Map<number, typeof regularPosts>();
+for (const post of regularPosts) {
   const year = post.data.date.getFullYear();
   if (!byYear.has(year)) byYear.set(year, []);
   byYear.get(year)!.push(post);
@@ -26,6 +29,17 @@ const years = [...byYear.keys()].sort((a, b) => b - a);
   <p class="text-ink-2 mb-10 max-w-[60ch]">
     All {sortedPosts.length} posts, one page, grouped by year.
   </p>
+
+  {pinnedPosts.length > 0 && (
+    <div class="mb-10">
+      <p class="font-mono text-xs uppercase tracking-widest text-muted mb-3">&#9733; Pinned</p>
+      <ul class="border-t border-rule">
+        {pinnedPosts.map((post) => (
+          <PostListRow post={post} seriesMarker={getSeriesMarker(post, seriesTotals)} pinned />
+        ))}
+      </ul>
+    </div>
+  )}
 
   {years.map((year) => (
     <section class="mb-10">

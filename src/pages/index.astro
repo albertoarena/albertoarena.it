@@ -17,7 +17,8 @@ const seriesTotals = buildSeriesTotals(sortedPosts);
 // (pinned is used for /series instead) — this also avoids featuring a
 // Truss post immediately under the dedicated Truss block above it.
 const [featured, ...rest] = sortedPosts;
-const listPosts = rest.slice(0, 6);
+const pinnedPosts = rest.filter((p) => p.data.pinned);
+const listPosts = rest.filter((p) => !p.data.pinned).slice(0, 6);
 
 const featuredSlug = getPostSlug(featured);
 const featuredReadTime = readingTime(featured.body).text;
@@ -84,6 +85,17 @@ const featuredCover = featured.data.cover
 				</p>
 			</div>
 		</a>
+
+		{pinnedPosts.length > 0 && (
+			<div class="mb-8">
+				<p class="font-mono text-xs uppercase tracking-widest text-muted mb-3">&#9733; Pinned</p>
+				<ul class="border-t border-rule">
+					{pinnedPosts.map((post) => (
+						<PostListRow post={post} seriesMarker={getSeriesMarker(post, seriesTotals)} pinned />
+					))}
+				</ul>
+			</div>
+		)}
 
 		<ul class="border-t border-rule">
 			{listPosts.map((post) => (
