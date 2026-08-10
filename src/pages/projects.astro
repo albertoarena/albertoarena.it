@@ -6,11 +6,13 @@
   descriptions filled it in — replaced with the same stacked-list shape as
   the professional-work section below (name + version/date on one line,
   description, then a muted meta line), which the plan itself calls for
-  as "the archived or client work in a second quieter group." Version and
-  installs still come from the build-time cache (scripts/fetch-project-
-  stats.mjs — "show a dash when unknown, never a zero"). Replaces
-  ProjectCard's rounded cards and icon set, both against the plan's
-  constraints (§1: no card grids, no icon set).
+  as "the archived or client work in a second quieter group." Version still
+  comes from the build-time cache (scripts/fetch-project-stats.mjs — "show a
+  dash when unknown, never a zero"). Installs are only surfaced once they're
+  a genuinely notable number (>= 1000, abbreviated "Nk+") — an exact 15 or
+  791 installs reads as a red flag, not a credential. Replaces ProjectCard's
+  rounded cards and icon set, both against the plan's constraints (§1: no
+  card grids, no icon set).
 */
 import Layout from '../components/Layout.astro';
 import TrussPromo from '../components/TrussPromo.astro';
@@ -23,6 +25,11 @@ const professionalProjects = projects.filter((p) => p.status === 'professional')
 function statsFor(project: (typeof projects)[number]) {
   const key = project.packagist ?? project.npmPackage;
   return key ? (projectStats as Record<string, { version: string | null; installs: number | null }>)[key] : undefined;
+}
+
+function formatInstalls(installs: number | null | undefined) {
+  if (installs == null || installs < 1000) return null;
+  return `${Math.floor(installs / 1000)}k+ installs`;
 }
 
 function hasSeparateDocs(project: (typeof projects)[number]) {
@@ -40,9 +47,10 @@ function hasSeparateDocs(project: (typeof projects)[number]) {
     <h2 class="font-mono text-xs uppercase tracking-[0.14em] text-ink dark:text-white font-semibold border-b border-rule pb-2 mb-2">
       Open source
     </h2>
-    <ul class="border-t border-rule-soft">
+    <ul>
       {openSourceProjects.map((project) => {
         const stats = statsFor(project);
+        const installsLabel = formatInstalls(stats?.installs);
         return (
           <li class="py-4 border-b border-rule-soft">
             <div class="flex items-baseline justify-between gap-4">
@@ -51,7 +59,7 @@ function hasSeparateDocs(project: (typeof projects)[number]) {
             </div>
             <p class="text-ink-2 mt-1 max-w-[64ch]">{project.description}</p>
             <p class="font-mono text-xs text-muted mt-1.5 flex flex-wrap gap-x-4 gap-y-1">
-              <span>{stats?.installs != null ? `${stats.installs.toLocaleString('en-US')} installs` : '— installs'}</span>
+              {installsLabel && <span>{installsLabel}</span>}
               {project.github && (
                 <a href={project.github} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">GitHub</a>
               )}
@@ -72,7 +80,7 @@ function hasSeparateDocs(project: (typeof projects)[number]) {
     <h2 class="font-mono text-xs uppercase tracking-[0.14em] text-ink dark:text-white font-semibold border-b border-rule pb-2 mb-2">
       Professional work
     </h2>
-    <ul class="border-t border-rule-soft">
+    <ul>
       {professionalProjects.map((project) => (
         <li class="py-4 border-b border-rule-soft">
           <div class="flex items-baseline justify-between gap-4">
