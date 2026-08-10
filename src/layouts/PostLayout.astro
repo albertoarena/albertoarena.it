@@ -186,7 +186,9 @@ const blogPostingSchema = {
             <div class="meta font-mono text-xs text-muted flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-b border-rule py-3">
                 <time datetime={post.data.date.toISOString()}>{formattedDate}</time>
                 <span>{readTime}</span>
-                <PostLangSwitch lang={lang} englishUrl={postEnglishUrl} italianUrl={postItalianUrl} />
+                {postItalianUrl && (
+                    <PostLangSwitch lang={lang} englishUrl={postEnglishUrl} italianUrl={postItalianUrl} />
+                )}
                 {seriesMeta && (
                     <span>{ordinal(seriesMeta.position, lang)} {lang === 'it' ? 'in' : 'in the'} {seriesMeta.label}</span>
                 )}

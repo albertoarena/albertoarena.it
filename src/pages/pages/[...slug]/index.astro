@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import Layout from "../../../components/Layout.astro";
-import LanguageToggle from "../../../components/LanguageToggle.astro";
+import PostLangSwitch from "../../../components/PostLangSwitch.astro";
 import LinkedInCta from "../../../components/LinkedInCta.astro";
 import { getPageSlug } from "@/utils/helpers";
 import { siteConfig } from "@/utils/config";
@@ -40,14 +40,12 @@ const italianPath = `/pages/${slug}/it/`;
     hreflangIt={hasItalian ? `${siteConfig.url}${italianPath}` : undefined}
 >
     <article class="prose dark:prose-invert max-w-none">
-        {hasItalian && (
-            <LanguageToggle
-                currentLang="en"
-                englishUrl={englishPath}
-                italianUrl={italianPath}
-            />
-        )}
         <h1 class="font-sans text-3xl font-bold text-ink dark:text-white mb-3">{page.data.title}</h1>
+        {hasItalian && (
+            <div class="meta font-mono text-xs text-muted border-t border-b border-rule py-3 mb-6 not-prose">
+                <PostLangSwitch lang="en" englishUrl={englishPath} italianUrl={italianPath} />
+            </div>
+        )}
         <Content />
         {slug === 'consulting' && <LinkedInCta lang="en" />}
     </article>
