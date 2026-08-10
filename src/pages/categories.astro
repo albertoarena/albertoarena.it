@@ -22,9 +22,9 @@ const categories = [...categoryMap.entries()]
         {categories.map(([category, count]) => (
             <a
                 href={`/category/${category.toLowerCase().replace(/\s+/g, '-')}/`}
-                class="px-4 py-2 bg-gray-100 dark:bg-dark-cloud rounded-lg hover:bg-primary hover:text-white transition-colors"
+                class="border border-rule text-ink-2 px-3 py-1.5 hover:text-accent hover:border-accent transition-colors"
             >
-                {category} <span class="text-sm opacity-75">({count})</span>
+                {category} <span class="text-muted">({count})</span>
             </a>
         ))}
     </div>

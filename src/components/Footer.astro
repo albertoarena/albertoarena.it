@@ -2,15 +2,15 @@
 import { siteConfig } from '@/utils/config';
 ---
 
-<footer class="site-footer border-t border-white-cloud dark:border-dark-cloud mt-20 py-8">
-  <div class="max-w-3xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray">
+<footer class="site-footer border-t border-rule mt-20 py-8">
+  <div class="max-w-3xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted">
     <span>© {new Date().getFullYear()} Alberto Arena</span>
     <div class="flex items-center gap-4">
-      <a href="/pages/privacy-policy/" class="hover:text-primary transition-colors">Privacy Policy</a>
+      <a href="/pages/privacy-policy/" class="hover:text-accent transition-colors">Privacy Policy</a>
       <span aria-hidden="true">·</span>
-      <a href="/pages/credits/" class="hover:text-primary transition-colors">Credits</a>
+      <a href="/pages/credits/" class="hover:text-accent transition-colors">Credits</a>
       <span aria-hidden="true">·</span>
-      <a href={siteConfig.author.contacts.rss} class="hover:text-primary transition-colors">RSS</a>
+      <a href={siteConfig.author.contacts.rss} class="hover:text-accent transition-colors">RSS</a>
     </div>
   </div>
 </footer>

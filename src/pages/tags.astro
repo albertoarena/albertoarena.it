@@ -22,7 +22,7 @@ const tags = [...tagMap.entries()]
         {tags.map(([tag, count]) => (
             <a
                 href={`/tag/${tag.toLowerCase().replace(/\s+/g, '-')}/`}
-                class="px-3 py-1 bg-gray-100 dark:bg-dark-cloud rounded-full text-sm hover:bg-secondary hover:text-white transition-colors"
+                class="border border-rule text-muted text-sm px-2 py-0.5 hover:text-accent hover:border-accent transition-colors"
             >
                 #{tag} <span class="opacity-75">({count})</span>
             </a>
