@@ -9,9 +9,10 @@ import { buildSeriesTotals, getSeriesMarker } from "@/data/series";
 export async function getStaticPaths() {
   const posts = await getCollection("posts", ({ data }) => !data.draft && (data.lang ?? 'en') === 'en');
   const sortedPosts = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+  const regularPosts = sortedPosts.filter((p) => !p.data.pinned);
 
   const { postsLimit } = siteConfig;
-  const totalPages = Math.ceil(sortedPosts.length / postsLimit);
+  const totalPages = Math.ceil(regularPosts.length / postsLimit);
 
   return Array.from({ length: totalPages - 1 }, (_, i) => {
     const pageNum = i + 2;
@@ -19,7 +20,7 @@ export async function getStaticPaths() {
     return {
       params: { page: String(pageNum) },
       props: {
-        pagePosts: sortedPosts.slice(start, start + postsLimit),
+        pagePosts: regularPosts.slice(start, start + postsLimit),
         seriesTotals: buildSeriesTotals(sortedPosts),
         currentPage: pageNum,
         totalPages,
