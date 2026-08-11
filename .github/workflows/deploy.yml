@@ -37,7 +37,7 @@ jobs:
       - name: Deploy to Netsons
         id: deploy1
         continue-on-error: true
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
@@ -48,6 +48,7 @@ jobs:
           protocol: ftp
           state-name: .ftp-deploy-sync-state.json
           dangerous-clean-slate: false
+          timeout: 60000
           exclude: |
             **/.DS_Store
             **/.git*
@@ -57,14 +58,14 @@ jobs:
       - name: Wait before retry
         if: steps.deploy1.outcome == 'failure'
         run: |
-          echo "⚠️ FTP deploy failed (attempt 1), retrying in 30s..."
-          sleep 30
+          echo "⚠️ FTP deploy failed (attempt 1), retrying in 60s..."
+          sleep 60
 
       - name: Deploy to Netsons (retry 2)
         id: deploy2
         if: steps.deploy1.outcome == 'failure'
         continue-on-error: true
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
@@ -75,6 +76,7 @@ jobs:
           protocol: ftp
           state-name: .ftp-deploy-sync-state.json
           dangerous-clean-slate: false
+          timeout: 60000
           exclude: |
             **/.DS_Store
             **/.git*
@@ -89,7 +91,7 @@ jobs:
 
       - name: Deploy to Netsons (retry 3)
         if: steps.deploy2.outcome == 'failure'
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
@@ -100,6 +102,7 @@ jobs:
           protocol: ftp
           state-name: .ftp-deploy-sync-state.json
           dangerous-clean-slate: false
+          timeout: 60000
           exclude: |
             **/.DS_Store
             **/.git*
