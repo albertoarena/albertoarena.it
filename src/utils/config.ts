@@ -57,6 +57,7 @@ export const siteConfig = {
       github: 'albertoarena',
       twitter: 'alberto_arena',
       linkedin: 'alberto-arena-ba44a624',
+      youtube: 'AlbertoArenaDev',
       rss: '/rss.xml'
     }
   }
