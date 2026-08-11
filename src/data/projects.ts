@@ -14,6 +14,7 @@ export interface Project {
   packagist?: string;
   /** npm package name, same purpose as `packagist` for the one Node project. */
   npmPackage?: string;
+  videoPlaylist?: string;
 }
 
 export const projects: Project[] = [
@@ -29,19 +30,32 @@ export const projects: Project[] = [
     featured: true,
     year: '2026',
     packagist: 'albertoarena/laravel-truss',
+    videoPlaylist: 'https://www.youtube.com/playlist?list=PLdadt28gT2Qc',
   },
   {
-    name: 'Laravel Netsons Deploy',
+    name: 'Laravel Event Sourcing Generator',
     description:
-      'GitHub Actions deployment workflow for Laravel on Netsons shared hosting, supporting both FTP and git clone strategies with zero-downtime release switching.',
-    tech: ['Laravel', 'PHP', 'GitHub Actions', 'Deploy'],
-    github: 'https://github.com/albertoarena/laravel-netsons-deploy',
-    url: 'https://albertoarena.github.io/laravel-netsons-deploy/',
-    postSlug: 'laravel-netsons-deploy',
+      'Code scaffolding tool that generates complete domain structures for event-sourced Laravel apps using Spatie\'s library.',
+    tech: ['Laravel', 'PHP', 'Event Sourcing'],
+    github: 'https://github.com/albertoarena/laravel-event-sourcing-generator',
+    url: 'https://albertoarena.github.io/laravel-event-sourcing-generator/',
+    postSlug: 'domain-using-spatie-event-sourcing',
+    status: 'active',
+    featured: true,
+    year: '2024',
+    packagist: 'albertoarena/laravel-event-sourcing-generator',
+  },
+  {
+    name: 'Claude Laravel Event Sourcing',
+    description:
+      'Claude Code skill that designs and generates event-sourced Laravel domains via a two-gate workflow: domain modelling conversation and ADR approval before any code is written.',
+    tech: ['Laravel', 'PHP', 'Event Sourcing', 'AI', 'Claude'],
+    github: 'https://github.com/albertoarena/claude-laravel-event-sourcing',
+    url: 'https://github.com/albertoarena/claude-laravel-event-sourcing',
+    postSlug: 'ai-laravel-event-sourcing',
     status: 'active',
     featured: true,
     year: '2026',
-    packagist: 'albertoarena/laravel-netsons-deploy',
   },
   {
     name: 'Filament Event Sourcing',
@@ -57,16 +71,17 @@ export const projects: Project[] = [
     packagist: 'albertoarena/filament-event-sourcing',
   },
   {
-    name: 'Claude Laravel Event Sourcing',
+    name: 'Codemetry',
     description:
-      'Claude Code skill that designs and generates event-sourced Laravel domains via a two-gate workflow: domain modelling conversation and ADR approval before any code is written.',
-    tech: ['Laravel', 'PHP', 'Event Sourcing', 'AI', 'Claude'],
-    github: 'https://github.com/albertoarena/claude-laravel-event-sourcing',
-    url: 'https://github.com/albertoarena/claude-laravel-event-sourcing',
-    postSlug: 'ai-laravel-event-sourcing',
+      'Git repository analysis tool that converts version control history into meaningful quality metrics with daily indicators.',
+    tech: ['Laravel', 'PHP', 'Git'],
+    github: 'https://github.com/albertoarena/codemetry',
+    url: 'https://albertoarena.github.io/codemetry/',
+    postSlug: 'introducing-codemetry',
     status: 'active',
     featured: true,
-    year: '2026',
+    year: '2025',
+    packagist: 'albertoarena/codemetry',
   },
   {
     name: 'envaudit',
@@ -82,30 +97,17 @@ export const projects: Project[] = [
     npmPackage: '@albertoarena/envaudit',
   },
   {
-    name: 'Codemetry',
+    name: 'Laravel Netsons Deploy',
     description:
-      'Git repository analysis tool that converts version control history into meaningful quality metrics with daily indicators.',
-    tech: ['Laravel', 'PHP', 'Git'],
-    github: 'https://github.com/albertoarena/codemetry',
-    url: 'https://albertoarena.github.io/codemetry/',
-    postSlug: 'introducing-codemetry',
+      'GitHub Actions deployment workflow for Laravel on Netsons shared hosting, supporting both FTP and git clone strategies with zero-downtime release switching.',
+    tech: ['Laravel', 'PHP', 'GitHub Actions', 'Deploy'],
+    github: 'https://github.com/albertoarena/laravel-netsons-deploy',
+    url: 'https://albertoarena.github.io/laravel-netsons-deploy/',
+    postSlug: 'laravel-netsons-deploy',
     status: 'active',
     featured: true,
-    year: '2025',
-    packagist: 'albertoarena/codemetry',
-  },
-  {
-    name: 'Laravel Event Sourcing Generator',
-    description:
-      'Code scaffolding tool that generates complete domain structures for event-sourced Laravel apps using Spatie\'s library.',
-    tech: ['Laravel', 'PHP', 'Event Sourcing'],
-    github: 'https://github.com/albertoarena/laravel-event-sourcing-generator',
-    url: 'https://albertoarena.github.io/laravel-event-sourcing-generator/',
-    postSlug: 'domain-using-spatie-event-sourcing',
-    status: 'active',
-    featured: true,
-    year: '2024',
-    packagist: 'albertoarena/laravel-event-sourcing-generator',
+    year: '2026',
+    packagist: 'albertoarena/laravel-netsons-deploy',
   },
   {
     name: 'SafariOffice for Accommodations',

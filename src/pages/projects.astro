@@ -69,6 +69,9 @@ function hasSeparateDocs(project: (typeof projects)[number]) {
               {project.postSlug && (
                 <a href={`/posts/${project.postSlug}/`} class="text-accent hover:underline">Post</a>
               )}
+              {project.videoPlaylist && (
+                <a href={project.videoPlaylist} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">Videos</a>
+              )}
             </p>
           </li>
         );
