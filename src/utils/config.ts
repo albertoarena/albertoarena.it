@@ -33,6 +33,7 @@ export const siteConfig = {
       items: [
         { label: 'truss', path: 'https://trussphp.com/' },
         { label: 'projects', path: '/projects/' },
+        { label: 'videos', path: 'https://www.youtube.com/@AlbertoArenaDev' },
       ],
     },
     {
