@@ -5,6 +5,7 @@ import Pagination from "@/components/Pagination.astro";
 import { getCollection } from "astro:content";
 import { siteConfig } from "@/utils/config";
 import { buildSeriesTotals, getSeriesMarker } from "@/data/series";
+import { getPostSlug, getReadingTime } from "@/utils/helpers";
 
 const posts = await getCollection("posts", ({ data }) => !data.draft && (data.lang ?? 'en') === 'en');
 const sortedPosts = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
@@ -12,6 +13,11 @@ const seriesTotals = buildSeriesTotals(sortedPosts);
 
 const pinnedPosts = sortedPosts.filter((p) => p.data.pinned);
 const regularPosts = sortedPosts.filter((p) => !p.data.pinned);
+
+function getCover(post: (typeof pinnedPosts)[number]) {
+  if (!post.data.cover) return post.data.socialImage;
+  return post.data.cover.startsWith('http') ? post.data.cover : `/images/posts/${post.data.cover}`;
+}
 
 const { postsLimit } = siteConfig;
 const totalPages = Math.ceil(regularPosts.length / postsLimit);
@@ -30,9 +36,51 @@ const pagePosts = regularPosts.slice(0, postsLimit);
     <div class="mb-8">
       <p class="font-mono text-xs uppercase tracking-widest text-muted mb-3">&#9733; Pinned</p>
       <ul class="border-t border-rule">
-        {pinnedPosts.map((post) => (
-          <PostListRow post={post} seriesMarker={getSeriesMarker(post, seriesTotals)} pinned />
-        ))}
+        {pinnedPosts.map((post) => {
+          const slug = getPostSlug(post);
+          const cover = getCover(post);
+          const readTime = getReadingTime(post.body);
+          const seriesMarker = getSeriesMarker(post, seriesTotals);
+          const formattedDate = post.data.date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          });
+          return (
+            <li class="flex gap-4 items-center py-3 border-b border-rule-soft bg-accent-soft px-3 -mx-3">
+              <a href={`/posts/${slug}/`} class="shrink-0">
+                {cover ? (
+                  <img
+                    src={cover}
+                    alt={post.data.coverAlt ?? post.data.title}
+                    width="160"
+                    height="112"
+                    loading="lazy"
+                    class="w-20 aspect-[10/7] object-cover border border-rule"
+                  />
+                ) : (
+                  <div class="w-20 aspect-[10/7] border border-rule bg-surface" aria-hidden="true"></div>
+                )}
+              </a>
+              <div class="min-w-0 flex-1 grid grid-cols-1 min-[640px]:grid-cols-[6.5rem_minmax(0,1fr)_auto] gap-x-4 gap-y-0.5 items-baseline">
+                <time datetime={post.data.date.toISOString()} class="font-mono text-xs text-muted whitespace-nowrap">
+                  {formattedDate}
+                </time>
+                <a href={`/posts/${slug}/`} class="group min-w-0">
+                  <span class="font-sans text-base font-medium text-ink dark:text-white group-hover:text-accent transition-colors">
+                    {post.data.title}
+                  </span>
+                  {seriesMarker && (
+                    <span class="font-sans text-base text-muted"> &middot; {seriesMarker}</span>
+                  )}
+                </a>
+                <span class="font-mono text-xs text-muted whitespace-nowrap">
+                  {post.data.category}{post.data.category ? ' · ' : ''}{readTime}
+                </span>
+              </div>
+            </li>
+          );
+        })}
       </ul>
     </div>
   )}
