@@ -1,6 +1,6 @@
 # WCAG AA accessibility: CI automation + fixes
 
-**Status:** Shipped (branch `wcag-aa-fixes`, not yet merged — user reviewing locally)
+**Status:** Merged ([PR #20](https://github.com/albertoarena/albertoarena.it/pull/20), 2026-08-12)
 **Date:** 2026-08-12
 
 ## Context
