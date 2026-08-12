@@ -13,7 +13,7 @@ tags:
   - "AI"
 description: "Laravel Truss 1.8 turns your schema export into grounding context for a coding agent: annotations, focused and compact exports, and an optional read-only MCP server."
 socialImage: "/images/posts/my-coding-agent-kept-inventing-columns/cover.jpg"
-coverAlt: "A two-way radio handset centred against a moody blue-to-purple gradient backdrop, its reflection faint below"
+coverAlt: "A two-way radio handset against a blue-to-purple gradient backdrop"
 series:
   slug: "truss"
   order: 4
