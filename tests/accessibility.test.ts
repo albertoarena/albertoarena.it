@@ -146,7 +146,11 @@ describe('WCAG 2.1 AA — full-site axe-core crawl', () => {
   beforeAll(async () => {
     [server, browser, axeSource] = await Promise.all([
       startStaticServer(),
-      puppeteer.launch({ headless: true }),
+      // --no-sandbox: GitHub Actions' Ubuntu runners block Chromium's own
+      // sandbox (unprivileged user namespaces are disabled by default),
+      // so an unqualified launch() crashes with "No usable sandbox!".
+      // Fine here — this only ever renders our own built static HTML.
+      puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] }),
       readFile(AXE_SOURCE_PATH, 'utf-8'),
     ]);
 
@@ -186,8 +190,11 @@ describe('WCAG 2.1 AA — full-site axe-core crawl', () => {
   }, 120_000);
 
   afterAll(async () => {
-    await browser.close();
-    await new Promise((resolve) => server.close(resolve));
+    // Guard against beforeAll throwing before assignment (e.g. Chromium
+    // failed to launch) — otherwise that failure gets masked by a second,
+    // unrelated "Cannot read properties of undefined" here.
+    if (browser) await browser.close();
+    if (server) await new Promise((resolve) => server.close(resolve));
   });
 
   it('crawled at least the known page count', () => {
