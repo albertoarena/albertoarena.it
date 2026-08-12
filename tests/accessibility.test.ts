@@ -51,6 +51,17 @@ const MIME_TYPES: Record<string, string> = {
 // just race axe-core against the browser's own client-side redirect.
 const REDIRECT_STUB_PATTERN = /^\/page\/\d+\/$/;
 
+// axe-core tags empty-table-header as best-practice/minor, but a manual
+// WAVE scan of a real post (claude-code-auto-mode-still-needs-a-human,
+// 2026-08-12 — a markdown table with `| |` as its first header cell)
+// flagged the identical issue as an Error, not an alert: a screen-reader
+// user landing on that header hears nothing at all, which is a concrete
+// barrier, not a stylistic nitpick. axe's own severity is wrong for this
+// one rule specifically — force it to fail the build regardless of the
+// impact axe assigns it. Don't add rules here speculatively; only ones
+// with the same kind of real-world evidence that axe under-rates them.
+const FORCE_FAIL_RULES = ['empty-table-header'];
+
 async function collectPages(dir: string, base = ''): Promise<string[]> {
   const entries = await readdir(dir, { withFileTypes: true });
   const pages: string[] = [];
@@ -114,8 +125,12 @@ async function auditPage(browser: Browser, axeSource: string, path: string): Pro
   });
   await page.addScriptTag({ content: axeSource });
   const results = await page.evaluate(async () => {
+    // best-practice needed for heading-order (see FORCE_FAIL_RULES comment
+    // and docs/plans/completed/wcag-aa-accessibility-automation.md for the
+    // TrussPromo.astro/PostLayout.astro heading-skip bugs this tag set
+    // previously missed entirely on real pages).
     // @ts-expect-error axe is injected via addScriptTag above
-    return await axe.run(document, { runOnly: ['wcag2a', 'wcag2aa', 'wcag21aa'] });
+    return await axe.run(document, { runOnly: ['wcag2a', 'wcag2aa', 'wcag21aa', 'best-practice'] });
   });
   await page.close();
 
@@ -126,13 +141,16 @@ async function auditPage(browser: Browser, axeSource: string, path: string): Pro
     nodes: unknown[];
   }[];
 
+  const isFailing = (v: { id: string; impact: string }) =>
+    v.impact === 'serious' || v.impact === 'critical' || FORCE_FAIL_RULES.includes(v.id);
+
   return {
     path,
     seriousOrCritical: violations
-      .filter((v) => v.impact === 'serious' || v.impact === 'critical')
+      .filter(isFailing)
       .map((v) => ({ id: v.id, impact: v.impact, help: v.help, nodes: v.nodes.length })),
     other: violations
-      .filter((v) => v.impact !== 'serious' && v.impact !== 'critical')
+      .filter((v) => !isFailing(v))
       .map((v) => ({ id: v.id, impact: v.impact, help: v.help, nodes: v.nodes.length })),
   };
 }
