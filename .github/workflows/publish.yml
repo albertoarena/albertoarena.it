@@ -3,11 +3,7 @@ name: 📦 Publish
 # Builds the site and publishes the static output to the `deploy` branch.
 # The Netsons server pulls that branch over HTTPS via a cron job
 # (scripts/server-deploy.sh), so no SSH/FTP from CI is involved. See
-# docs/plans/server-pull-deployment.md.
-#
-# Coexists with deploy.yml (the old FTP pipeline) until the server-pull
-# setup is verified live — deploy.yml gets removed once that's confirmed,
-# not before.
+# docs/plans/completed/server-pull-deployment.md.
 
 on:
   push:

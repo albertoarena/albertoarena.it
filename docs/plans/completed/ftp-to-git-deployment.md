@@ -1,6 +1,7 @@
 # Migration plan: FTP to git deployment on Netsons
 
-**Status: in progress**
+**Status: superseded** — replaced by `docs/plans/completed/server-pull-deployment.md`'s
+server-pull model (no SSH needed). Never implemented; archived for history only.
 
 ## Decisions
 
