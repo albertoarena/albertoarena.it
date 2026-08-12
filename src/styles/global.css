@@ -37,7 +37,7 @@
   --color-rule-soft: #eef2f6;
   --color-accent: #0b5fd0;
   --color-accent-soft: #eaf2fd;
-  --color-ok: #1f8a55;
+  --color-ok: #1c7a4c;
 
   /*
     Override Tailwind v4's OKLCH default palette with HSL for the colours we

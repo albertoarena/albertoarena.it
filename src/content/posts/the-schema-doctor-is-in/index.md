@@ -12,7 +12,7 @@ tags:
   - "Database"
 description: "Laravel Truss 1.5 adds truss:doctor: a deterministic, structure-only review of your database schema, thirteen rules deep, that can fail your CI build."
 socialImage: "/images/posts/the-schema-doctor-is-in/cover.jpg"
-coverAlt: "A stethoscope resting on a handwritten notebook next to a laptop keyboard, in black and white"
+coverAlt: "A stethoscope resting on a notebook next to a laptop keyboard, in black and white"
 series:
   slug: "truss"
   order: 2
