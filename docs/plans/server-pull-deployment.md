@@ -200,18 +200,24 @@ as "the reference implementation," now the actual destination.
 
 **Sequencing** (this order specifically, not hosting-downgrade-first):
 
-1. Set up the deploy pipeline on the new SSD 50 account *first*, while
+1. ✅ **Done (2026-08-12)**: `albertoarena.it` added as an addon domain on
+   the SSD 50 account. Confirmed docroot: `~/albertoarena.it/` — matches
+   what `scripts/server-deploy.sh` and `DEPLOYMENT.md` already assumed, no
+   changes needed there. Confirmed via cPanel's addon-domain list, which
+   also shows a per-domain **Create Email** action — the target account
+   does support mail hosting for addon domains (resolves the email
+   question below).
+2. Set up the deploy pipeline on the new SSD 50 account, while
    `albertoarena.it`'s DNS still points at the old Hosting Web 10 account —
-   add `albertoarena.it` there as an addon domain, get the pull script and
-   cron running, and verify it serves correctly (reachable via the addon
-   domain's own temporary/direct path before public DNS points at it).
-   Nothing about this step touches the live site or risks downtime, since
-   DNS hasn't moved yet.
-2. Once verified working end-to-end (a real push → `deploy` branch update →
+   cron + `.htaccess` (see the copy-paste block below), then verify it
+   serves correctly (reachable via the addon domain's own temporary/direct
+   path before public DNS points at it). Nothing about this step touches
+   the live site or risks downtime, since DNS hasn't moved yet.
+3. Once verified working end-to-end (a real push → `deploy` branch update →
    cron pull → live release, confirmed via `curl`), switch DNS: the `A`
-   record (and `www`) to the SSD 50 account's IP.
-3. Handle **email** (see blocker below) — before or atomically with step 4,
-   not after.
+   record (and `www`) to the SSD 50 account's IP, **and** the `MX` record
+   to the new account's mail (create the mailbox there first via
+   **Create Email**) — same DNS edit, one cutover.
 4. Once DNS has propagated and email is confirmed working, downgrade/cancel
    the Hosting Web 10 plan before 2026-08-18, keeping only the domain
    registration.
@@ -220,8 +226,7 @@ This is safer than downgrade-then-migrate: the old hosting stays live and
 untouched as a fallback for the entire time the new pipeline is being built
 and tested, and DNS only moves once the destination is already proven.
 
-**Blocker found, not yet solved — email.** Checked live DNS
-(2026-08-12):
+**Blocker found and resolved — email.** Checked live DNS (2026-08-12):
 
 ```
 albertoarena.it.    A     89.40.173.33        (current Hosting Web 10 IP)
@@ -231,18 +236,11 @@ mail.albertoarena.it. A   89.40.173.33        (same server)
 
 Email for `albertoarena.it` is hosted directly on the Hosting Web 10
 account being cancelled — not a separate provider. Cancelling that hosting
-without a plan for email first breaks mail delivery immediately, full stop.
-This needs a decision before step 4 above, and realistically before step 2
-(DNS cutover) if the new mail destination also needs its own DNS/MX change,
-since doing the `A` record and `MX` record changes together in one DNS
-edit is simpler and less error-prone than two separate cutovers. Two paths:
-
-- **SSD 50 also hosts mail** for its addon domains (typical for
-  cPanel-based shared hosting) — if so, repoint MX to the new account
-  alongside the `A` record in step 2, same cutover.
-- **A separate mail provider** (Google Workspace, Zoho Mail, a
-  Netsons mail-only product, etc.) — decide and set up independently of the
-  web-hosting move.
+without a plan for email first would break mail delivery immediately.
+**Decided (2026-08-12): SSD 50 also hosts mail** — confirmed via cPanel's
+addon-domain list, which shows a **Create Email** action per domain.
+Sequencing: create the mailbox(es) there via Create Email *before* the DNS
+cutover in step 3, then repoint both `A` and `MX` in the same edit.
 
 **Also found while checking DNS, unrelated but worth fixing in the same
 pass**: `albertoarena.it` currently has **two separate SPF TXT records**
@@ -260,6 +258,38 @@ Whether `albertoarena.it` should get the same treatment is a separate,
 non-urgent decision; this migration works identically with or without it
 (point DNS straight at the SSD 50 account's IP for the simplest path, add
 Cloudflare later if wanted).
+
+### Next action, right now: cron + `.htaccess` on the addon domain
+
+With the addon domain already in place (docroot `~/albertoarena.it/`), this
+is what's left to do in cPanel before anything can be tested end-to-end.
+Both are copy-paste from `scripts/server-deploy.sh`/`DEPLOYMENT.md` in
+PR #23 (not yet merged, but the content is final either way):
+
+**1. Cron Jobs** → add a new cron job, every 5 minutes:
+```
+*/5 * * * * /bin/bash $HOME/bin/albertoarena-it-server-deploy.sh >> $HOME/albertoarena-it-server-deploy.log 2>&1
+```
+This assumes `~/bin/albertoarena-it-server-deploy.sh` exists on the host —
+upload `scripts/server-deploy.sh` there via File Manager (or `curl` it from
+the raw GitHub URL once PR #23 is merged) and `chmod +x` it first.
+
+**2. File Manager** → create `~/albertoarena.it/.htaccess`:
+```apache
+Options +FollowSymLinks -Indexes
+RewriteEngine On
+RewriteRule ^releases(/.*)?$ - [F,L]
+RewriteCond %{REQUEST_URI} !^/current/
+RewriteRule ^(.*)$ current/$1 [L]
+```
+
+**3. Bootstrap**: trigger the cron once manually (or just wait ≤5 min) to
+create the first `releases/<ts>/` and `current` symlink from whatever's
+currently on the `deploy` branch — but note the `deploy` branch doesn't
+exist yet either (nothing has pushed to it — `publish.yml` is only on
+PR #23's branch, unmerged). So the realistic order is: merge #23 first (or
+push `scripts/server-deploy.sh` some other way), then do steps 1-3 above,
+then step 6 in Phase 1 below (trivial push to confirm the full loop).
 
 ## Phase 1 — deploy pipeline
 
