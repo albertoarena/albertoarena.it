@@ -1,6 +1,6 @@
 # Accessibility TDD: component-level checks
 
-**Status:** Sketch — not yet implemented, spikes verified
+**Status:** Shipped (branch `a11y-component-tdd`)
 **Date:** 2026-08-12
 
 ## Context
@@ -148,3 +148,49 @@ it('has no structural accessibility violations', async () => {
    relying on it for something new.
 3. Use it going forward for any new component, written before the
    component's final markup — the actual TDD part.
+
+---
+
+## 2026-08-12 update: shipped
+
+Built and verified on branch `a11y-component-tdd`, deliberately chosen
+before Netsons' next deploy retry rather than left as unexercised
+infrastructure. Three things came up that the sketch above didn't
+anticipate, all found by actually running it rather than assumed:
+
+1. **A root `vitest.config.ts` was required, not just the helper.**
+   `import Rail from '../../src/components/Rail.astro'` in a test file
+   fails outright without Astro's own Vite plugin to transform `.astro`
+   syntax — the sketch's code sample assumed this would just work. Added
+   `vitest.config.ts` using Astro's own documented `getViteConfig()` (from
+   `astro/config`, confirmed present in the installed `astro@5.14.5`).
+   Verified this doesn't affect the other 6 existing test suites: full
+   `npm run test` still passes (59 tests, one more than before — the new
+   `Rail.astro` test — across 7 files) and `npm run build` is unaffected.
+2. **`JSDOM` needed `runScripts: 'dangerously'`.** Dropped from the
+   sketch's code sample when writing the real helper — without it,
+   `dom.window.eval(AXE_SOURCE)` silently no-ops and `dom.window.axe` is
+   `undefined`. First test run failed with exactly that
+   (`TypeError: Cannot read properties of undefined (reading 'run')`),
+   which is what caught it.
+3. **The page-only rule list was smaller than sketched, and had a
+   different member.** Running against real `Rail.astro` output only ever
+   surfaced `region` (as the original spike found) and `document-title`
+   (a fragment has no `<title>`, and never will) — not
+   `landmark-one-main` or `page-has-heading-one`, which the sketch listed
+   speculatively. Kept the list to only what actually fired rather than
+   guessing at the full set; `tests/helpers/audit-component.ts` has a
+   comment telling the next person to extend it only on confirmed
+   misfires, same discipline.
+
+**Verification beyond what the sketch called for**: the sketch's step 2
+only asked for one test against known-good markup. Also wrote a throwaway
+scratch component with a deliberate missing `alt` and a skipped heading
+level, confirmed `auditComponent` reports both `image-alt` and
+`heading-order`, then deleted the scratch files — proving the helper
+actually catches violations, not just that it passes trivially on markup
+that was already fixed once.
+
+**Shipped**: `vitest.config.ts`, `tests/helpers/audit-component.ts`,
+`tests/components/rail.test.ts`, wired in as
+`test:accessibility-components` (part of the `npm run test` composite).
