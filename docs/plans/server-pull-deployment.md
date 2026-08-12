@@ -1,6 +1,10 @@
 # Migration plan: server-pull deployment (supersedes the SSH/SCP plan)
 
-**Status: finalized — blocked on hosting migration (Phase 0), not started**
+**Status: Phase 0 target decided (2026-08-12) — hosting migration in
+progress, deadline-driven**
+**Deadline: 2026-08-18** — the current Netsons Hosting Web 10 plan renews on
+that date; the goal is to be fully cut over before then and let it lapse to
+domain-only instead of renewing.
 
 ## TL;DR
 
@@ -187,34 +191,125 @@ since CI no longer touches the server. Both addressed below.
   once the new pipeline is stable, but as a separate change — don't bundle it
   into the deploy migration itself.
 
-## Phase 0 — hosting migration (separate, user-driven, prerequisite)
+## Phase 0 — hosting migration (2026-08-12 decisions)
 
-Not detailed here — this is infrastructure work the user is handling
-directly (downgrading the current Netsons account from Hosting Web 10 to
-domain-only without losing anything on it, then adding `albertoarena.it` as
-an addon domain on the target account, then repointing DNS). Everything below
-assumes Phase 0 is complete.
+**Target account confirmed**: the Netsons **SSD 50** shared-hosting account
+that already runs `trussphp.com` (and other static sites) as addon domains —
+the same account this plan's server-pull model was always designed against
+as "the reference implementation," now the actual destination.
 
-## Phase 1 — deploy pipeline (once Phase 0 lands)
+**Sequencing** (this order specifically, not hosting-downgrade-first):
 
-1. Add `.github/workflows/publish.yml` (per above), keep `test.yml` as-is.
-2. Add `scripts/server-deploy.sh` (per above).
-3. Set up the cron entry on the target account via cPanel's **Cron Jobs** UI.
+1. Set up the deploy pipeline on the new SSD 50 account *first*, while
+   `albertoarena.it`'s DNS still points at the old Hosting Web 10 account —
+   add `albertoarena.it` there as an addon domain, get the pull script and
+   cron running, and verify it serves correctly (reachable via the addon
+   domain's own temporary/direct path before public DNS points at it).
+   Nothing about this step touches the live site or risks downtime, since
+   DNS hasn't moved yet.
+2. Once verified working end-to-end (a real push → `deploy` branch update →
+   cron pull → live release, confirmed via `curl`), switch DNS: the `A`
+   record (and `www`) to the SSD 50 account's IP.
+3. Handle **email** (see blocker below) — before or atomically with step 4,
+   not after.
+4. Once DNS has propagated and email is confirmed working, downgrade/cancel
+   the Hosting Web 10 plan before 2026-08-18, keeping only the domain
+   registration.
+
+This is safer than downgrade-then-migrate: the old hosting stays live and
+untouched as a fallback for the entire time the new pipeline is being built
+and tested, and DNS only moves once the destination is already proven.
+
+**Blocker found, not yet solved — email.** Checked live DNS
+(2026-08-12):
+
+```
+albertoarena.it.    A     89.40.173.33        (current Hosting Web 10 IP)
+albertoarena.it.    MX    10 mail.albertoarena.it.
+mail.albertoarena.it. A   89.40.173.33        (same server)
+```
+
+Email for `albertoarena.it` is hosted directly on the Hosting Web 10
+account being cancelled — not a separate provider. Cancelling that hosting
+without a plan for email first breaks mail delivery immediately, full stop.
+This needs a decision before step 4 above, and realistically before step 2
+(DNS cutover) if the new mail destination also needs its own DNS/MX change,
+since doing the `A` record and `MX` record changes together in one DNS
+edit is simpler and less error-prone than two separate cutovers. Two paths:
+
+- **SSD 50 also hosts mail** for its addon domains (typical for
+  cPanel-based shared hosting) — if so, repoint MX to the new account
+  alongside the `A` record in step 2, same cutover.
+- **A separate mail provider** (Google Workspace, Zoho Mail, a
+  Netsons mail-only product, etc.) — decide and set up independently of the
+  web-hosting move.
+
+**Also found while checking DNS, unrelated but worth fixing in the same
+pass**: `albertoarena.it` currently has **two separate SPF TXT records**
+(`v=spf1 +a +mx ~all` and `v=spf1 include:_spf.mlsend.com +a +mx ~all` — the
+second is MailerLite's). Multiple SPF records is invalid per RFC 7208 and
+can cause SPF to permanently fail validation, hurting deliverability. Should
+be merged into one (`v=spf1 include:_spf.mlsend.com +a +mx ~all` covers
+both) whenever DNS is being touched for the migration anyway — not urgent
+enough to block anything, but cheap to fix in the same sitting.
+
+**Not decided yet, deferred rather than blocking**: `trussphp.com` sits
+behind Cloudflare (its `A` record resolves to Cloudflare IPs, not directly
+to Netsons) — `DEPLOYMENT.md` there even notes a cache-busting trick for it.
+Whether `albertoarena.it` should get the same treatment is a separate,
+non-urgent decision; this migration works identically with or without it
+(point DNS straight at the SSD 50 account's IP for the simplest path, add
+Cloudflare later if wanted).
+
+## Phase 1 — deploy pipeline
+
+**Confirmed against the live reference** (2026-08-12): read the actual
+`.github/workflows/publish.yml`, `scripts/server-deploy.sh`, and
+`DEPLOYMENT.md` runbook from the proven implementation — the code above
+already matches it near-exactly (the reference's script defaults `BASE` to
+`$HOME/trussphp.com`; this project's would default to
+`$HOME/albertoarena.it` the same way). No secrets, no SSH, PATH-prepend for
+cPanel's git already validated in production on this exact target account.
+
+**One addition needed that the reference doesn't have**: the current
+`deploy.yml`'s last two steps (checkout `albertoarena/albertoarena`, run
+`scripts/update-profile-readme.mjs`, commit+push using
+`PROFILE_README_TOKEN`) push the latest posts into the GitHub profile
+README. That's specific to this repo and needs to carry over into the new
+`publish.yml` — the reference workflow has nothing like it. Straightforward:
+same steps, appended after the "publish to `deploy` branch" step.
+
+**Naming** (per the existing namespacing note below, now concrete): docroot
+`~/albertoarena.it/` (mirrors `~/trussphp.com/`), script
+`~/bin/albertoarena-it-server-deploy.sh`, log
+`~/albertoarena-it-server-deploy.log`, repo pull URL
+`https://github.com/albertoarena/albertoarena.it.git`.
+
+**Steps — repo-side work (1-2) can start now, doesn't block on Phase 0**:
+
+1. Add `.github/workflows/publish.yml` (per above + the profile-readme
+   steps carried over), keep `test.yml` as-is, leave the existing
+   `deploy.yml` (FTP) in place and untouched for now — it's the fallback
+   until the new pipeline is proven.
+2. Add `scripts/server-deploy.sh` (per above, `albertoarena.it`-specific
+   defaults).
+3. *(Phase 0 must have landed — addon domain exists)* Set up the cron entry
+   on the SSD 50 account via cPanel's **Cron Jobs** UI.
 4. Use cPanel **File Manager** (or SSH, if the target account has it) to
    write the root `.htaccess` at the new docroot.
 5. Trigger the cron entry once manually to bootstrap `releases/` and
-   `current` — verify `https://albertoarena.it/` still loads correctly
-   throughout (the rewrite is transparent, so this should be zero-downtime).
+   `current` — verify the addon domain serves correctly before DNS points
+   there.
 6. Push a trivial change to `main`, confirm the `deploy` branch updates, wait
    for the next cron tick, confirm the release directory and symlink update.
-7. Once confirmed stable over a few real deploys, delete the old
-   `deploy.yml` FTP workflow and remove `FTP_HOST`/`FTP_USER`/`FTP_PASS`/
-   `FTP_PORT` secrets.
+7. Only after DNS has been switched (Phase 0 step 2) and the site is
+   confirmed serving correctly from the new pipeline over a few real
+   deploys: delete the old `deploy.yml` FTP workflow and remove
+   `FTP_HOST`/`FTP_USER`/`FTP_PASS`/`FTP_PORT` secrets.
 8. Move both `ftp-to-git-deployment.md` and this plan to
    `docs/plans/completed/` once live (per this repo's existing convention).
-9. Update the `project-deployment-migration` memory: the SSH-upgrade blocker
-   is gone, replaced by the Phase 0 hosting-migration dependency (and once
-   Phase 0 lands, that too is resolved).
+9. Update the `project-deployment-migration` memory: mark Phase 0 and
+   Phase 1 both complete, note the email migration outcome.
 
 ## What this plan deliberately doesn't do
 

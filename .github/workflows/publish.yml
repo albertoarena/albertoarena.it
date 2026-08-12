@@ -1,0 +1,91 @@
+name: 📦 Publish
+
+# Builds the site and publishes the static output to the `deploy` branch.
+# The Netsons server pulls that branch over HTTPS via a cron job
+# (scripts/server-deploy.sh), so no SSH/FTP from CI is involved. See
+# docs/plans/server-pull-deployment.md.
+#
+# Coexists with deploy.yml (the old FTP pipeline) until the server-pull
+# setup is verified live — deploy.yml gets removed once that's confirmed,
+# not before.
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+
+      # Same Rollup workaround as deploy.yml — see that file's comment.
+      # Worth testing without it once this pipeline is stable, but that's a
+      # separate change from the deploy migration itself.
+      - name: Install dependencies and fix Rollup
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install
+          npm install rollup@4.22.4 --save-dev --force
+          npm install @rollup/rollup-linux-x64-gnu --save-dev --force || true
+
+      - name: Build Astro site
+        run: npm run build
+
+      - name: Publish dist to the deploy branch
+        run: |
+          cd dist
+          git init -q
+          git checkout -q -b deploy
+          git add -A
+          git -c user.email=actions@github.com -c user.name="github-actions[bot]" \
+            commit -q -m "build: ${GITHUB_SHA}"
+          git push -q --force "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" deploy
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      # 📰 Push the latest posts into the profile README (albertoarena/albertoarena).
+      # Reads dist/rss.xml, already built above, no network call to albertoarena.it.
+      # Requires the PROFILE_README_TOKEN secret (fine-grained PAT, Contents:
+      # read/write, scoped to albertoarena/albertoarena). See
+      # docs/plans/completed/profile-readme-push.md.
+      - name: Checkout profile repo
+        uses: actions/checkout@v4
+        with:
+          repository: albertoarena/albertoarena
+          path: profile
+          token: ${{ secrets.PROFILE_README_TOKEN }}
+
+      - name: Update profile README with latest posts
+        env:
+          RSS_PATH: dist/rss.xml
+          PROFILE_README: profile/README.md
+        run: node scripts/update-profile-readme.mjs
+
+      - name: Commit and push profile README
+        working-directory: profile
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- README.md; then
+            echo "No change to profile README."
+            exit 0
+          fi
+          git add README.md
+          git commit -m "chore: update latest blog posts"
+          git push
