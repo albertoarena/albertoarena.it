@@ -1,10 +1,10 @@
 # Migration plan: server-pull deployment (supersedes the SSH/SCP plan)
 
-**Status: Phase 0 target decided (2026-08-12) — hosting migration in
-progress, deadline-driven**
-**Deadline: 2026-08-18** — the current Netsons Hosting Web 10 plan renews on
-that date; the goal is to be fully cut over before then and let it lapse to
-domain-only instead of renewing.
+**Status: Live (2026-08-12)** — DNS cutover, TLS cert, and email all
+confirmed working on the new Netsons SSD 50 account. `deploy.yml` (FTP) and
+its secrets removed same day. Remaining: cancel/downgrade the Hosting Web 10
+plan before it renews on 2026-08-18 (domain-only going forward) — that part
+is user-driven infra work, not tracked further here.
 
 ## TL;DR
 

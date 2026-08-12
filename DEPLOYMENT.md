@@ -3,11 +3,10 @@
 `albertoarena.it` deploys with a **server-pull** model: CI never connects to
 the host. CI publishes the built site to a branch, and the server pulls it
 over HTTPS. This avoids inbound-FTP flakiness (see
-`docs/plans/completed/wcag-aa-accessibility-automation.md`'s neighbor,
-`docs/plans/server-pull-deployment.md`, for the full migration writeup), and
-each pull is a clean release (no stale-file buildup, rollback is a symlink
-flip). Mirrors the same setup already proven for `trussphp.com` on the same
-Netsons account.
+`docs/plans/completed/server-pull-deployment.md` for the full migration
+writeup), and each pull is a clean release (no stale-file buildup, rollback
+is a symlink flip). Mirrors the same setup already proven for
+`trussphp.com` on the same Netsons account.
 
 ## Pipeline
 
@@ -47,7 +46,7 @@ minutes, no manual step.
 
 The script/log/cron entry names are namespaced (`albertoarena-it-`) because
 the target account already runs another project's cron-based pull deploy —
-see `docs/plans/server-pull-deployment.md`.
+see `docs/plans/completed/server-pull-deployment.md`.
 
 ## Operations
 
@@ -92,6 +91,6 @@ ln -sfn releases/<previous-ts> ~/albertoarena.it/current
 ## Notes
 
 - The server-pull needs **no secrets** (public repo, outbound HTTPS).
-- This coexists with the legacy FTP pipeline (`deploy.yml`) until this
-  setup is verified live; `deploy.yml` and the `FTP_*` secrets get removed
-  once confirmed stable over a few real deploys.
+- The legacy FTP pipeline (`deploy.yml`) and its `FTP_*` secrets were
+  removed 2026-08-12 once this setup was confirmed live — see
+  `docs/plans/completed/server-pull-deployment.md`.

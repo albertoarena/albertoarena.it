@@ -7,7 +7,7 @@
 # prunes to the newest 3 releases. The server initiates the connection
 # (outbound HTTPS), so it is not affected by inbound-FTP blocking. Safe to
 # run repeatedly from cron. Mirrors the proven laravel-truss-docs setup on
-# the same Netsons account — see docs/plans/server-pull-deployment.md.
+# the same Netsons account — see docs/plans/completed/server-pull-deployment.md.
 #
 # Usage: server-deploy.sh [BASE_DIR]
 #   BASE_DIR defaults to $HOME/albertoarena.it (the live docroot parent).
