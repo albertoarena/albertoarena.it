@@ -229,10 +229,12 @@ and tested, and DNS only moves once the destination is already proven.
 **Blocker found and resolved — email.** Checked live DNS (2026-08-12):
 
 ```
-albertoarena.it.    A     89.40.173.33        (current Hosting Web 10 IP)
+albertoarena.it.    A     <redacted>          (current Hosting Web 10 IP)
 albertoarena.it.    MX    10 mail.albertoarena.it.
-mail.albertoarena.it. A   89.40.173.33        (same server)
+mail.albertoarena.it. A   <redacted>          (same server as the A record above)
 ```
+(Actual IPs kept out of this public repo — see `.docs/` for infra-specific
+notes, per the CLAUDE.md policy on confidential deployment info.)
 
 Email for `albertoarena.it` is hosted directly on the Hosting Web 10
 account being cancelled — not a separate provider. Cancelling that hosting
@@ -259,37 +261,31 @@ non-urgent decision; this migration works identically with or without it
 (point DNS straight at the SSD 50 account's IP for the simplest path, add
 Cloudflare later if wanted).
 
-### Next action, right now: cron + `.htaccess` on the addon domain
+### Status (2026-08-12): pipeline confirmed working, pre-cutover
 
-With the addon domain already in place (docroot `~/albertoarena.it/`), this
-is what's left to do in cPanel before anything can be tested end-to-end.
-Both are copy-paste from `scripts/server-deploy.sh`/`DEPLOYMENT.md` in
-PR #23 (not yet merged, but the content is final either way):
+PR #23 merged. Cron + `.htaccess` are live on the target account — the
+existing pre-cPanel `.htaccess` (a force-HTTPS rule) had to be *merged*
+with the release-routing rule, not replaced, since it predated this setup.
+First real cron pull succeeded: `releases/<ts>/` was created with the full
+expected build output and `current` symlinked to it correctly.
 
-**1. Cron Jobs** → add a new cron job, every 5 minutes:
-```
-*/5 * * * * /bin/bash $HOME/bin/albertoarena-it-server-deploy.sh >> $HOME/albertoarena-it-server-deploy.log 2>&1
-```
-This assumes `~/bin/albertoarena-it-server-deploy.sh` exists on the host —
-upload `scripts/server-deploy.sh` there via File Manager (or `curl` it from
-the raw GitHub URL once PR #23 is merged) and `chmod +x` it first.
+**Tested directly against the target server** (IP + exact commands in the
+gitignored `.docs/server-pull-deployment-infra.md` — kept out of this
+public repo per the CLAUDE.md policy on confidential deploy info), using
+`curl --resolve` to hit it without touching real DNS:
 
-**2. File Manager** → create `~/albertoarena.it/.htaccess`:
-```apache
-Options +FollowSymLinks -Indexes
-RewriteEngine On
-RewriteRule ^releases(/.*)?$ - [F,L]
-RewriteCond %{REQUEST_URI} !^/current/
-RewriteRule ^(.*)$ current/$1 [L]
-```
+- ✅ HTTP correctly 301-redirects to HTTPS (both `.htaccess` rules firing).
+- ✅ Page content matches production exactly (title checked).
+- ❌ HTTPS itself fails right now — `SSL: no alternative certificate
+  subject name matches target host name`. The server doesn't have a valid
+  cert for `albertoarena.it` yet, almost certainly because AutoSSL/Let's
+  Encrypt needs DNS to actually point here before it can issue one.
 
-**3. Bootstrap**: trigger the cron once manually (or just wait ≤5 min) to
-create the first `releases/<ts>/` and `current` symlink from whatever's
-currently on the `deploy` branch — but note the `deploy` branch doesn't
-exist yet either (nothing has pushed to it — `publish.yml` is only on
-PR #23's branch, unmerged). So the realistic order is: merge #23 first (or
-push `scripts/server-deploy.sh` some other way), then do steps 1-3 above,
-then step 6 in Phase 1 below (trivial push to confirm the full loop).
+**Action needed at DNS-cutover time, not before**: right after switching
+the `A` record, check cPanel's **SSL/TLS Status** for `albertoarena.it` and
+manually **Run AutoSSL** if it hasn't already picked up the domain —
+otherwise the site's own force-HTTPS redirect sends every visitor into a
+broken cert for however long AutoSSL's normal schedule takes to catch up.
 
 ## Phase 1 — deploy pipeline
 

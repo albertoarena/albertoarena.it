@@ -90,6 +90,18 @@ BaseLayout (html/head/scripts)
 Use these import aliases (configured in tsconfig.json):
 - `@/*` → `./src/*`
 
+## Confidential information
+
+This repo is public. Never commit server/account IPs, cPanel usernames,
+hosting-account-identifying domains, credentials, or similar infra details
+to any tracked file (including `docs/plans/`) — not even in a plan doc's
+"here's what I found" notes. Use the gitignored `.docs/` folder instead for
+anything confidential tied to this site's engineering (e.g.
+`.docs/server-pull-deployment-infra.md`), and reference it generically
+("see `.docs/` for the actual IP") from the public docs. If something
+confidential slips into a commit, remove it from the current file — it's
+fine for it to remain in git history, no need to rewrite history for it.
+
 ## Git Commit Conventions
 
 ### Format
