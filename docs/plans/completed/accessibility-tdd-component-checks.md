@@ -1,6 +1,6 @@
 # Accessibility TDD: component-level checks
 
-**Status:** Shipped (branch `a11y-component-tdd`)
+**Status:** Merged ([PR #21](https://github.com/albertoarena/albertoarena.it/pull/21), 2026-08-12)
 **Date:** 2026-08-12
 
 ## Context
