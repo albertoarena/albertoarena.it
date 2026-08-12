@@ -22,7 +22,7 @@ Starting August 14, [auto mode becomes the default permission mode](https://clau
 
 That's not a subtle gap, and reading it made me a little uncomfortable, because I've spent most of the last few months running my own sessions in accept-edits or auto mode, clicking through permission prompts the same way everyone apparently does. Anthropic's own usage data backs that up: people approve 97% of ordinary permission prompts, and the rate at which someone actually catches a dangerous one degrades from roughly 17% early in a session to about 5% after fifty-plus prior approvals. We're not reading carefully. We're pattern-matching on "this looks like the last forty things I clicked yes on," and that pattern breaks exactly when it stops holding.
 
-| | Human review | Auto mode classifier |
+| Metric | Human review | Auto mode classifier |
 |---|---|---|
 | Dangerous commands caught (1,053-tester study) | 13.6% | 89% |
 | Production-severity unintended harm, real flagged sessions | 6.3% | 2.4% |
