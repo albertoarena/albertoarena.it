@@ -1,0 +1,33 @@
+# Docroot .htaccess for the server-pull releases/current deploy mechanism.
+#
+# NOT deployed automatically. CI only ever publishes into releases/<ts>/;
+# this file lives one level up, at the docroot root itself (e.g.
+# ~/albertoarena.it/.htaccess on Netsons), and must be placed there by hand.
+# Copy this when setting up the same releases/current pull-deploy pattern
+# on another Astro site — see DEPLOYMENT.md for the full pipeline.
+#
+# Merge the HTTPS-force block with any host-specific rules that already
+# exist on the target account (www-stripping, addon-domain quirks, etc.).
+
+Options +FollowSymLinks -Indexes
+RewriteEngine On
+
+# Force HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [L,R=301]
+
+# Block public access to releases/<ts>/ and current/ directly — visitors
+# should only ever see content through the docroot root ("/").
+#
+# %{THE_REQUEST} is the client's original raw request line and does NOT
+# change across the internal current/ rewrite below, so this only fires
+# for requests that actually target these paths (a visitor hitting
+# /current/ or /releases/<ts>/ directly). Matching on the rewritten URI
+# instead (e.g. RewriteRule ^current...) would also catch the internal
+# rewrite target below and break the homepage.
+RewriteCond %{THE_REQUEST} \s/+(current|releases)(/|\s) [NC]
+RewriteRule ^ - [F,L]
+
+# Serve everything else through the active release
+RewriteCond %{REQUEST_URI} !^/current/
+RewriteRule ^(.*)$ current/$1 [L]

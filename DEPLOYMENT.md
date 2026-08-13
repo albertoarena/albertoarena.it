@@ -41,8 +41,27 @@ minutes, no manual step.
 | Server pull script | `scripts/server-deploy.sh` (source of truth in this repo) |
 | Running copy on host | `~/bin/albertoarena-it-server-deploy.sh` (fetched from this repo) |
 | Cron (host) | `*/5 * * * * /bin/bash $HOME/bin/albertoarena-it-server-deploy.sh >> $HOME/albertoarena-it-server-deploy.log 2>&1` |
-| Docroot | `~/albertoarena.it/` with an `.htaccess` that rewrites all traffic to `current/` |
+| Docroot | `~/albertoarena.it/` with an `.htaccess` that rewrites all traffic to `current/` and blocks direct access to `current/` and `releases/<ts>/` |
+| Docroot `.htaccess` template | `scripts/docroot.htaccess` (source of truth in this repo; **not** auto-deployed — see below) |
 | Releases + symlink | `~/albertoarena.it/releases/<ts>/`, `~/albertoarena.it/current` |
+
+### Docroot `.htaccess` is hand-maintained
+
+Unlike everything else in this table, the docroot `.htaccess` is **not**
+part of the build or the pull-deploy pipeline — CI only ever publishes into
+`releases/<ts>/`, one level below the docroot. `scripts/docroot.htaccess`
+in this repo is the source of truth; changes to it must be copied to
+`~/albertoarena.it/.htaccess` on the host by hand (cPanel File Manager or
+SSH) and merged with any host-specific rules already there.
+
+It does two things: rewrites all traffic through the active `current/`
+release, and returns 403 for direct requests to `current/` or
+`releases/<ts>/` (those should never be reachable — only the docroot root
+is a public URL). The block rule matches on `%{THE_REQUEST}`, not the
+rewritten URI, so it doesn't also catch — and break — the internal rewrite
+to `current/`. See the comments in `scripts/docroot.htaccess` for the
+full explanation; reuse that file as-is when setting up the same
+releases/current mechanism on another Astro site.
 
 The script/log/cron entry names are namespaced (`albertoarena-it-`) because
 the target account already runs another project's cron-based pull deploy —
