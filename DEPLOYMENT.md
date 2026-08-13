@@ -41,27 +41,44 @@ minutes, no manual step.
 | Server pull script | `scripts/server-deploy.sh` (source of truth in this repo) |
 | Running copy on host | `~/bin/albertoarena-it-server-deploy.sh` (fetched from this repo) |
 | Cron (host) | `*/5 * * * * /bin/bash $HOME/bin/albertoarena-it-server-deploy.sh >> $HOME/albertoarena-it-server-deploy.log 2>&1` |
-| Docroot | `~/albertoarena.it/` with an `.htaccess` that rewrites all traffic to `current/` and blocks direct access to `current/` and `releases/<ts>/` |
+| Docroot | `~/albertoarena.it/` with an `.htaccess` that rewrites all traffic to `current/` |
 | Docroot `.htaccess` template | `scripts/docroot.htaccess` (source of truth in this repo; **not** auto-deployed — see below) |
 | Releases + symlink | `~/albertoarena.it/releases/<ts>/`, `~/albertoarena.it/current` |
+| Block direct `current/`/`releases/<ts>/` access | `public/.htaccess` → deployed into every release automatically (see below) |
 
-### Docroot `.htaccess` is hand-maintained
+### Docroot `.htaccess` is hand-maintained, and doesn't reliably run custom rules
 
-Unlike everything else in this table, the docroot `.htaccess` is **not**
-part of the build or the pull-deploy pipeline — CI only ever publishes into
-`releases/<ts>/`, one level below the docroot. `scripts/docroot.htaccess`
-in this repo is the source of truth; changes to it must be copied to
-`~/albertoarena.it/.htaccess` on the host by hand (cPanel File Manager or
-SSH) and merged with any host-specific rules already there.
+The docroot `.htaccess` is **not** part of the build or the pull-deploy
+pipeline — CI only ever publishes into `releases/<ts>/`, one level below
+the docroot. `scripts/docroot.htaccess` in this repo mirrors it; changes
+must be copied to `~/albertoarena.it/.htaccess` on the host by hand (cPanel
+File Manager or SSH).
 
-It does two things: rewrites all traffic through the active `current/`
-release, and returns 403 for direct requests to `current/` or
-`releases/<ts>/` (those should never be reachable — only the docroot root
-is a public URL). The block rule matches on `%{THE_REQUEST}`, not the
-rewritten URI, so it doesn't also catch — and break — the internal rewrite
-to `current/`. See the comments in `scripts/docroot.htaccess` for the
-full explanation; reuse that file as-is when setting up the same
-releases/current mechanism on another Astro site.
+Its "Force HTTPS" block is owned by cPanel's own **Domains → Redirects**
+feature (recognizable by its quoted, backslash-escaped destination) — leave
+it alone, it's managed outside this repo. **Custom `RewriteRule`s added
+elsewhere in this same file were tested extensively (2026-08-13) and never
+fired for any of several independent conditions/patterns**, while the
+cPanel-owned rule fired immediately — so something about this account's
+`AllowOverride` scope or cPanel's management of the file prevents
+hand-added rules here from taking effect reliably. Don't rely on this file
+for anything beyond what cPanel itself manages.
+
+### Blocking direct access to `current/`/`releases/<ts>/`
+
+Because the docroot `.htaccess` can't be trusted for custom rules, this is
+instead handled in `public/.htaccess` — a file this repo already controls
+and that ships into every release automatically via the normal build/pull
+pipeline, no server-side hand-editing required. It redirects (301) any
+direct hit on `current/...` or `releases/<ts>/...` to the equivalent
+canonical `https://albertoarena.it/...` URL, using `%{THE_REQUEST}` (the
+client's original request line, unaffected by the docroot's internal
+`current/` rewrite) to distinguish a direct hit from a normal page view
+that was internally routed through `current/`. See the comments in
+`public/.htaccess` for the full explanation. Reuse the same technique,
+relocated to whatever the equivalent auto-deployed `.htaccess` is, when
+setting up this releases/current mechanism on another Astro site — don't
+depend on a hand-maintained docroot `.htaccess` for it.
 
 The script/log/cron entry names are namespaced (`albertoarena-it-`) because
 the target account already runs another project's cron-based pull deploy —

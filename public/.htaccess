@@ -1,6 +1,18 @@
 # Canonicalize host: force https://albertoarena.it (no www, https only)
 RewriteEngine On
 
+# Redirect direct access to the deploy plumbing (current/, releases/<ts>/)
+# to the equivalent canonical URL instead of serving it. This file is
+# deployed identically into every release, so it applies whether reached via
+# releases/<ts>/.htaccess directly or via the current/ symlink.
+#
+# %{THE_REQUEST} is the client's original request line, unaffected by the
+# docroot .htaccess's internal current/ rewrite, so this only matches
+# requests that actually target current/ or releases/<ts>/ directly — not
+# the internally-rewritten request for a normal page view.
+RewriteCond %{THE_REQUEST} \s/+(current|releases)(/|\?|\s) [NC]
+RewriteRule ^(.*)$ https://albertoarena.it/$1 [R=301,L]
+
 # Collapse host+scheme+trailing-slash normalization into a single 301
 # (avoids a 2-hop chain for e.g. http://www.albertoarena.it/category/react)
 RewriteCond %{HTTP_HOST} ^www\.albertoarena\.it$ [NC,OR]

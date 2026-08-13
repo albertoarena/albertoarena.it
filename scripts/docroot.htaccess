@@ -5,35 +5,36 @@
 # ~/albertoarena.it/.htaccess on Netsons), and must be placed there by hand.
 # This copy mirrors the live file — verify against the host after editing.
 #
+# The "Force HTTPS" block below is owned by cPanel's own Domains > Redirects
+# feature, not hand-authored — don't touch it, manage HTTPS forcing through
+# cPanel's UI instead. Custom RewriteRules added elsewhere in this file were
+# tested extensively (2026-08-13, several independent conditions/patterns)
+# and never took effect, while the cPanel-owned rule fired immediately — so
+# this file cannot be trusted for anything beyond what cPanel itself
+# manages. See DEPLOYMENT.md. Blocking current/releases/<ts>/ is instead
+# handled in public/.htaccess (deployed automatically into every release,
+# not requiring any hand-editing on the host) — see the comments there.
+#
 # Reusing on another Astro site with the same releases/current mechanism:
 # swap the hardcoded domain in the Force HTTPS block for the target site's,
-# keep everything else as-is.
+# keep everything else as-is, and put any custom rewrite logic in the
+# release-level .htaccess (this project's public/.htaccess), not here.
 
 Options +FollowSymLinks -Indexes
 
 RewriteEngine on
 
-# Force HTTPS (pre-existing rule, kept as-is). Checks X-Forwarded-SSL
-# alongside HTTPS because SSL may be terminated upstream of Apache on this
-# host, and collapses www + wrong-scheme + wrong-host into one 301 straight
-# to the canonical https://albertoarena.it/$1 instead of a redirect chain.
+# Force HTTPS — owned by cPanel's Domains > Redirects feature, kept as-is
 RewriteCond %{HTTPS} off
 RewriteCond %{HTTP:X-Forwarded-SSL} !on
 RewriteCond %{HTTP_HOST} ^albertoarena\.it$ [OR]
 RewriteCond %{HTTP_HOST} ^www\.albertoarena\.it$
 RewriteRule ^(.*)$ "https\:\/\/albertoarena\.it\/$1" [R=301,L]
 
-# Block direct access to current/. Matched against the client's original
-# request line (%{THE_REQUEST}), not the rewritten URI — matching on the
-# rewritten URI instead (e.g. RewriteRule ^current...) would also catch the
-# internal "current/$1" rewrite two rules down and break the homepage,
-# since mod_rewrite restarts matching from the top after that rewrite.
-RewriteCond %{THE_REQUEST} \s/+current(/|\?|\s) [NC]
-RewriteRule ^ - [F,L]
-
 # Route everything to the active release; block direct access to releases/
-# (safe to pattern-match here — the internal rewrite target is always
-# "current/...", never "releases/...", so this can't fire on it)
+# (kept from the original setup — untested whether it actually fires, given
+# the findings above, but harmless either way since public/.htaccess is the
+# real enforcement mechanism now)
 RewriteRule ^releases(/.*)?$ - [F,L]
 RewriteCond %{REQUEST_URI} !^/current/
 RewriteRule ^(.*)$ current/$1 [L]
