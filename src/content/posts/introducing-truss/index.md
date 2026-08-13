@@ -10,7 +10,7 @@ tags:
   - "Laravel"
   - "Developer Tools"
   - "Database"
-description: "A live, zoomable ER diagram of your Laravel app's actual database schema, safe to run in production because it only ever reads structure, never rows."
+description: "A live, zoomable ER diagram of your Laravel app's actual database schema, safe to run in production. Structure only, never data."
 socialImage: "/images/posts/introducing-truss/cover.jpg"
 coverAlt: "A steel truss lattice shot from below against a bright sky"
 pinned: true
