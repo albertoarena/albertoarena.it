@@ -3,31 +3,37 @@
 # NOT deployed automatically. CI only ever publishes into releases/<ts>/;
 # this file lives one level up, at the docroot root itself (e.g.
 # ~/albertoarena.it/.htaccess on Netsons), and must be placed there by hand.
-# Copy this when setting up the same releases/current pull-deploy pattern
-# on another Astro site — see DEPLOYMENT.md for the full pipeline.
+# This copy mirrors the live file — verify against the host after editing.
 #
-# Merge the HTTPS-force block with any host-specific rules that already
-# exist on the target account (www-stripping, addon-domain quirks, etc.).
+# Reusing on another Astro site with the same releases/current mechanism:
+# swap the hardcoded domain in the Force HTTPS block for the target site's,
+# keep everything else as-is.
 
 Options +FollowSymLinks -Indexes
-RewriteEngine On
 
-# Force HTTPS
+RewriteEngine on
+
+# Force HTTPS (pre-existing rule, kept as-is). Checks X-Forwarded-SSL
+# alongside HTTPS because SSL may be terminated upstream of Apache on this
+# host, and collapses www + wrong-scheme + wrong-host into one 301 straight
+# to the canonical https://albertoarena.it/$1 instead of a redirect chain.
 RewriteCond %{HTTPS} off
-RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [L,R=301]
+RewriteCond %{HTTP:X-Forwarded-SSL} !on
+RewriteCond %{HTTP_HOST} ^albertoarena\.it$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.albertoarena\.it$
+RewriteRule ^(.*)$ "https\:\/\/albertoarena\.it\/$1" [R=301,L]
 
-# Block public access to releases/<ts>/ and current/ directly — visitors
-# should only ever see content through the docroot root ("/").
-#
-# %{THE_REQUEST} is the client's original raw request line and does NOT
-# change across the internal current/ rewrite below, so this only fires
-# for requests that actually target these paths (a visitor hitting
-# /current/ or /releases/<ts>/ directly). Matching on the rewritten URI
-# instead (e.g. RewriteRule ^current...) would also catch the internal
-# rewrite target below and break the homepage.
-RewriteCond %{THE_REQUEST} \s/+(current|releases)(/|\s) [NC]
+# Block direct access to current/. Matched against the client's original
+# request line (%{THE_REQUEST}), not the rewritten URI — matching on the
+# rewritten URI instead (e.g. RewriteRule ^current...) would also catch the
+# internal "current/$1" rewrite two rules down and break the homepage,
+# since mod_rewrite restarts matching from the top after that rewrite.
+RewriteCond %{THE_REQUEST} \s/+current(/|\?|\s) [NC]
 RewriteRule ^ - [F,L]
 
-# Serve everything else through the active release
+# Route everything to the active release; block direct access to releases/
+# (safe to pattern-match here — the internal rewrite target is always
+# "current/...", never "releases/...", so this can't fire on it)
+RewriteRule ^releases(/.*)?$ - [F,L]
 RewriteCond %{REQUEST_URI} !^/current/
 RewriteRule ^(.*)$ current/$1 [L]
