@@ -21,7 +21,7 @@ export const projects: Project[] = [
   {
     name: 'Truss',
     description:
-      'Live, zoomable ER diagram viewer for Laravel. Scans your actual database schema, not migration files, and renders it in-app with Mermaid, safe to run in production since it only reads structure, never rows.',
+      'Live, zoomable ER diagram viewer for Laravel. Scans your actual database schema, not migration files, and renders it in-app with Mermaid, safe to run in production. Structure only, never data.',
     tech: ['Laravel', 'PHP', 'Database', 'Mermaid'],
     github: 'https://github.com/albertoarena/laravel-truss',
     url: 'https://trussphp.com/',
