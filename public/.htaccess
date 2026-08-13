@@ -27,7 +27,13 @@ RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://albertoarena.it/$1 [L,R=301]
 
 # Custom error pages
-ErrorDocument 404 /404.html
+#
+# The local-path argument is resolved against the docroot, not this file's
+# own directory — and the docroot has no 404.html of its own (it only
+# exists inside current/, i.e. releases/<ts>/), so this must point through
+# current/ explicitly or Apache silently falls back to its own default
+# error page (found live 2026-08-13: bare /404.html never resolved).
+ErrorDocument 404 /current/404.html
 
 # MIME types
 AddType application/xml .xml
