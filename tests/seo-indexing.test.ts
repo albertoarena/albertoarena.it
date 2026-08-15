@@ -63,9 +63,13 @@ describe('noindex does not leak onto real content', () => {
 });
 
 describe('robots.txt allows crawling of tag/category/pagination paths', () => {
-  it('has no Disallow rules', () => {
+  it('the User-agent: * group has no Disallow rules', () => {
+    // Other groups (e.g. specific bot user-agents blocked at the host level)
+    // may carry their own Disallow lines — see the WAF-block group below.
     const robotsTxt = readFileSync(join('public', 'robots.txt'), 'utf-8');
-    expect(robotsTxt).not.toMatch(/Disallow:[^\n\S]*\S/);
+    const wildcardGroup = robotsTxt.split(/\n\s*\n/).find((group) => /^User-agent:\s*\*\s*$/m.test(group));
+    expect(wildcardGroup).toBeDefined();
+    expect(wildcardGroup).not.toMatch(/Disallow:[^\n\S]*\S/);
   });
 
   it('still points to the sitemap', () => {

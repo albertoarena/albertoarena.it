@@ -2,4 +2,11 @@ User-agent: *
 Disallow:
 Crawl-delay: 1
 
+# The three rules below reflect a host-level WAF block on the hosting
+# provider's side, not a site preference — see .well-known/ai.txt.
+User-agent: ClaudeBot
+User-agent: Amazonbot
+User-agent: Bytespider
+Disallow: /
+
 Sitemap: https://albertoarena.it/sitemap-index.xml
