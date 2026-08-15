@@ -54,6 +54,31 @@ describe('robots.txt Crawl-delay', () => {
   });
 });
 
+describe('robots.txt / ai.txt blocked-agent consistency', () => {
+  it('every agent disallowed in robots.txt is named in ai.txt, and vice versa', () => {
+    const robotsTxt = readFileSync(join('public', 'robots.txt'), 'utf-8');
+    const aiTxt = readFileSync(join('public', '.well-known', 'ai.txt'), 'utf-8');
+
+    const disallowedAgents = [...robotsTxt.matchAll(/^User-agent:\s*(\S+)$/gm)]
+      .map((m) => m[1])
+      .filter((agent) => agent !== '*');
+
+    expect(disallowedAgents.length).toBeGreaterThan(0);
+
+    for (const agent of disallowedAgents) {
+      expect(aiTxt).toContain(agent);
+    }
+
+    const aiTxtAgentLine = aiTxt.match(/training crawlers \(([^)]+)\)/);
+    expect(aiTxtAgentLine).not.toBeNull();
+    const namedInAiTxt = aiTxtAgentLine![1].split(',').map((s) => s.trim());
+
+    for (const agent of namedInAiTxt) {
+      expect(disallowedAgents).toContain(agent);
+    }
+  });
+});
+
 describe('no dead manifest link', () => {
   it('the homepage does not link a manifest.webmanifest that does not exist', () => {
     const html = readDist(join('index.html'));
