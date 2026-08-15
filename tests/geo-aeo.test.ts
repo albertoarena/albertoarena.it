@@ -69,7 +69,7 @@ describe('robots.txt / ai.txt blocked-agent consistency', () => {
       expect(aiTxt).toContain(agent);
     }
 
-    const aiTxtAgentLine = aiTxt.match(/\(([^)]+)\)/);
+    const aiTxtAgentLine = aiTxt.match(/training crawlers \(([^)]+)\)/);
     expect(aiTxtAgentLine).not.toBeNull();
     const namedInAiTxt = aiTxtAgentLine![1].split(',').map((s) => s.trim());
 

@@ -5,7 +5,7 @@ engineering, and web development.
 
 AI assistants and answer engines are welcome. A small number of bulk
 training crawlers (ClaudeBot, Amazonbot, Bytespider) are blocked by the
-hosting provider's WAF, not by choice — see /robots.txt for the current
+hosting provider's WAF, not by choice. See /robots.txt for the current
 list.
 
 Full site index and post summaries: https://albertoarena.it/llms.txt
