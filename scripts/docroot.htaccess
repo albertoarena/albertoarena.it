@@ -36,5 +36,12 @@ RewriteRule ^(.*)$ "https\:\/\/albertoarena\.it\/$1" [R=301,L]
 # the findings above, but harmless either way since public/.htaccess is the
 # real enforcement mechanism now)
 RewriteRule ^releases(/.*)?$ - [F,L]
+
+# Defence in depth for the now-removed .deploy-src working clone (see
+# server-deploy.sh) — it used to live in the docroot and was served over
+# HTTP as a full duplicate site. Per the findings above, custom rules in
+# this file are not reliable on this host, so this does not stand alone;
+# the actual fix is that .deploy-src no longer exists inside the docroot.
+RewriteRule ^\.deploy-src(/.*)?$ - [F,L]
 RewriteCond %{REQUEST_URI} !^/current/
 RewriteRule ^(.*)$ current/$1 [L]

@@ -22,10 +22,24 @@ export PATH="/usr/local/cpanel/3rdparty/lib/path-bin:/usr/local/bin:/usr/bin:/bi
 BASE="${1:-$HOME/albertoarena.it}"
 REPO="https://github.com/albertoarena/albertoarena.it.git"
 BRANCH="deploy"
-SRC="$BASE/.deploy-src"
-STAMP="$BASE/.deployed-sha"
+# Working state lives OUTSIDE the docroot, deliberately. It used to sit at
+# $BASE/.deploy-src, which was reachable over HTTP and served a complete
+# second copy of the site. The docroot rewrite that routes traffic into
+# current/ does not catch it, and a dot prefix is not protection.
+STATE="$HOME/.albertoarena-deploy"
+SRC="$STATE/src"
+STAMP="$STATE/deployed-sha"
 
-mkdir -p "$BASE"
+mkdir -p "$BASE" "$STATE"
+
+# One-off migration from the previous in-docroot location.
+if [ -d "$BASE/.deploy-src" ]; then
+  echo "removing web-reachable $BASE/.deploy-src (state now lives in $STATE)"
+  rm -rf "${BASE:?}/.deploy-src"
+fi
+if [ -f "$BASE/.deployed-sha" ] && [ ! -f "$STAMP" ]; then
+  mv "$BASE/.deployed-sha" "$STAMP"
+fi
 
 # Keep a shallow single-branch mirror of the deploy branch. --force on fetch
 # so a force-pushed (rewritten) deploy branch always updates cleanly.

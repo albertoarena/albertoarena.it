@@ -6,6 +6,13 @@ its secrets removed same day. Remaining: cancel/downgrade the Hosting Web 10
 plan before it renews on 2026-08-18 (domain-only going forward) — that part
 is user-driven infra work, not tracked further here.
 
+**Addendum (2026-08-16):** the `SRC="$BASE/.deploy-src"` layout below put
+the working git clone inside the docroot, where it was reachable over HTTP
+and served a full duplicate of the site. `server-deploy.sh` now keeps that
+state at `~/.albertoarena-deploy/`, outside the docroot — see
+`DEPLOYMENT.md`. The code block below is left as originally written for the
+historical record; don't copy the `SRC`/`STAMP` lines from it verbatim.
+
 ## TL;DR
 
 `docs/plans/ftp-to-git-deployment.md` designed an SSH/SCP + symlink release
