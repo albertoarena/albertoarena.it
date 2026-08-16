@@ -45,6 +45,19 @@ minutes, no manual step.
 | Docroot `.htaccess` template | `scripts/docroot.htaccess` (source of truth in this repo; **not** auto-deployed — see below) |
 | Releases + symlink | `~/albertoarena.it/releases/<ts>/`, `~/albertoarena.it/current` |
 | Block direct `current/`/`releases/<ts>/` access | `public/.htaccess` → deployed into every release automatically (see below) |
+| Working git clone (deploy state) | `~/.albertoarena-deploy/` — **outside** the docroot, not web-reachable |
+
+### Deploy state lives outside the docroot
+
+`server-deploy.sh`'s working git clone and SHA stamp used to live at
+`~/albertoarena.it/.deploy-src` — inside the docroot. That path was
+reachable over HTTP and served a complete second copy of the site: the
+docroot rewrite that routes traffic into `current/` doesn't catch it, and a
+dot prefix isn't protection (found live 2026-08-16, on a sibling site
+copying this same pattern). State now lives at `~/.albertoarena-deploy/`,
+outside the docroot entirely, so there's no path that can serve it
+regardless of `.htaccess` behavior. Don't move it back into the docroot
+when reusing this pattern elsewhere.
 
 ### Docroot `.htaccess` is hand-maintained, and doesn't reliably run custom rules
 
@@ -121,7 +134,7 @@ ln -sfn releases/<previous-ts> ~/albertoarena.it/current
 - `git: command not found` in cron is a PATH issue; the script prepends the
   host's git path. Adjust the `export PATH=...` line if git lives elsewhere.
 - Verify live: `curl -sI https://albertoarena.it/` for a `200`, or check
-  `~/.deployed-sha` under the docroot against the latest `deploy` branch
+  `~/.albertoarena-deploy/deployed-sha` against the latest `deploy` branch
   commit on GitHub.
 
 ## Notes
