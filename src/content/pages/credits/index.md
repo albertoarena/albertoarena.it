@@ -46,6 +46,7 @@ Cover images for some posts are sourced from **[Unsplash](https://unsplash.com)*
 | [I gave my schema viewer your app's colours](/posts/gave-my-schema-viewer-your-app-colours/) | Pantone colour swatches fanned out in a circle on a concrete surface | [Annie Spratt](https://unsplash.com/@anniespratt) on Unsplash |
 | [I built a Laravel event-sourcing generator, then the AI version](/posts/generator-vs-ai-skill/) | A dirt path forking in two through a green forest | [Jens Lelie](https://unsplash.com/@madebyjens) on Unsplash |
 | [Claude Code Auto Mode: What Still Needs a Human](/posts/claude-code-auto-mode-still-needs-a-human/) | A red-and-white boom barrier gate lowered across a road, blocking a waiting car | [Mauro Sbicego](https://unsplash.com/@maurosbicego) on Unsplash |
+| [Context Engineering: The Discipline That Keeps AI From Writing Slop](/posts/context-engineering-not-slop/) | Top-down flat lay of an architectural blueprint, ruler, pens, and an orange set square on a wooden desk | [Toby Wong](https://unsplash.com/@hitobywong) on Unsplash |
 | 404 page | A red and white road sign reading WRONG WAY | [Julian Gentile](https://unsplash.com/@juliangentile) on Unsplash |
 
 ## Diagrams
