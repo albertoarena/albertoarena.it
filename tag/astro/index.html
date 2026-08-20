@@ -1,0 +1,122 @@
+<!DOCTYPE html><html lang="en" class="light"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="canonical" href="https://albertoarena.it/tag/astro/"><meta name="robots" content="noindex,follow"><link rel="sitemap" href="/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="A blog by Alberto Arena" href="/rss.xml"><!-- Preload the body serif and the mono weight actually used at first paint --><link rel="preload" as="font" type="font/woff2" href="/_astro/source-serif-4-latin-wght-normal.D9elroTD.woff2" crossorigin="anonymous"><link rel="preload" as="font" type="font/woff2" href="/_astro/ibm-plex-mono-latin-400-normal.DMJ8VG8y.woff2" crossorigin="anonymous"><title>Tag: Astro</title><meta name="description" content="Senior Software Engineer."><meta name="author" content="Alberto Arena"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://albertoarena.it/tag/astro/"><meta property="og:title" content="Tag: Astro"><meta property="og:description" content="Senior Software Engineer."><meta property="og:image" content="https://albertoarena.it/photo.jpg"><meta property="og:site_name" content="A blog by Alberto Arena"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:url" content="https://albertoarena.it/tag/astro/"><meta name="twitter:title" content="Tag: Astro"><meta name="twitter:description" content="Senior Software Engineer."><meta name="twitter:image" content="https://albertoarena.it/photo.jpg"><meta name="twitter:creator" content="@alberto_arena"><!-- Structured data --><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://albertoarena.it/#person","name":"Alberto Arena","url":"https://albertoarena.it/pages/about/","image":"https://albertoarena.it/photo.jpg","jobTitle":"Senior Software Engineer","sameAs":["https://x.com/alberto_arena","https://www.linkedin.com/in/alberto-arena-ba44a624/","https://github.com/albertoarena","https://www.youtube.com/@AlbertoArenaDev"]},{"@type":"WebSite","@id":"https://albertoarena.it/#website","name":"A blog by Alberto Arena","url":"https://albertoarena.it","publisher":{"@id":"https://albertoarena.it/#person"}}]}</script><!-- Theme color, kept in sync with the --accent token per theme --><meta name="theme-color" content="#0b5fd0"><!-- Theme script (prevent flash) --><script>
+      const THEME_COLOR = { light: '#0b5fd0', dark: '#5eb3ff' };
+
+      function setThemeColorMeta(theme) {
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', THEME_COLOR[theme]);
+      }
+
+      function applyTheme() {
+        const theme = (() => {
+          if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+            return localStorage.getItem('theme');
+          }
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
+          }
+          return 'light';
+        })();
+
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+        } else {
+          document.documentElement.classList.add('light');
+          document.documentElement.classList.remove('dark');
+        }
+        setThemeColorMeta(theme);
+      }
+
+      // Apply theme immediately
+      applyTheme();
+
+      // Re-apply after View Transitions swap
+      document.addEventListener('astro:after-swap', applyTheme);
+
+      // Also handle before swap to prevent flash
+      document.addEventListener('astro:before-swap', (event) => {
+        const theme = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        event.newDocument.documentElement.classList.toggle('dark', theme === 'dark');
+        event.newDocument.documentElement.classList.toggle('light', theme === 'light');
+      });
+
+      // Reflect an in-page toggle click immediately, no swap involved
+      document.addEventListener('theme-changed', (event) => setThemeColorMeta(event.detail.theme));
+    </script><!-- Reading mode script (prevent flash, post pages only) --><script>
+      function applyReadingMode() {
+        const onPost = location.pathname.startsWith('/posts/');
+        if (onPost && localStorage.getItem('reading-mode') === '1') {
+          document.documentElement.setAttribute('data-reading', '');
+        } else {
+          document.documentElement.removeAttribute('data-reading');
+        }
+      }
+
+      // Apply immediately
+      applyReadingMode();
+
+      // Re-apply after View Transitions swap
+      document.addEventListener('astro:after-swap', applyReadingMode);
+
+      // Also handle before swap to prevent flash
+      document.addEventListener('astro:before-swap', (event) => {
+        const onPost = event.to.pathname.startsWith('/posts/');
+        const on = onPost && localStorage.getItem('reading-mode') === '1';
+        event.newDocument.documentElement.toggleAttribute('data-reading', on);
+      });
+    </script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CDGfc0hd.js"></script><!-- Google Consent Mode v2 defaults --><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      // Restore prior consent immediately so returning users aren't blocked
+      var _priorConsent = localStorage.getItem('cookieConsent');
+      gtag('consent', 'default', {
+        analytics_storage: _priorConsent === 'accepted' ? 'granted' : 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        wait_for_update: _priorConsent ? 0 : 500,
+      });
+    </script><!-- Google Tag Manager --><script>(function(){const gtmId = "GTM-PDQBJBL3";
+
+      if (gtmId && !window._gtmLoaded) {
+        window._gtmLoaded = true;
+        (function(w,d,s,l,i){
+          w[l]=w[l]||[];
+          w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+          var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s), dl=l!='dataLayer'?'&l='+l:'';
+          j.async=true;
+          j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+          f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer',gtmId);
+
+        // Push page_view on each SPA navigation (View Transitions) — registered once
+        document.addEventListener('astro:after-swap', function() {
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            event: 'page_view',
+            page_location: window.location.href,
+            page_path: window.location.pathname,
+            page_title: document.title,
+          });
+        });
+      }
+    })();</script><link rel="stylesheet" href="/_astro/index.CL4KpOtD.css"></head> <body class="min-h-screen"> <!-- Google Tag Manager (noscript) --> <noscript> <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PDQBJBL3" height="0" width="0" style="display:none;visibility:hidden"></iframe> </noscript> <a href="#main-content" class="skip-to-content">Skip to content</a>   <div class="min-[900px]:grid min-[900px]:grid-cols-[14rem_minmax(0,1fr)] max-w-[82rem] mx-auto"> <aside class="border-b min-[900px]:border-b-0 min-[900px]:border-r border-rule
+    flex flex-row min-[900px]:flex-col flex-wrap min-[900px]:flex-nowrap
+    items-start gap-x-7 gap-y-3 min-[900px]:gap-y-6
+    px-5 py-5 min-[900px]:pl-5 min-[900px]:pr-6 min-[900px]:pt-9 min-[900px]:pb-8
+    min-[900px]:sticky min-[900px]:top-0 min-[900px]:self-start
+    min-[900px]:h-screen min-[900px]:w-56 min-[900px]:shrink-0
+    print:hidden"> <div class="w-full min-[900px]:w-auto"> <a href="/" class="font-sans font-semibold text-base leading-tight tracking-tight text-ink dark:text-white hover:text-accent transition-colors"> Alberto Arena </a> <div class="font-mono text-[0.6875rem] uppercase tracking-[0.11em] text-muted mt-1.5"> Senior Software Engineer </div> </div> <nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Reading"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> read </div> <a href="/writing/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>writing </a><a href="/series/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>series </a><a href="/cheatsheets/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>cheatsheets </a> </nav><nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Projects"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> build </div> <a href="https://trussphp.com/" target="_blank" rel="noopener noreferrer" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>truss </a><a href="/projects/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>projects </a><a href="https://www.youtube.com/@AlbertoArenaDev" target="_blank" rel="noopener noreferrer" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>videos </a> </nav><nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Work with me"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> work </div> <a href="/pages/consulting/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>consulting </a><a href="/subscribe/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>subscribe </a><a href="/pages/about/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>about </a> </nav> <div class="w-full min-[900px]:w-auto min-[900px]:mt-auto font-mono text-[0.6875rem] leading-relaxed text-muted flex flex-col gap-1"> <span>Sicily, Italy</span> <span class="flex items-center gap-1.5"> <span class="inline-block w-[0.45rem] h-[0.45rem] rounded-full bg-ok shrink-0" aria-hidden="true"></span>
+Available for freelance
+</span>  </div> </aside> <div class="min-w-0 min-[900px]:col-start-2"> <div class="flex justify-end px-6 pt-6 min-[900px]:px-8 min-[900px]:pt-8"> <button data-theme-toggle type="button" class="p-2 text-muted hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent" aria-label="Toggle dark mode"> <!-- Sun icon (shown in dark mode to switch to light) --> <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path> </svg> <!-- Moon icon (shown in light mode to switch to dark) --> <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path> </svg> </button> <script type="module">function t(){const e=document.documentElement.classList.contains("dark"),c=e?"light":"dark";e?(document.documentElement.classList.remove("dark"),document.documentElement.classList.add("light"),localStorage.setItem("theme","light")):(document.documentElement.classList.add("dark"),document.documentElement.classList.remove("light"),localStorage.setItem("theme","dark")),document.dispatchEvent(new CustomEvent("theme-changed",{detail:{theme:c}}))}function n(){document.querySelectorAll("[data-theme-toggle]").forEach(e=>{e.removeEventListener("click",t),e.addEventListener("click",t)})}n();document.addEventListener("astro:after-swap",n);</script> </div> <main id="main-content" class="max-w-3xl mx-auto px-6 pb-12 animate-fade-in">  <h1 class="font-sans text-3xl font-bold text-ink dark:text-white mb-3">
+#Astro </h1> <p class="text-ink-2 mb-10"> 1 post with this tag.
+</p> <ul class="border-t border-rule"> <li class="grid grid-cols-1 min-[640px]:grid-cols-[6.5rem_minmax(0,1fr)_auto] gap-x-4 gap-y-0.5 items-baseline py-3 border-b border-rule-soft"> <time datetime="2025-02-07T12:00:00.000Z" class="font-mono text-xs text-muted whitespace-nowrap"> Feb 7, 2025 </time> <a href="/posts/moving-from-gatsby-to-astro/" class="group min-w-0"> <span class="font-sans text-base font-medium text-ink dark:text-white group-hover:text-accent transition-colors"> Moving from Gatsby to Astro </span>  </a> <span class="font-mono text-xs text-muted whitespace-nowrap"> Static Websites · 2 min read </span> </li> </ul>  </main> <footer class="site-footer border-t border-rule mt-20 py-8"> <div class="max-w-3xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted"> <span>© 2026 Alberto Arena</span> <div class="flex items-center gap-4"> <a href="/pages/privacy-policy/" class="hover:text-accent transition-colors">Privacy Policy</a> <span aria-hidden="true">·</span> <a href="/pages/credits/" class="hover:text-accent transition-colors">Credits</a> <span aria-hidden="true">·</span> <a href="/rss.xml" class="hover:text-accent transition-colors">RSS</a> <span aria-hidden="true">·</span> <a href="https://www.youtube.com/@AlbertoArenaDev" class="hover:text-accent transition-colors">YouTube</a> </div> </div> </footer> </div> </div> <div id="cookie-consent" class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-paper border-t border-rule shadow-lg" role="dialog" aria-labelledby="cookie-consent-title" aria-describedby="cookie-consent-description"> <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"> <div class="text-sm text-ink dark:text-white"> <p id="cookie-consent-title" class="font-semibold mb-1">We use cookies</p> <p id="cookie-consent-description" class="text-ink-2">
+We use analytics cookies to understand how you use this site and improve your experience.
+        No advertising or profiling cookies are used.
+<a href="/pages/privacy-policy/" class="underline hover:text-accent transition-colors ml-1">Privacy Policy</a> </p> </div> <div class="flex gap-3 flex-shrink-0"> <button id="decline-cookies" class="px-4 py-2 text-sm text-muted hover:text-ink dark:hover:text-white transition-colors" aria-label="Decline analytics cookies">
+Decline
+</button> <button id="accept-cookies" class="px-4 py-2 text-sm bg-accent text-white hover:bg-accent/90 transition-colors" aria-label="Accept analytics cookies">
+Accept analytics
+</button> </div> </div> </div> <script type="module">function n(...e){window.dataLayer=window.dataLayer||[],window.dataLayer.push(e)}function o(){const e=localStorage.getItem("cookieConsent"),t=document.getElementById("cookie-consent");if(e){t?.remove(),e==="accepted"&&n("consent","update",{analytics_storage:"granted"});return}document.getElementById("accept-cookies")?.addEventListener("click",()=>{n("consent","update",{analytics_storage:"granted"}),localStorage.setItem("cookieConsent","accepted"),t?.remove()}),document.getElementById("decline-cookies")?.addEventListener("click",()=>{n("consent","update",{analytics_storage:"denied"}),localStorage.setItem("cookieConsent","declined"),t?.remove()})}o();document.addEventListener("astro:after-swap",o);</script>  </body></html>

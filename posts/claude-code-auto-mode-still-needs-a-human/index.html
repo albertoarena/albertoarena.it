@@ -1,0 +1,313 @@
+<!DOCTYPE html><html lang="en" class="light"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="canonical" href="https://albertoarena.it/posts/claude-code-auto-mode-still-needs-a-human/"><link rel="sitemap" href="/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="A blog by Alberto Arena" href="/rss.xml"><!-- Preload the body serif and the mono weight actually used at first paint --><link rel="preload" as="font" type="font/woff2" href="/_astro/source-serif-4-latin-wght-normal.D9elroTD.woff2" crossorigin="anonymous"><link rel="preload" as="font" type="font/woff2" href="/_astro/ibm-plex-mono-latin-400-normal.DMJ8VG8y.woff2" crossorigin="anonymous"><title>Claude Code Auto Mode: What Still Needs a Human</title><meta name="description" content="Anthropic says auto mode catches 89% of dangerous commands against 13.6% for human reviewers, and still calls it not risk-free. The config, hooks, and review habits that keep it honest."><meta name="author" content="Alberto Arena"><!-- Open Graph / Facebook --><meta property="og:type" content="article"><meta property="og:url" content="https://albertoarena.it/posts/claude-code-auto-mode-still-needs-a-human/"><meta property="og:title" content="Claude Code Auto Mode: What Still Needs a Human"><meta property="og:description" content="Anthropic says auto mode catches 89% of dangerous commands against 13.6% for human reviewers, and still calls it not risk-free. The config, hooks, and review habits that keep it honest."><meta property="og:image" content="https://albertoarena.it/images/posts/claude-code-auto-mode-still-needs-a-human/cover.jpg"><meta property="og:site_name" content="A blog by Alberto Arena"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:url" content="https://albertoarena.it/posts/claude-code-auto-mode-still-needs-a-human/"><meta name="twitter:title" content="Claude Code Auto Mode: What Still Needs a Human"><meta name="twitter:description" content="Anthropic says auto mode catches 89% of dangerous commands against 13.6% for human reviewers, and still calls it not risk-free. The config, hooks, and review habits that keep it honest."><meta name="twitter:image" content="https://albertoarena.it/images/posts/claude-code-auto-mode-still-needs-a-human/cover.jpg"><meta name="twitter:creator" content="@alberto_arena"><!-- Structured data --><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://albertoarena.it/#person","name":"Alberto Arena","url":"https://albertoarena.it/pages/about/","image":"https://albertoarena.it/photo.jpg","jobTitle":"Senior Software Engineer","sameAs":["https://x.com/alberto_arena","https://www.linkedin.com/in/alberto-arena-ba44a624/","https://github.com/albertoarena","https://www.youtube.com/@AlbertoArenaDev"]},{"@type":"WebSite","@id":"https://albertoarena.it/#website","name":"A blog by Alberto Arena","url":"https://albertoarena.it","publisher":{"@id":"https://albertoarena.it/#person"}}]}</script><!-- Theme color, kept in sync with the --accent token per theme --><meta name="theme-color" content="#0b5fd0"><!-- Theme script (prevent flash) --><script>
+      const THEME_COLOR = { light: '#0b5fd0', dark: '#5eb3ff' };
+
+      function setThemeColorMeta(theme) {
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', THEME_COLOR[theme]);
+      }
+
+      function applyTheme() {
+        const theme = (() => {
+          if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+            return localStorage.getItem('theme');
+          }
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
+          }
+          return 'light';
+        })();
+
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+        } else {
+          document.documentElement.classList.add('light');
+          document.documentElement.classList.remove('dark');
+        }
+        setThemeColorMeta(theme);
+      }
+
+      // Apply theme immediately
+      applyTheme();
+
+      // Re-apply after View Transitions swap
+      document.addEventListener('astro:after-swap', applyTheme);
+
+      // Also handle before swap to prevent flash
+      document.addEventListener('astro:before-swap', (event) => {
+        const theme = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        event.newDocument.documentElement.classList.toggle('dark', theme === 'dark');
+        event.newDocument.documentElement.classList.toggle('light', theme === 'light');
+      });
+
+      // Reflect an in-page toggle click immediately, no swap involved
+      document.addEventListener('theme-changed', (event) => setThemeColorMeta(event.detail.theme));
+    </script><!-- Reading mode script (prevent flash, post pages only) --><script>
+      function applyReadingMode() {
+        const onPost = location.pathname.startsWith('/posts/');
+        if (onPost && localStorage.getItem('reading-mode') === '1') {
+          document.documentElement.setAttribute('data-reading', '');
+        } else {
+          document.documentElement.removeAttribute('data-reading');
+        }
+      }
+
+      // Apply immediately
+      applyReadingMode();
+
+      // Re-apply after View Transitions swap
+      document.addEventListener('astro:after-swap', applyReadingMode);
+
+      // Also handle before swap to prevent flash
+      document.addEventListener('astro:before-swap', (event) => {
+        const onPost = event.to.pathname.startsWith('/posts/');
+        const on = onPost && localStorage.getItem('reading-mode') === '1';
+        event.newDocument.documentElement.toggleAttribute('data-reading', on);
+      });
+    </script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CDGfc0hd.js"></script><!-- Google Consent Mode v2 defaults --><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      // Restore prior consent immediately so returning users aren't blocked
+      var _priorConsent = localStorage.getItem('cookieConsent');
+      gtag('consent', 'default', {
+        analytics_storage: _priorConsent === 'accepted' ? 'granted' : 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        wait_for_update: _priorConsent ? 0 : 500,
+      });
+    </script><!-- Google Tag Manager --><script>(function(){const gtmId = "GTM-PDQBJBL3";
+
+      if (gtmId && !window._gtmLoaded) {
+        window._gtmLoaded = true;
+        (function(w,d,s,l,i){
+          w[l]=w[l]||[];
+          w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+          var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s), dl=l!='dataLayer'?'&l='+l:'';
+          j.async=true;
+          j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+          f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer',gtmId);
+
+        // Push page_view on each SPA navigation (View Transitions) — registered once
+        document.addEventListener('astro:after-swap', function() {
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            event: 'page_view',
+            page_location: window.location.href,
+            page_path: window.location.pathname,
+            page_title: document.title,
+          });
+        });
+      }
+    })();</script><link rel="stylesheet" href="/_astro/index.CL4KpOtD.css">
+<style>@keyframes astroFadeInOut{0%{opacity:1}to{opacity:0}}@keyframes astroFadeIn{0%{opacity:0;mix-blend-mode:plus-lighter}to{opacity:1;mix-blend-mode:plus-lighter}}@keyframes astroFadeOut{0%{opacity:1;mix-blend-mode:plus-lighter}to{opacity:0;mix-blend-mode:plus-lighter}}@keyframes astroSlideFromRight{0%{transform:translate(100%)}}@keyframes astroSlideFromLeft{0%{transform:translate(-100%)}}@keyframes astroSlideToRight{to{transform:translate(100%)}}@keyframes astroSlideToLeft{to{transform:translate(-100%)}}@media(prefers-reduced-motion){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}[data-astro-transition-scope]{animation:none!important}}
+</style><style>[data-astro-transition-scope="astro-iogfcb4l-1"] { view-transition-name: newsletter-signup; }@layer astro { ::view-transition-old(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-iogfcb4l-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-iogfcb4l-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-iogfcb4l-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-iogfcb4l-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-iogfcb4l-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-iogfcb4l-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-iogfcb4l-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-iogfcb4l-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head> <body class="min-h-screen"> <!-- Google Tag Manager (noscript) --> <noscript> <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PDQBJBL3" height="0" width="0" style="display:none;visibility:hidden"></iframe> </noscript> <a href="#main-content" class="skip-to-content">Skip to content</a>   <div class="post-shell min-[900px]:grid min-[900px]:grid-cols-[14rem_minmax(0,1fr)] min-[1180px]:grid-cols-[14rem_minmax(0,1fr)_15rem] max-w-[82rem] mx-auto"> <aside class="border-b min-[900px]:border-b-0 min-[900px]:border-r border-rule
+    flex flex-row min-[900px]:flex-col flex-wrap min-[900px]:flex-nowrap
+    items-start gap-x-7 gap-y-3 min-[900px]:gap-y-6
+    px-5 py-5 min-[900px]:pl-5 min-[900px]:pr-6 min-[900px]:pt-9 min-[900px]:pb-8
+    min-[900px]:sticky min-[900px]:top-0 min-[900px]:self-start
+    min-[900px]:h-screen min-[900px]:w-56 min-[900px]:shrink-0
+    print:hidden"> <div class="w-full min-[900px]:w-auto"> <a href="/" class="font-sans font-semibold text-base leading-tight tracking-tight text-ink dark:text-white hover:text-accent transition-colors"> Alberto Arena </a> <div class="font-mono text-[0.6875rem] uppercase tracking-[0.11em] text-muted mt-1.5"> Senior Software Engineer </div> </div> <nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Reading"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> read </div> <a href="/writing/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>writing </a><a href="/series/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>series </a><a href="/cheatsheets/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>cheatsheets </a> </nav><nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Projects"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> build </div> <a href="https://trussphp.com/" target="_blank" rel="noopener noreferrer" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>truss </a><a href="/projects/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>projects </a><a href="https://www.youtube.com/@AlbertoArenaDev" target="_blank" rel="noopener noreferrer" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>videos </a> </nav><nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Work with me"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> work </div> <a href="/pages/consulting/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>consulting </a><a href="/subscribe/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>subscribe </a><a href="/pages/about/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>about </a> </nav> <div class="w-full min-[900px]:w-auto min-[900px]:mt-auto font-mono text-[0.6875rem] leading-relaxed text-muted flex flex-col gap-1"> <span>Sicily, Italy</span> <span class="flex items-center gap-1.5"> <span class="inline-block w-[0.45rem] h-[0.45rem] rounded-full bg-ok shrink-0" aria-hidden="true"></span>
+Available for freelance
+</span>  </div> </aside> <div class="post-shell-main min-w-0 min-[900px]:col-start-2"> <div class="flex justify-end px-6 pt-6 min-[900px]:px-8 min-[900px]:pt-8"> <button data-theme-toggle type="button" class="p-2 text-muted hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent" aria-label="Toggle dark mode"> <!-- Sun icon (shown in dark mode to switch to light) --> <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path> </svg> <!-- Moon icon (shown in light mode to switch to dark) --> <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path> </svg> </button> <script type="module">function t(){const e=document.documentElement.classList.contains("dark"),c=e?"light":"dark";e?(document.documentElement.classList.remove("dark"),document.documentElement.classList.add("light"),localStorage.setItem("theme","light")):(document.documentElement.classList.add("dark"),document.documentElement.classList.remove("light"),localStorage.setItem("theme","dark")),document.dispatchEvent(new CustomEvent("theme-changed",{detail:{theme:c}}))}function n(){document.querySelectorAll("[data-theme-toggle]").forEach(e=>{e.removeEventListener("click",t),e.addEventListener("click",t)})}n();document.addEventListener("astro:after-swap",n);</script> </div> <main id="main-content" class="px-6 pb-12 min-[900px]:px-8 min-[900px]:pb-16"> <article class="post-content"> <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Claude Code Auto Mode: What Still Needs a Human","description":"Anthropic says auto mode catches 89% of dangerous commands against 13.6% for human reviewers, and still calls it not risk-free. The config, hooks, and review habits that keep it honest.","image":"https://albertoarena.it/images/posts/claude-code-auto-mode-still-needs-a-human/cover.jpg","datePublished":"2026-08-10T10:00:00.000Z","author":{"@id":"https://albertoarena.it/#person"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://albertoarena.it/posts/claude-code-auto-mode-still-needs-a-human/"}}</script> <header class="mb-8 max-w-[68ch]"> <p class="eyebrow font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-accent mb-3"> AI </p> <h1 class="font-sans text-[clamp(1.75rem,3.4vw,2.5rem)] leading-[1.15] tracking-[-0.025em] font-[660] mb-4 max-w-[26ch] text-ink dark:text-white"> Claude Code Auto Mode: What Still Needs a Human </h1> <p class="standfirst text-lg text-ink-2 mb-6 max-w-[60ch]"> Anthropic says auto mode catches 89% of dangerous commands against 13.6% for human reviewers, and still calls it not risk-free. The config, hooks, and review habits that keep it honest. </p> <div class="meta font-mono text-xs text-muted flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-b border-rule py-3"> <time datetime="2026-08-10T10:00:00.000Z">August 10, 2026</time> <span>8 min read</span>  <span>3rd in the how to use AI series</span> </div> </header> <figure class="mb-10"> <img src="/images/posts/claude-code-auto-mode-still-needs-a-human/cover.jpg" alt="A red-and-white boom barrier gate lowered across a road, blocking a waiting car" width="1200" height="628" loading="eager" fetchpriority="high" class="w-full aspect-[1.91/1] object-cover border border-rule"> </figure> <details class="toc-mobile min-[1180px]:hidden mb-8 border border-rule px-4 py-3 not-prose"> <summary class="font-mono text-xs uppercase tracking-[0.1em] text-muted cursor-pointer"> On this page </summary> <ul class="toc-list mt-3 font-mono text-sm leading-relaxed"> <li> <a href="#what-actually-changes-on-august-14" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">What actually changes on August 14</a> </li><li> <a href="#the-asterisk-anthropic-puts-on-its-own-number" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">The asterisk Anthropic puts on its own number</a> </li><li> <a href="#rules-that-hold-no-matter-the-mode" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Rules that hold no matter the mode</a> </li><li> <a href="#a-gate-automation-cant-talk-itself-out-of" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">A gate automation can’t talk itself out of</a> </li><li> <a href="#review-moves-it-doesnt-disappear" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Review moves, it doesn’t disappear</a> </li><li> <a href="#tests-are-the-check-that-doesnt-get-tired" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Tests are the check that doesn’t get tired</a> </li><li> <a href="#stacking-checks-that-fail-differently" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Stacking checks that fail differently</a> </li><li> <a href="#sources" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Sources</a> </li> </ul> </details> <details class="series-mobile min-[1180px]:hidden mb-8 border border-rule px-4 py-3 not-prose"> <summary class="font-mono text-xs uppercase tracking-[0.1em] text-muted cursor-pointer"> how to use AI series </summary> <ul class="mt-3 font-mono text-sm leading-relaxed"> <li class="flex py-[0.25rem]"> <span class="text-muted shrink-0 w-3">1</span> <a href="/posts/ai-hallucination-in-coding-agents/" class="text-ink-2 hover:text-accent">AI Code Hallucinations: When Your AI Writes Confident Nonsense</a> </li><li class="flex py-[0.25rem]"> <span class="text-muted shrink-0 w-3">2</span> <a href="/posts/we-became-editors-in-chief/" class="text-ink-2 hover:text-accent">We Became Editors-in-Chief, and Nobody Trained Us</a> </li><li class="flex py-[0.25rem]"> <span class="text-muted shrink-0 w-3">3</span> <span class="text-accent font-semibold">Claude Code Auto Mode: What Still Needs a Human</span> </li><li class="flex py-[0.25rem]"> <span class="text-muted shrink-0 w-3">4</span> <a href="/posts/context-engineering-not-slop/" class="text-ink-2 hover:text-accent">Context Engineering: The Discipline That Keeps AI From Writing Slop</a> </li> </ul> <a href="/series/how-to-use-ai/" class="block mt-3 pt-3 border-t border-rule-soft font-mono text-sm text-accent hover:underline"> View series &rarr;
+</a> </details> <!-- Prose body at reading measure --> <div class="prose dark:prose-invert max-w-[68ch]">  <p>Starting August 14, <a href="https://claude.com/blog/auto-mode-default-in-claude-code" rel="noopener noreferrer" target="_blank">auto mode becomes the default permission mode</a> for Claude Code on Pro, Max, and Team plans. Buried in Anthropic’s own announcement is a number worth sitting with: in a controlled test with 1,053 paid professional testers, researchers swapped in genuinely dangerous commands partway through real sessions. Humans caught 13.6% of them. Auto mode’s classifier caught 89%.</p>
+<p>That’s not a subtle gap, and reading it made me a little uncomfortable, because I’ve spent most of the last few months running my own sessions in accept-edits or auto mode, clicking through permission prompts the same way everyone apparently does. Anthropic’s own usage data backs that up: people approve 97% of ordinary permission prompts, and the rate at which someone actually catches a dangerous one degrades from roughly 17% early in a session to about 5% after fifty-plus prior approvals. We’re not reading carefully. We’re pattern-matching on “this looks like the last forty things I clicked yes on,” and that pattern breaks exactly when it stops holding.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Metric</th><th>Human review</th><th>Auto mode classifier</th></tr></thead><tbody><tr><td>Dangerous commands caught (1,053-tester study)</td><td>13.6%</td><td>89%</td></tr><tr><td>Production-severity unintended harm, real flagged sessions</td><td>6.3%</td><td>2.4%</td></tr></tbody></table>
+<p>The second row comes from Anthropic’s audit of real, already-flagged sessions rather than a lab test: manually-approved sessions contained serious unintended harm more than twice as often as auto mode sessions did. Different methodology, same direction.</p>
+<h2 id="what-actually-changes-on-august-14">What actually changes on August 14</h2>
+<p>Auto mode itself is a fairly simple change to the default flow. Right now, Claude pauses before most file edits and shell commands and waits for you to click approve. Under auto mode, it doesn’t. Instead, a separate classifier model reviews each action in the background as Claude proposes it, and only interrupts you when it judges something risky: an irreversible action, a request that escalates beyond what you asked for, an attempt to send data somewhere it shouldn’t go. Everything else, the reads, the routine edits, the ordinary shell commands, runs without a prompt at all.</p>
+<p>The classifier sits underneath the permission mode you’ve already picked, not instead of it. Your allow, ask, and deny rules resolve first; the classifier only gets a say on whatever those rules don’t already settle. That layering is exactly what makes the rest of this post possible: the classifier isn’t the only thing standing between Claude and a bad command, it’s the last one, and everything upstream of it is something you configure.</p>
+<h2 id="the-asterisk-anthropic-puts-on-its-own-number">The asterisk Anthropic puts on its own number</h2>
+<p>None of this means auto mode is safe, and Anthropic doesn’t claim it is. Their own line: “auto mode relies on classification systems and therefore does not eliminate risk.” They ran a two-week red-teaming pilot with <a href="https://watcher.apolloresearch.ai/" rel="noopener noreferrer" target="_blank">Apollo Research</a>, injecting synthetic attacks into real workflows. Before the hardening that shipped with this release, the classifier missed 12% of those attacks. After hardening, 7%, on a test set the classifier had never seen during tuning. Better than a distracted human. Not zero.</p>
+<p>What the classifier is actually built to catch is specific: scope escalation on a vague or destructive request, credential exploration, exfiltration through an external service like a public gist, retrying a failed deploy with a skip-verification flag, a command that reads normally but was seeded by hostile content Claude picked up along the way. Where it still misses isn’t usually “is this dangerous”, it correctly flags danger most of the time. It’s “does a real consent signal in this session actually cover this specific action”, the same ambiguity a tired human glosses over, just less often.</p>
+<p>So the useful question isn’t auto mode versus manual review. It’s what to put alongside auto mode that fails in a different way than auto mode does.</p>
+<h2 id="rules-that-hold-no-matter-the-mode">Rules that hold no matter the mode</h2>
+<p>The classifier isn’t the only layer available, and it’s not the one you have the most control over. Permission rules sit underneath it: <a href="https://code.claude.com/docs/en/permission-modes" rel="noopener noreferrer" target="_blank">the docs are explicit</a> that “these controls apply in every mode, including <code>bypassPermissions</code>: deny rules and explicit ask rules.” Deny is a hard stop the classifier never gets to weigh in on. Ask still forces a prompt, even in a mode whose entire point is skipping prompts, which matters because the example below relies on it.</p>
+<p>Here’s a concrete gap worth knowing about: auto mode auto-approves pushes to any branch of the repository you’re working in, including the default branch, unless you tell it otherwise. The classifier judges the push’s content on its own terms, but the act of pushing to <code>main</code> isn’t itself something it blocks by default. If you want that to always stop for a human, write it down:</p>
+<pre class="astro-code github-dark-default" style="background-color:#0d1117;color:#e6edf3; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E6EDF3">{</span></span>
+<span class="line"><span style="color:#7EE787">  "permissions"</span><span style="color:#E6EDF3">: {</span></span>
+<span class="line"><span style="color:#7EE787">    "ask"</span><span style="color:#E6EDF3">: [</span></span>
+<span class="line"><span style="color:#A5D6FF">      "Bash(git push origin main)"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#A5D6FF">      "Bash(git push origin master)"</span></span>
+<span class="line"><span style="color:#E6EDF3">    ]</span></span>
+<span class="line"><span style="color:#E6EDF3">  }</span></span>
+<span class="line"><span style="color:#E6EDF3">}</span></span></code></pre>
+<p>The push example above uses <code>ask</code> on purpose: you still want to push eventually, just with a human in the loop first. That’s different from an invariant you never want crossed at all, “no data exposed, ever,” say, in a <code>CLAUDE.md</code> file. A rules file states that kind of invariant as a request Claude tries to honor. A deny rule enforces it: a request the tool can’t route around, in any mode, on any day you forget you’re in auto mode at all.</p>
+<h2 id="a-gate-automation-cant-talk-itself-out-of">A gate automation can’t talk itself out of</h2>
+<p>Rules cover what you can name in advance. Hooks cover what you want checked every time, mechanically, regardless of what the classifier decides. A <code>PreToolUse</code> hook can inspect a tool call before it runs and block it outright, deterministically, with no probability involved:</p>
+<pre class="astro-code github-dark-default" style="background-color:#0d1117;color:#e6edf3; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E6EDF3">{</span></span>
+<span class="line"><span style="color:#7EE787">  "hooks"</span><span style="color:#E6EDF3">: {</span></span>
+<span class="line"><span style="color:#7EE787">    "PreToolUse"</span><span style="color:#E6EDF3">: [</span></span>
+<span class="line"><span style="color:#E6EDF3">      {</span></span>
+<span class="line"><span style="color:#7EE787">        "matcher"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"Bash"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "hooks"</span><span style="color:#E6EDF3">: [</span></span>
+<span class="line"><span style="color:#E6EDF3">          {</span></span>
+<span class="line"><span style="color:#7EE787">            "type"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"command"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">            "if"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"Bash(git push *)"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">            "command"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"${CLAUDE_PROJECT_DIR}/.claude/hooks/require-green-tests.sh"</span></span>
+<span class="line"><span style="color:#E6EDF3">          }</span></span>
+<span class="line"><span style="color:#E6EDF3">        ]</span></span>
+<span class="line"><span style="color:#E6EDF3">      }</span></span>
+<span class="line"><span style="color:#E6EDF3">    ]</span></span>
+<span class="line"><span style="color:#E6EDF3">  }</span></span>
+<span class="line"><span style="color:#E6EDF3">}</span></span></code></pre>
+<pre class="astro-code github-dark-default" style="background-color:#0d1117;color:#e6edf3; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#8B949E">#!/bin/bash</span></span>
+<span class="line"><span style="color:#8B949E"># .claude/hooks/require-green-tests.sh</span></span>
+<span class="line"><span style="color:#FF7B72">if</span><span style="color:#FF7B72"> !</span><span style="color:#FFA657"> npm</span><span style="color:#A5D6FF"> test</span><span style="color:#79C0FF"> --silent</span><span style="color:#E6EDF3">; </span><span style="color:#FF7B72">then</span></span>
+<span class="line"><span style="color:#79C0FF">  echo</span><span style="color:#A5D6FF"> '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"Tests are red, push blocked"}}'</span></span>
+<span class="line"><span style="color:#FF7B72">else</span></span>
+<span class="line"><span style="color:#79C0FF">  exit</span><span style="color:#79C0FF"> 0</span></span>
+<span class="line"><span style="color:#FF7B72">fi</span></span></code></pre>
+<p>The <code>if</code> field narrows this to <code>git push</code> calls specifically, the script runs the test suite, and a failing suite returns a <code>deny</code> decision that blocks the push outright, exit code 2 works the same way with a plain stderr message. Nothing here asks a classifier to judge intent. It’s a yes/no gate on a fact you can check.</p>
+<h2 id="review-moves-it-doesnt-disappear">Review moves, it doesn’t disappear</h2>
+<p>None of the above replaces reading the diff. It changes what “reading the diff” is for. <a href="/posts/we-became-editors-in-chief/">I wrote before about how agentic development turned most of the job into review</a>, and the failure mode there isn’t that people stopped reviewing, it’s that review quality degrades under volume exactly the way the approval-fatigue numbers above describe. Auto mode doesn’t fix that. It just removes the low-value prompts so the review that’s left can, in theory, be the kind that actually catches something.</p>
+<p>In practice that means picking one point in the loop where you deliberately stay the bottleneck, on purpose, and the push to a shared branch is the obvious candidate. It’s the one action that’s genuinely hard to undo and visible to someone else the moment it happens. Everything upstream of that, a wrong edit, a bad approach, a half-finished refactor, is still local and still reversible. <a href="/posts/ai-hallucination-in-coding-agents/">Hallucinated code compiles and passes a quick glance</a>; it doesn’t survive someone actually reading it against what they asked for. That reading has to happen somewhere. Put it at the boundary that matters and let the classifier and the hooks handle the volume everywhere else.</p>
+<h2 id="tests-are-the-check-that-doesnt-get-tired">Tests are the check that doesn’t get tired</h2>
+<p>The hook above only works because there’s a test suite behind it. That’s the other half of the strategy: tests are the executable version of “did this actually do what I asked”, and unlike a human on prompt four hundred of a session, they don’t get less careful over time. Write them before or alongside the change, not after, and the <code>git push</code> gate above stops being a formality and starts being the thing that actually catches a regression a tired reviewer would have waved through.</p>
+<h2 id="stacking-checks-that-fail-differently">Stacking checks that fail differently</h2>
+<p>None of this makes the miss rate zero, same as auto mode itself doesn’t. The point isn’t finding the one control that eliminates risk. It’s stacking controls that fail in different ways, so the same blind spot doesn’t line up twice. The classifier catches the obvious and the fast. Deny rules catch the specific thing you already know matters. Hooks catch what you can specify as a check. Tests catch what you can assert. And a deliberate human read at the point something becomes shared catches the one thing none of the above can judge: whether this was the right thing to build in the first place.</p>
+<p>Thirteen point six percent is a bad number for humans working alone. Eighty-nine percent is a good number for a classifier working alone. Neither one is the number that matters. The number that matters is what’s left over once you’ve stacked both, plus the checks that are actually yours to configure.</p>
+<h2 id="sources">Sources</h2>
+<ul>
+<li><a href="https://claude.com/blog/auto-mode-default-in-claude-code" rel="noopener noreferrer" target="_blank">Auto mode is now the default in Claude Code for Pro, Max, and Team plans</a>: the announcement this post responds to, including the 1,053-tester study and the real-session audit numbers.</li>
+<li><a href="https://www.anthropic.com/engineering/claude-code-auto-mode" rel="noopener noreferrer" target="_blank">How we built Claude Code auto mode: a safer way to skip permissions</a>: the technical writeup covering the classifier’s two-stage design and what it’s built to catch.</li>
+<li><a href="https://code.claude.com/docs/en/permission-modes" rel="noopener noreferrer" target="_blank">Choose a permission mode</a>: official documentation on <code>default</code>, <code>acceptEdits</code>, <code>bypassPermissions</code>, and how permission rules interact with each mode.</li>
+<li><a href="https://code.claude.com/docs/en/hooks" rel="noopener noreferrer" target="_blank">Hooks reference</a>: official documentation on hook events, matcher syntax, and the <code>PreToolUse</code> block/allow contract used in the example above.</li>
+</ul>  </div> <!-- Endnote block (redesign-plan.md §7): tags, author, subscribe, discussion, pager --> <div class="endnote mt-12 pt-6 border-t border-rule max-w-[68ch]"> <div class="post-tags flex flex-wrap gap-2 mb-7 font-mono text-xs"> <a href="/tag/ai/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#AI </a><a href="/tag/claude-code/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#Claude Code </a><a href="/tag/code-quality/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#Code Quality </a><a href="/tag/devtools/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#DevTools </a> </div> <div class="post-author flex items-center gap-3 mb-7"> <img src="/photo.jpg" alt="" class="w-11 h-11 rounded-full"> <div> <p class="font-sans font-semibold text-sm text-ink dark:text-white">Alberto Arena</p> <p class="text-sm text-muted">Senior Software Engineer</p> </div> </div> <div class="post-newsletter border border-rule px-5 py-5 mb-6" data-astro-transition-persist="newsletter-signup" data-astro-transition-scope="astro-iogfcb4l-1"> <h2 class="text-base font-semibold text-ink dark:text-white mb-1">Liked this? Get the next one.</h2> <p class="text-sm text-ink-2 leading-relaxed mb-4">
+Practical notes on Laravel tooling and AI-assisted development, about once a month.
+                    Join the list and I'll send you my
+<a href="/cheatsheets/spatie-event-sourcing/" class="text-accent underline">Spatie Event Sourcing cheat sheet</a>
+to start.
+</p> <div data-form="HjBuvq" class="ml-embedded newsletter-signup-target"></div> <script>(function(){const accountId = "2474575";
+
+  function loadMailerLite() {
+    (function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[])
+    .push(arguments);},l=d.createElement(e),l.async=1,l.src=u,
+    n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})
+    (window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');
+    ml('account', accountId);
+  }
+
+  function initNewsletterSignup() {
+    var target = document.querySelector('.newsletter-signup-target');
+    // Already wired up: either a fresh page's target we've already handled,
+    // or (post-to-post navigation) the same transition:persist node carried
+    // over from the previous page, already loaded or already being watched.
+    if (!target || target.dataset.mlObserved === '1') return;
+    target.dataset.mlObserved = '1';
+
+    // Plain scroll-position polling, not IntersectionObserver: the box is
+    // transition:persist (home page and every post share one DOM node), so
+    // an observer created on first load keeps "watching" that node forever,
+    // even after it's carried into a page it never ran its own init on —
+    // fine on its own, except a same-page TOC jump rides scroll-behavior:
+    // smooth, and an animated scroll can move the target through the
+    // viewport fast enough to land between two observer check frames,
+    // which then never reports isIntersecting at all (same failure mode
+    // already hit and fixed this way for the TOC active-heading tracking).
+    // A rAF-throttled getBoundingClientRect check against every 'scroll'
+    // event can't miss a frame like that, and rides along with the persisted
+    // node onto whichever page it ends up on.
+    var ticking = false;
+    function checkPosition() {
+      ticking = false;
+      var rect = target.getBoundingClientRect();
+      if (rect.top < window.innerHeight + 600 && rect.bottom > -600) {
+        window.removeEventListener('scroll', onScroll);
+        loadMailerLite();
+      }
+    }
+    function onScroll() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(checkPosition);
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    checkPosition();
+  }
+
+  // Astro's View Transitions swap doesn't re-execute an inline script whose
+  // content is byte-identical to one that already ran elsewhere in the
+  // session (this component renders the same script on every post and on
+  // /subscribe), so a target introduced by a client-side navigation from a
+  // page with no newsletter box of its own (e.g. home -> a post) would
+  // otherwise never get observed.
+  initNewsletterSignup();
+  document.addEventListener('astro:after-swap', initNewsletterSignup);
+})();</script> </div> <div class="discuss border-t border-rule-soft pt-4 mb-7 font-mono text-sm text-muted leading-relaxed"> Found a mistake, or disagree?  <a href="https://github.com/albertoarena/albertoarena.it/discussions" target="_blank" rel="noopener noreferrer" class="text-accent underline"> Open a discussion on GitHub </a>  or  <a href="mailto:hello@albertoarena.it" class="text-accent underline"> send me an email </a>.
+</div> <nav class="pager grid grid-cols-1 min-[560px]:grid-cols-2 gap-5" aria-label="Post navigation"> <a href="/posts/we-became-editors-in-chief/" class="border-t border-rule pt-3 group"> <span class="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-muted block">
+&larr; Previous in thread </span> <span class="font-sans text-[0.9375rem] font-medium leading-snug mt-1 block group-hover:text-accent"> We Became Editors-in-Chief, and Nobody Trained Us </span> </a> <a href="/posts/context-engineering-not-slop/" class="border-t border-rule pt-3 text-right group"> <span class="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-muted block"> Next in thread &rarr;
+</span> <span class="font-sans text-[0.9375rem] font-medium leading-snug mt-1 block group-hover:text-accent"> Context Engineering: The Discipline That Keeps AI From Writing Slop </span> </a> </nav> </div> </article> </main> <footer class="site-footer border-t border-rule mt-20 py-8"> <div class="max-w-3xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted"> <span>© 2026 Alberto Arena</span> <div class="flex items-center gap-4"> <a href="/pages/privacy-policy/" class="hover:text-accent transition-colors">Privacy Policy</a> <span aria-hidden="true">·</span> <a href="/pages/credits/" class="hover:text-accent transition-colors">Credits</a> <span aria-hidden="true">·</span> <a href="/rss.xml" class="hover:text-accent transition-colors">RSS</a> <span aria-hidden="true">·</span> <a href="https://www.youtube.com/@AlbertoArenaDev" class="hover:text-accent transition-colors">YouTube</a> </div> </div> </footer> </div> <aside class="hidden min-[1180px]:flex flex-col gap-8 border-l border-rule px-5 py-9 sticky top-0 self-start h-screen overflow-y-auto"> <div> <h3 class="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted mb-2.5"> On this page </h3> <ul id="toc" class="font-mono text-xs leading-[1.55]"> <li> <a href="#what-actually-changes-on-august-14" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="what-actually-changes-on-august-14">What actually changes on August 14</a> </li><li> <a href="#the-asterisk-anthropic-puts-on-its-own-number" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="the-asterisk-anthropic-puts-on-its-own-number">The asterisk Anthropic puts on its own number</a> </li><li> <a href="#rules-that-hold-no-matter-the-mode" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="rules-that-hold-no-matter-the-mode">Rules that hold no matter the mode</a> </li><li> <a href="#a-gate-automation-cant-talk-itself-out-of" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="a-gate-automation-cant-talk-itself-out-of">A gate automation can’t talk itself out of</a> </li><li> <a href="#review-moves-it-doesnt-disappear" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="review-moves-it-doesnt-disappear">Review moves, it doesn’t disappear</a> </li><li> <a href="#tests-are-the-check-that-doesnt-get-tired" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="tests-are-the-check-that-doesnt-get-tired">Tests are the check that doesn’t get tired</a> </li><li> <a href="#stacking-checks-that-fail-differently" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="stacking-checks-that-fail-differently">Stacking checks that fail differently</a> </li><li> <a href="#sources" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="sources">Sources</a> </li> </ul> </div> <div> <h3 class="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted mb-2.5"> <a href="/series/how-to-use-ai/" class="hover:text-accent">how to use AI series</a> </h3> <ul class="font-mono text-xs leading-[1.5]"> <li class="flex py-[0.3rem]"> <span class="text-muted shrink-0 w-3">1</span> <a href="/posts/ai-hallucination-in-coding-agents/" class="text-ink-2 hover:text-accent">AI Code Hallucinations: When Your AI Writes Confident Nonsense</a> </li><li class="flex py-[0.3rem]"> <span class="text-muted shrink-0 w-3">2</span> <a href="/posts/we-became-editors-in-chief/" class="text-ink-2 hover:text-accent">We Became Editors-in-Chief, and Nobody Trained Us</a> </li><li class="flex py-[0.3rem]"> <span class="text-muted shrink-0 w-3">3</span> <span class="text-accent font-semibold">Claude Code Auto Mode: What Still Needs a Human</span> </li><li class="flex py-[0.3rem]"> <span class="text-muted shrink-0 w-3">4</span> <a href="/posts/context-engineering-not-slop/" class="text-ink-2 hover:text-accent">Context Engineering: The Discipline That Keeps AI From Writing Slop</a> </li> </ul> </div> </aside> </div> <button id="reading-mode-toggle" type="button" aria-pressed="false" class="fixed right-4 z-50 border border-rule bg-paper px-4 py-2 font-mono text-sm text-accent shadow-lg transition-colors hover:border-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 motion-reduce:transition-none" style="bottom: calc(1rem + env(safe-area-inset-bottom));">
+Reading mode
+</button> <script type="module">const i="reading-mode";function n(){const t=document.documentElement.toggleAttribute("data-reading");localStorage.setItem(i,t?"1":"0"),o()}function o(){const e=document.getElementById("reading-mode-toggle");if(!e)return;const t=document.documentElement.hasAttribute("data-reading");e.setAttribute("aria-pressed",String(t)),e.textContent=t?"Exit reading mode":"Reading mode"}function d(){const e=document.getElementById("reading-mode-toggle");e&&(e.removeEventListener("click",n),e.addEventListener("click",n),o())}d();document.addEventListener("astro:after-swap",d);</script> <div id="cookie-consent" class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-paper border-t border-rule shadow-lg" role="dialog" aria-labelledby="cookie-consent-title" aria-describedby="cookie-consent-description"> <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"> <div class="text-sm text-ink dark:text-white"> <p id="cookie-consent-title" class="font-semibold mb-1">We use cookies</p> <p id="cookie-consent-description" class="text-ink-2">
+We use analytics cookies to understand how you use this site and improve your experience.
+        No advertising or profiling cookies are used.
+<a href="/pages/privacy-policy/" class="underline hover:text-accent transition-colors ml-1">Privacy Policy</a> </p> </div> <div class="flex gap-3 flex-shrink-0"> <button id="decline-cookies" class="px-4 py-2 text-sm text-muted hover:text-ink dark:hover:text-white transition-colors" aria-label="Decline analytics cookies">
+Decline
+</button> <button id="accept-cookies" class="px-4 py-2 text-sm bg-accent text-white hover:bg-accent/90 transition-colors" aria-label="Accept analytics cookies">
+Accept analytics
+</button> </div> </div> </div> <script type="module">function n(...e){window.dataLayer=window.dataLayer||[],window.dataLayer.push(e)}function o(){const e=localStorage.getItem("cookieConsent"),t=document.getElementById("cookie-consent");if(e){t?.remove(),e==="accepted"&&n("consent","update",{analytics_storage:"granted"});return}document.getElementById("accept-cookies")?.addEventListener("click",()=>{n("consent","update",{analytics_storage:"granted"}),localStorage.setItem("cookieConsent","accepted"),t?.remove()}),document.getElementById("decline-cookies")?.addEventListener("click",()=>{n("consent","update",{analytics_storage:"denied"}),localStorage.setItem("cookieConsent","declined"),t?.remove()})}o();document.addEventListener("astro:after-swap",o);</script>  </body></html> <script type="module">let n;function l(){n&&(window.removeEventListener("scroll",n),n=void 0);const o=Array.from(document.querySelectorAll("#toc a[data-target]")),i=o.map(e=>document.getElementById(e.dataset.target)).filter(e=>!!e);if(!i.length)return;const s=()=>window.innerHeight*.2;function a(){const e=s();let c=i[0].id;for(const t of i)if(t.getBoundingClientRect().top<=e)c=t.id;else break;o.forEach(t=>{t.classList.toggle("toc-active",t.dataset.target===c)})}let r=!1;n=()=>{r||(r=!0,requestAnimationFrame(()=>{r=!1,a()}))},window.addEventListener("scroll",n,{passive:!0}),a()}l();document.addEventListener("astro:after-swap",l);</script>

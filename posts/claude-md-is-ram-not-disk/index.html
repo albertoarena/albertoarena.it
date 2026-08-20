@@ -1,0 +1,275 @@
+<!DOCTYPE html><html lang="en" class="light"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="canonical" href="https://albertoarena.it/posts/claude-md-is-ram-not-disk/"><link rel="sitemap" href="/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="A blog by Alberto Arena" href="/rss.xml"><!-- Preload the body serif and the mono weight actually used at first paint --><link rel="preload" as="font" type="font/woff2" href="/_astro/source-serif-4-latin-wght-normal.D9elroTD.woff2" crossorigin="anonymous"><link rel="preload" as="font" type="font/woff2" href="/_astro/ibm-plex-mono-latin-400-normal.DMJ8VG8y.woff2" crossorigin="anonymous"><title>CLAUDE.md Is RAM, Not Disk: A Memory Model for Claude Code Projects</title><meta name="description" content="Why a growing CLAUDE.md makes Claude Code worse, and a simple RAM/disk model for structuring your docs instead, plus a Laravel starter repo you can copy."><meta name="author" content="Alberto Arena"><!-- Open Graph / Facebook --><meta property="og:type" content="article"><meta property="og:url" content="https://albertoarena.it/posts/claude-md-is-ram-not-disk/"><meta property="og:title" content="CLAUDE.md Is RAM, Not Disk: A Memory Model for Claude Code Projects"><meta property="og:description" content="Why a growing CLAUDE.md makes Claude Code worse, and a simple RAM/disk model for structuring your docs instead, plus a Laravel starter repo you can copy."><meta property="og:image" content="https://albertoarena.it/images/posts/claude-md-is-ram-not-disk/cover.jpg"><meta property="og:site_name" content="A blog by Alberto Arena"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:url" content="https://albertoarena.it/posts/claude-md-is-ram-not-disk/"><meta name="twitter:title" content="CLAUDE.md Is RAM, Not Disk: A Memory Model for Claude Code Projects"><meta name="twitter:description" content="Why a growing CLAUDE.md makes Claude Code worse, and a simple RAM/disk model for structuring your docs instead, plus a Laravel starter repo you can copy."><meta name="twitter:image" content="https://albertoarena.it/images/posts/claude-md-is-ram-not-disk/cover.jpg"><meta name="twitter:creator" content="@alberto_arena"><!-- Structured data --><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://albertoarena.it/#person","name":"Alberto Arena","url":"https://albertoarena.it/pages/about/","image":"https://albertoarena.it/photo.jpg","jobTitle":"Senior Software Engineer","sameAs":["https://x.com/alberto_arena","https://www.linkedin.com/in/alberto-arena-ba44a624/","https://github.com/albertoarena","https://www.youtube.com/@AlbertoArenaDev"]},{"@type":"WebSite","@id":"https://albertoarena.it/#website","name":"A blog by Alberto Arena","url":"https://albertoarena.it","publisher":{"@id":"https://albertoarena.it/#person"}}]}</script><!-- Theme color, kept in sync with the --accent token per theme --><meta name="theme-color" content="#0b5fd0"><!-- Theme script (prevent flash) --><script>
+      const THEME_COLOR = { light: '#0b5fd0', dark: '#5eb3ff' };
+
+      function setThemeColorMeta(theme) {
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', THEME_COLOR[theme]);
+      }
+
+      function applyTheme() {
+        const theme = (() => {
+          if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+            return localStorage.getItem('theme');
+          }
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
+          }
+          return 'light';
+        })();
+
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+        } else {
+          document.documentElement.classList.add('light');
+          document.documentElement.classList.remove('dark');
+        }
+        setThemeColorMeta(theme);
+      }
+
+      // Apply theme immediately
+      applyTheme();
+
+      // Re-apply after View Transitions swap
+      document.addEventListener('astro:after-swap', applyTheme);
+
+      // Also handle before swap to prevent flash
+      document.addEventListener('astro:before-swap', (event) => {
+        const theme = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        event.newDocument.documentElement.classList.toggle('dark', theme === 'dark');
+        event.newDocument.documentElement.classList.toggle('light', theme === 'light');
+      });
+
+      // Reflect an in-page toggle click immediately, no swap involved
+      document.addEventListener('theme-changed', (event) => setThemeColorMeta(event.detail.theme));
+    </script><!-- Reading mode script (prevent flash, post pages only) --><script>
+      function applyReadingMode() {
+        const onPost = location.pathname.startsWith('/posts/');
+        if (onPost && localStorage.getItem('reading-mode') === '1') {
+          document.documentElement.setAttribute('data-reading', '');
+        } else {
+          document.documentElement.removeAttribute('data-reading');
+        }
+      }
+
+      // Apply immediately
+      applyReadingMode();
+
+      // Re-apply after View Transitions swap
+      document.addEventListener('astro:after-swap', applyReadingMode);
+
+      // Also handle before swap to prevent flash
+      document.addEventListener('astro:before-swap', (event) => {
+        const onPost = event.to.pathname.startsWith('/posts/');
+        const on = onPost && localStorage.getItem('reading-mode') === '1';
+        event.newDocument.documentElement.toggleAttribute('data-reading', on);
+      });
+    </script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CDGfc0hd.js"></script><!-- Google Consent Mode v2 defaults --><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      // Restore prior consent immediately so returning users aren't blocked
+      var _priorConsent = localStorage.getItem('cookieConsent');
+      gtag('consent', 'default', {
+        analytics_storage: _priorConsent === 'accepted' ? 'granted' : 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        wait_for_update: _priorConsent ? 0 : 500,
+      });
+    </script><!-- Google Tag Manager --><script>(function(){const gtmId = "GTM-PDQBJBL3";
+
+      if (gtmId && !window._gtmLoaded) {
+        window._gtmLoaded = true;
+        (function(w,d,s,l,i){
+          w[l]=w[l]||[];
+          w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+          var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s), dl=l!='dataLayer'?'&l='+l:'';
+          j.async=true;
+          j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+          f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer',gtmId);
+
+        // Push page_view on each SPA navigation (View Transitions) — registered once
+        document.addEventListener('astro:after-swap', function() {
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            event: 'page_view',
+            page_location: window.location.href,
+            page_path: window.location.pathname,
+            page_title: document.title,
+          });
+        });
+      }
+    })();</script><link rel="stylesheet" href="/_astro/index.CL4KpOtD.css">
+<style>@keyframes astroFadeInOut{0%{opacity:1}to{opacity:0}}@keyframes astroFadeIn{0%{opacity:0;mix-blend-mode:plus-lighter}to{opacity:1;mix-blend-mode:plus-lighter}}@keyframes astroFadeOut{0%{opacity:1;mix-blend-mode:plus-lighter}to{opacity:0;mix-blend-mode:plus-lighter}}@keyframes astroSlideFromRight{0%{transform:translate(100%)}}@keyframes astroSlideFromLeft{0%{transform:translate(-100%)}}@keyframes astroSlideToRight{to{transform:translate(100%)}}@keyframes astroSlideToLeft{to{transform:translate(-100%)}}@media(prefers-reduced-motion){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}[data-astro-transition-scope]{animation:none!important}}
+</style><style>[data-astro-transition-scope="astro-iogfcb4l-1"] { view-transition-name: newsletter-signup; }@layer astro { ::view-transition-old(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-iogfcb4l-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-iogfcb4l-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-iogfcb4l-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-iogfcb4l-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-iogfcb4l-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-iogfcb4l-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-iogfcb4l-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-iogfcb4l-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head> <body class="min-h-screen"> <!-- Google Tag Manager (noscript) --> <noscript> <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PDQBJBL3" height="0" width="0" style="display:none;visibility:hidden"></iframe> </noscript> <a href="#main-content" class="skip-to-content">Skip to content</a>   <div class="post-shell min-[900px]:grid min-[900px]:grid-cols-[14rem_minmax(0,1fr)] min-[1180px]:grid-cols-[14rem_minmax(0,1fr)_15rem] max-w-[82rem] mx-auto"> <aside class="border-b min-[900px]:border-b-0 min-[900px]:border-r border-rule
+    flex flex-row min-[900px]:flex-col flex-wrap min-[900px]:flex-nowrap
+    items-start gap-x-7 gap-y-3 min-[900px]:gap-y-6
+    px-5 py-5 min-[900px]:pl-5 min-[900px]:pr-6 min-[900px]:pt-9 min-[900px]:pb-8
+    min-[900px]:sticky min-[900px]:top-0 min-[900px]:self-start
+    min-[900px]:h-screen min-[900px]:w-56 min-[900px]:shrink-0
+    print:hidden"> <div class="w-full min-[900px]:w-auto"> <a href="/" class="font-sans font-semibold text-base leading-tight tracking-tight text-ink dark:text-white hover:text-accent transition-colors"> Alberto Arena </a> <div class="font-mono text-[0.6875rem] uppercase tracking-[0.11em] text-muted mt-1.5"> Senior Software Engineer </div> </div> <nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Reading"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> read </div> <a href="/writing/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>writing </a><a href="/series/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>series </a><a href="/cheatsheets/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>cheatsheets </a> </nav><nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Projects"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> build </div> <a href="https://trussphp.com/" target="_blank" rel="noopener noreferrer" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>truss </a><a href="/projects/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>projects </a><a href="https://www.youtube.com/@AlbertoArenaDev" target="_blank" rel="noopener noreferrer" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>videos </a> </nav><nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Work with me"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> work </div> <a href="/pages/consulting/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>consulting </a><a href="/subscribe/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>subscribe </a><a href="/pages/about/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>about </a> </nav> <div class="w-full min-[900px]:w-auto min-[900px]:mt-auto font-mono text-[0.6875rem] leading-relaxed text-muted flex flex-col gap-1"> <span>Sicily, Italy</span> <span class="flex items-center gap-1.5"> <span class="inline-block w-[0.45rem] h-[0.45rem] rounded-full bg-ok shrink-0" aria-hidden="true"></span>
+Available for freelance
+</span>  </div> </aside> <div class="post-shell-main min-w-0 min-[900px]:col-start-2"> <div class="flex justify-end px-6 pt-6 min-[900px]:px-8 min-[900px]:pt-8"> <button data-theme-toggle type="button" class="p-2 text-muted hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent" aria-label="Toggle dark mode"> <!-- Sun icon (shown in dark mode to switch to light) --> <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path> </svg> <!-- Moon icon (shown in light mode to switch to dark) --> <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path> </svg> </button> <script type="module">function t(){const e=document.documentElement.classList.contains("dark"),c=e?"light":"dark";e?(document.documentElement.classList.remove("dark"),document.documentElement.classList.add("light"),localStorage.setItem("theme","light")):(document.documentElement.classList.add("dark"),document.documentElement.classList.remove("light"),localStorage.setItem("theme","dark")),document.dispatchEvent(new CustomEvent("theme-changed",{detail:{theme:c}}))}function n(){document.querySelectorAll("[data-theme-toggle]").forEach(e=>{e.removeEventListener("click",t),e.addEventListener("click",t)})}n();document.addEventListener("astro:after-swap",n);</script> </div> <main id="main-content" class="px-6 pb-12 min-[900px]:px-8 min-[900px]:pb-16"> <article class="post-content"> <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"CLAUDE.md Is RAM, Not Disk: A Memory Model for Claude Code Projects","description":"Why a growing CLAUDE.md makes Claude Code worse, and a simple RAM/disk model for structuring your docs instead, plus a Laravel starter repo you can copy.","image":"https://albertoarena.it/images/posts/claude-md-is-ram-not-disk/cover.jpg","datePublished":"2026-06-28T12:00:00.000Z","author":{"@id":"https://albertoarena.it/#person"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://albertoarena.it/posts/claude-md-is-ram-not-disk/"}}</script> <header class="mb-8 max-w-[68ch]"> <p class="eyebrow font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-accent mb-3"> AI </p> <h1 class="font-sans text-[clamp(1.75rem,3.4vw,2.5rem)] leading-[1.15] tracking-[-0.025em] font-[660] mb-4 max-w-[26ch] text-ink dark:text-white"> CLAUDE.md Is RAM, Not Disk: A Memory Model for Claude Code Projects </h1> <p class="standfirst text-lg text-ink-2 mb-6 max-w-[60ch]"> Why a growing CLAUDE.md makes Claude Code worse, and a simple RAM/disk model for structuring your docs instead, plus a Laravel starter repo you can copy. </p> <div class="meta font-mono text-xs text-muted flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-b border-rule py-3"> <time datetime="2026-06-28T12:00:00.000Z">June 28, 2026</time> <span>6 min read</span>  <span>1st in the CLAUDE.md memory model series</span> </div> </header> <figure class="mb-10"> <img src="/images/posts/claude-md-is-ram-not-disk/cover.jpg" alt="CLAUDE.md Is RAM, Not Disk: A Memory Model for Claude Code Projects" width="1200" height="628" loading="eager" fetchpriority="high" class="w-full aspect-[1.91/1] object-cover border border-rule"> </figure> <details class="toc-mobile min-[1180px]:hidden mb-8 border border-rule px-4 py-3 not-prose"> <summary class="font-mono text-xs uppercase tracking-[0.1em] text-muted cursor-pointer"> On this page </summary> <ul class="toc-list mt-3 font-mono text-sm leading-relaxed"> <li> <a href="#why-the-big-file-hurts" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Why the big file hurts</a> </li><li> <a href="#what-belongs-in-ram" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">What belongs in RAM</a> </li><li> <a href="#what-belongs-on-disk" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">What belongs on disk</a> </li><li> <a href="#the-trick-most-setups-miss-nested-files" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">The trick most setups miss: nested files</a> </li><li> <a href="#the-starter" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">The starter</a> </li><li> <a href="#three-rules-to-take-away" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Three rules to take away</a> </li><li> <a href="#notes" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Notes</a> </li> </ul> </details> <details class="series-mobile min-[1180px]:hidden mb-8 border border-rule px-4 py-3 not-prose"> <summary class="font-mono text-xs uppercase tracking-[0.1em] text-muted cursor-pointer"> CLAUDE.md memory model series </summary> <ul class="mt-3 font-mono text-sm leading-relaxed"> <li class="flex py-[0.25rem]"> <span class="text-muted shrink-0 w-3">1</span> <span class="text-accent font-semibold">CLAUDE.md Is RAM, Not Disk: A Memory Model for Claude Code Projects</span> </li><li class="flex py-[0.25rem]"> <span class="text-muted shrink-0 w-3">2</span> <a href="/posts/claudes-working-memory-is-smaller-than-you-think/" class="text-ink-2 hover:text-accent">Claude&#39;s Working Memory Is Smaller Than You Think</a> </li><li class="flex py-[0.25rem]"> <span class="text-muted shrink-0 w-3">3</span> <a href="/posts/claude-md-skills-are-not-disk/" class="text-ink-2 hover:text-accent">CLAUDE.md Is RAM, Skills Are Not Disk: The Four-Tier Memory Model for Claude Code</a> </li> </ul> <a href="/series/claude-md/" class="block mt-3 pt-3 border-t border-rule-soft font-mono text-sm text-accent hover:underline"> View series &rarr;
+</a> </details> <!-- Prose body at reading measure --> <div class="prose dark:prose-invert max-w-[68ch]">  <blockquote>
+<p><strong>Update</strong>: this post covers two tiers, <code>CLAUDE.md</code> and <code>docs/</code>. There are two more once you add path-scoped rules and skills to the picture. See the follow-up, <a href="/posts/claude-md-skills-are-not-disk/">CLAUDE.md Is RAM, Skills Are Not Disk</a>, for the four-tier version, including a correction to the nested <code>CLAUDE.md</code> trick below.</p>
+</blockquote>
+<p>Most Claude Code projects I see have one giant <code>CLAUDE.md</code> that keeps growing until it is three hundred lines long, and somewhere around line two hundred the assistant starts getting worse instead of better. That is not bad luck. That file is loaded into context at the start of the session and stays resident there, so every line you add is a line Claude carries in front of it on every turn that follows: context it reads past before it gets to your actual task. The fix is not a longer file. It is treating <code>CLAUDE.md</code> like RAM and the rest of your docs like disk.</p>
+<p>Here is the whole idea in one sentence: <code>CLAUDE.md</code> is working memory, loaded constantly and paid for constantly, so it stays small; the <code>docs/</code> folder is long-term memory, loaded only when something points to it. Once that distinction clicks, every other decision about where a piece of information should live answers itself.</p>
+<h2 id="why-the-big-file-hurts">Why the big file hurts</h2>
+<p>Claude Code reads <code>CLAUDE.md</code> automatically at the start of every session and keeps it in context the whole time. That is exactly what you want for the handful of things Claude needs on every task: your stack, your commands, the rules that must always hold. It is exactly what you do not want for the things Claude needs once a week. A long domain description or a full architecture writeup sitting in <code>CLAUDE.md</code> does not make Claude smarter. It crowds the context with detail that is irrelevant to the task in front of it, and it costs you tokens on every turn whether you use it or not.</p>
+<p>The test I use is simple. Does Claude need this every time, or only sometimes? Every time goes in <code>CLAUDE.md</code>. Sometimes goes in <code>docs/</code>, with a one-line pointer from <code>CLAUDE.md</code> so Claude knows where to look when it actually needs it.</p>
+<h2 id="what-belongs-in-ram">What belongs in RAM</h2>
+<p><code>CLAUDE.md</code> should be short enough that you can read it in under a minute. Mine for a Laravel project holds five things:</p>
+<ul>
+<li>A two or three sentence overview of what the project is.</li>
+<li>The stack with versions pinned. “Laravel” is not enough. “Laravel 11, PHP 8.3, Pest 3” is.</li>
+<li>The exact commands: test, lint, static analysis, dev server. Claude should never guess these.</li>
+<li>The conventions that must hold on every change. For me that is TDD with Pest first, KISS, event sourcing through Spatie where it earns its place, domain logic kept free of framework code, and <code>envaudit</code> validating <code>.env</code> in CI.</li>
+<li>Pointers out. One line each: architecture is in <code>docs/DESIGN.md</code>, current work is in <code>docs/PLAN.md</code>, decisions are in <code>docs/DECISIONS.md</code>.</li>
+</ul>
+<p>That last group is the trick. <code>CLAUDE.md</code> does not contain the architecture. It contains the address of the architecture. Claude loads the detail on demand when a task needs it, and the rest of the time that detail is not burning context.</p>
+<h2 id="what-belongs-on-disk">What belongs on disk</h2>
+<p>The <code>docs/</code> folder is where the long material lives, and because it loads on demand it can be as long as it needs to be. Three files cover most projects:</p>
+<p><code>DESIGN.md</code> is the architecture and domain model. Bounded contexts, aggregates, the events each one records, the invariants they protect. This is your thinking written down once so Claude does not reinvent it every session, and so that when it asks “where does this logic belong” the answer is derivable from the file.</p>
+<p><code>PLAN.md</code> is the phased, plan-first breakdown of the work. Small phases, each finishable and verifiable, checked off as they land, with a short done log at the bottom so progress survives between sessions.</p>
+<p><code>DECISIONS.md</code> is a lightweight decision log. One short entry per significant choice: context, decision, trade-off. This is the file that stops you and Claude relitigating the same question three sessions later.</p>
+<p>Add more only when a real need shows up. A <code>TESTING.md</code> when your test strategy is genuinely non-obvious. A separate <code>DOMAIN.md</code> when the glossary outgrows <code>DESIGN.md</code>. Not before. Empty scaffolding is just more for Claude to read.</p>
+<h2 id="the-trick-most-setups-miss-nested-files">The trick most setups miss: nested files</h2>
+<p>Claude Code does not only read the root <code>CLAUDE.md</code>. It also reads a <code>CLAUDE.md</code> in the directory it happens to be working in, layered on top of the root one. That means rules which only matter inside one folder can live in that folder instead of bloating the root file.</p>
+<p>In a Laravel project with a real domain layer, I put a <code>CLAUDE.md</code> inside <code>app/Domains</code> that says: no framework imports here, aggregates extend Spatie’s <code>AggregateRoot</code> and only record events, events are immutable and past-tense, and every change starts with a Pest test. None of that needs to be in the root file, because it is irrelevant when Claude is editing a controller or a Blade view. It loads exactly when Claude steps into the domain layer, and not before.</p>
+<p>Update: there is now a cleaner version of this trick. <code>.claude/rules/*.md</code> files with a <code>paths:</code> glob do the same on-demand loading, but scoped by pattern instead of by folder and collected in one reviewable place instead of scattered across the tree. If you’re setting this up today, use a rule file instead of a nested <code>CLAUDE.md</code>. I cover the mechanism, and where skills fit alongside it, in <a href="/posts/claude-md-skills-are-not-disk/">CLAUDE.md Is RAM, Skills Are Not Disk</a>.</p>
+<h2 id="the-starter">The starter</h2>
+<p>I put all of this into a small template repo you can copy straight into a project: <a href="https://github.com/albertoarena/claude-code-laravel-starter" rel="noopener noreferrer" target="_blank">claude-code-laravel-starter</a>. It is the structure above, with every file as a fillable template rather than lorem ipsum, the Laravel and event sourcing conventions already baked in, and a nested domain-layer <code>CLAUDE.md</code> so the pattern is concrete.</p>
+<pre class="astro-code github-dark-default" style="background-color:#0d1117;color:#e6edf3; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>claude-code-laravel-starter/</span></span>
+<span class="line"><span>├── CLAUDE.md              # the lean anchor, auto-loaded every session</span></span>
+<span class="line"><span>├── README.md</span></span>
+<span class="line"><span>├── docs/</span></span>
+<span class="line"><span>│   ├── DESIGN.md         # domain model, aggregates, events</span></span>
+<span class="line"><span>│   ├── PLAN.md           # phased, plan-first implementation</span></span>
+<span class="line"><span>│   └── DECISIONS.md      # lightweight ADR log</span></span>
+<span class="line"><span>└── app/</span></span>
+<span class="line"><span>    └── Domains/</span></span>
+<span class="line"><span>        └── CLAUDE.md     # rules for the domain layer only</span></span></code></pre>
+<p>Copy it onto a fresh Laravel app, fill in your real stack and commands, replace the example domain with yours, and keep the root file tight.</p>
+<h2 id="three-rules-to-take-away">Three rules to take away</h2>
+<p>If Claude needs it every time, it goes in <code>CLAUDE.md</code>. If only sometimes, it goes in <code>docs/</code>. Start with three files and add more only when something real demands it. And when a folder gets its own rules, give it its own <code>CLAUDE.md</code> instead of stretching the root one.</p>
+<p>Start small, keep working memory tight, and let the disk hold the rest.</p>
+<h2 id="notes">Notes</h2>
+<p>On July 27, 2026, I published a follow-up covering two more tiers, path-scoped rules and skills, plus a correction to the nested <code>CLAUDE.md</code> trick above: <a href="/posts/claude-md-skills-are-not-disk/">read CLAUDE.md Is RAM, Skills Are Not Disk</a>.</p>  </div> <!-- Endnote block (redesign-plan.md §7): tags, author, subscribe, discussion, pager --> <div class="endnote mt-12 pt-6 border-t border-rule max-w-[68ch]"> <div class="post-tags flex flex-wrap gap-2 mb-7 font-mono text-xs"> <a href="/tag/ai/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#AI </a><a href="/tag/claude/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#Claude </a><a href="/tag/laravel/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#Laravel </a><a href="/tag/devtools/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#DevTools </a> </div> <div class="post-author flex items-center gap-3 mb-7"> <img src="/photo.jpg" alt="" class="w-11 h-11 rounded-full"> <div> <p class="font-sans font-semibold text-sm text-ink dark:text-white">Alberto Arena</p> <p class="text-sm text-muted">Senior Software Engineer</p> </div> </div> <div class="post-newsletter border border-rule px-5 py-5 mb-6" data-astro-transition-persist="newsletter-signup" data-astro-transition-scope="astro-iogfcb4l-1"> <h2 class="text-base font-semibold text-ink dark:text-white mb-1">Liked this? Get the next one.</h2> <p class="text-sm text-ink-2 leading-relaxed mb-4">
+Practical notes on Laravel tooling and AI-assisted development, about once a month.
+                    Join the list and I'll send you my
+<a href="/cheatsheets/spatie-event-sourcing/" class="text-accent underline">Spatie Event Sourcing cheat sheet</a>
+to start.
+</p> <div data-form="HjBuvq" class="ml-embedded newsletter-signup-target"></div> <script>(function(){const accountId = "2474575";
+
+  function loadMailerLite() {
+    (function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[])
+    .push(arguments);},l=d.createElement(e),l.async=1,l.src=u,
+    n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})
+    (window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');
+    ml('account', accountId);
+  }
+
+  function initNewsletterSignup() {
+    var target = document.querySelector('.newsletter-signup-target');
+    // Already wired up: either a fresh page's target we've already handled,
+    // or (post-to-post navigation) the same transition:persist node carried
+    // over from the previous page, already loaded or already being watched.
+    if (!target || target.dataset.mlObserved === '1') return;
+    target.dataset.mlObserved = '1';
+
+    // Plain scroll-position polling, not IntersectionObserver: the box is
+    // transition:persist (home page and every post share one DOM node), so
+    // an observer created on first load keeps "watching" that node forever,
+    // even after it's carried into a page it never ran its own init on —
+    // fine on its own, except a same-page TOC jump rides scroll-behavior:
+    // smooth, and an animated scroll can move the target through the
+    // viewport fast enough to land between two observer check frames,
+    // which then never reports isIntersecting at all (same failure mode
+    // already hit and fixed this way for the TOC active-heading tracking).
+    // A rAF-throttled getBoundingClientRect check against every 'scroll'
+    // event can't miss a frame like that, and rides along with the persisted
+    // node onto whichever page it ends up on.
+    var ticking = false;
+    function checkPosition() {
+      ticking = false;
+      var rect = target.getBoundingClientRect();
+      if (rect.top < window.innerHeight + 600 && rect.bottom > -600) {
+        window.removeEventListener('scroll', onScroll);
+        loadMailerLite();
+      }
+    }
+    function onScroll() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(checkPosition);
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    checkPosition();
+  }
+
+  // Astro's View Transitions swap doesn't re-execute an inline script whose
+  // content is byte-identical to one that already ran elsewhere in the
+  // session (this component renders the same script on every post and on
+  // /subscribe), so a target introduced by a client-side navigation from a
+  // page with no newsletter box of its own (e.g. home -> a post) would
+  // otherwise never get observed.
+  initNewsletterSignup();
+  document.addEventListener('astro:after-swap', initNewsletterSignup);
+})();</script> </div> <div class="discuss border-t border-rule-soft pt-4 mb-7 font-mono text-sm text-muted leading-relaxed"> Found a mistake, or disagree?  <a href="https://github.com/albertoarena/albertoarena.it/discussions" target="_blank" rel="noopener noreferrer" class="text-accent underline"> Open a discussion on GitHub </a>  or  <a href="mailto:hello@albertoarena.it" class="text-accent underline"> send me an email </a>.
+</div> <nav class="pager grid grid-cols-1 min-[560px]:grid-cols-2 gap-5" aria-label="Post navigation"> <a href="/posts/introducing-filament-event-sourcing/" class="border-t border-rule pt-3 group"> <span class="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-muted block">
+&larr; Previous post </span> <span class="font-sans text-[0.9375rem] font-medium leading-snug mt-1 block group-hover:text-accent"> What if every Filament write went through an aggregate? </span> </a> <a href="/posts/claudes-working-memory-is-smaller-than-you-think/" class="border-t border-rule pt-3 text-right group"> <span class="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-muted block"> Next in thread &rarr;
+</span> <span class="font-sans text-[0.9375rem] font-medium leading-snug mt-1 block group-hover:text-accent"> Claude&#39;s Working Memory Is Smaller Than You Think </span> </a> </nav> </div> </article> </main> <footer class="site-footer border-t border-rule mt-20 py-8"> <div class="max-w-3xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted"> <span>© 2026 Alberto Arena</span> <div class="flex items-center gap-4"> <a href="/pages/privacy-policy/" class="hover:text-accent transition-colors">Privacy Policy</a> <span aria-hidden="true">·</span> <a href="/pages/credits/" class="hover:text-accent transition-colors">Credits</a> <span aria-hidden="true">·</span> <a href="/rss.xml" class="hover:text-accent transition-colors">RSS</a> <span aria-hidden="true">·</span> <a href="https://www.youtube.com/@AlbertoArenaDev" class="hover:text-accent transition-colors">YouTube</a> </div> </div> </footer> </div> <aside class="hidden min-[1180px]:flex flex-col gap-8 border-l border-rule px-5 py-9 sticky top-0 self-start h-screen overflow-y-auto"> <div> <h3 class="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted mb-2.5"> On this page </h3> <ul id="toc" class="font-mono text-xs leading-[1.55]"> <li> <a href="#why-the-big-file-hurts" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="why-the-big-file-hurts">Why the big file hurts</a> </li><li> <a href="#what-belongs-in-ram" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="what-belongs-in-ram">What belongs in RAM</a> </li><li> <a href="#what-belongs-on-disk" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="what-belongs-on-disk">What belongs on disk</a> </li><li> <a href="#the-trick-most-setups-miss-nested-files" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="the-trick-most-setups-miss-nested-files">The trick most setups miss: nested files</a> </li><li> <a href="#the-starter" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="the-starter">The starter</a> </li><li> <a href="#three-rules-to-take-away" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="three-rules-to-take-away">Three rules to take away</a> </li><li> <a href="#notes" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="notes">Notes</a> </li> </ul> </div> <div> <h3 class="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted mb-2.5"> <a href="/series/claude-md/" class="hover:text-accent">CLAUDE.md memory model series</a> </h3> <ul class="font-mono text-xs leading-[1.5]"> <li class="flex py-[0.3rem]"> <span class="text-muted shrink-0 w-3">1</span> <span class="text-accent font-semibold">CLAUDE.md Is RAM, Not Disk: A Memory Model for Claude Code Projects</span> </li><li class="flex py-[0.3rem]"> <span class="text-muted shrink-0 w-3">2</span> <a href="/posts/claudes-working-memory-is-smaller-than-you-think/" class="text-ink-2 hover:text-accent">Claude&#39;s Working Memory Is Smaller Than You Think</a> </li><li class="flex py-[0.3rem]"> <span class="text-muted shrink-0 w-3">3</span> <a href="/posts/claude-md-skills-are-not-disk/" class="text-ink-2 hover:text-accent">CLAUDE.md Is RAM, Skills Are Not Disk: The Four-Tier Memory Model for Claude Code</a> </li> </ul> </div> </aside> </div> <button id="reading-mode-toggle" type="button" aria-pressed="false" class="fixed right-4 z-50 border border-rule bg-paper px-4 py-2 font-mono text-sm text-accent shadow-lg transition-colors hover:border-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 motion-reduce:transition-none" style="bottom: calc(1rem + env(safe-area-inset-bottom));">
+Reading mode
+</button> <script type="module">const i="reading-mode";function n(){const t=document.documentElement.toggleAttribute("data-reading");localStorage.setItem(i,t?"1":"0"),o()}function o(){const e=document.getElementById("reading-mode-toggle");if(!e)return;const t=document.documentElement.hasAttribute("data-reading");e.setAttribute("aria-pressed",String(t)),e.textContent=t?"Exit reading mode":"Reading mode"}function d(){const e=document.getElementById("reading-mode-toggle");e&&(e.removeEventListener("click",n),e.addEventListener("click",n),o())}d();document.addEventListener("astro:after-swap",d);</script> <div id="cookie-consent" class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-paper border-t border-rule shadow-lg" role="dialog" aria-labelledby="cookie-consent-title" aria-describedby="cookie-consent-description"> <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"> <div class="text-sm text-ink dark:text-white"> <p id="cookie-consent-title" class="font-semibold mb-1">We use cookies</p> <p id="cookie-consent-description" class="text-ink-2">
+We use analytics cookies to understand how you use this site and improve your experience.
+        No advertising or profiling cookies are used.
+<a href="/pages/privacy-policy/" class="underline hover:text-accent transition-colors ml-1">Privacy Policy</a> </p> </div> <div class="flex gap-3 flex-shrink-0"> <button id="decline-cookies" class="px-4 py-2 text-sm text-muted hover:text-ink dark:hover:text-white transition-colors" aria-label="Decline analytics cookies">
+Decline
+</button> <button id="accept-cookies" class="px-4 py-2 text-sm bg-accent text-white hover:bg-accent/90 transition-colors" aria-label="Accept analytics cookies">
+Accept analytics
+</button> </div> </div> </div> <script type="module">function n(...e){window.dataLayer=window.dataLayer||[],window.dataLayer.push(e)}function o(){const e=localStorage.getItem("cookieConsent"),t=document.getElementById("cookie-consent");if(e){t?.remove(),e==="accepted"&&n("consent","update",{analytics_storage:"granted"});return}document.getElementById("accept-cookies")?.addEventListener("click",()=>{n("consent","update",{analytics_storage:"granted"}),localStorage.setItem("cookieConsent","accepted"),t?.remove()}),document.getElementById("decline-cookies")?.addEventListener("click",()=>{n("consent","update",{analytics_storage:"denied"}),localStorage.setItem("cookieConsent","declined"),t?.remove()})}o();document.addEventListener("astro:after-swap",o);</script>  </body></html> <script type="module">let n;function l(){n&&(window.removeEventListener("scroll",n),n=void 0);const o=Array.from(document.querySelectorAll("#toc a[data-target]")),i=o.map(e=>document.getElementById(e.dataset.target)).filter(e=>!!e);if(!i.length)return;const s=()=>window.innerHeight*.2;function a(){const e=s();let c=i[0].id;for(const t of i)if(t.getBoundingClientRect().top<=e)c=t.id;else break;o.forEach(t=>{t.classList.toggle("toc-active",t.dataset.target===c)})}let r=!1;n=()=>{r||(r=!0,requestAnimationFrame(()=>{r=!1,a()}))},window.addEventListener("scroll",n,{passive:!0}),a()}l();document.addEventListener("astro:after-swap",l);</script>

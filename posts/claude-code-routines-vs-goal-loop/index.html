@@ -1,0 +1,278 @@
+<!DOCTYPE html><html lang="en" class="light"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="canonical" href="https://albertoarena.it/posts/claude-code-routines-vs-goal-loop/"><link rel="sitemap" href="/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="A blog by Alberto Arena" href="/rss.xml"><!-- Preload the body serif and the mono weight actually used at first paint --><link rel="preload" as="font" type="font/woff2" href="/_astro/source-serif-4-latin-wght-normal.D9elroTD.woff2" crossorigin="anonymous"><link rel="preload" as="font" type="font/woff2" href="/_astro/ibm-plex-mono-latin-400-normal.DMJ8VG8y.woff2" crossorigin="anonymous"><title>Claude Code Routines: A Third Way Beyond /goal and /loop</title><meta name="description" content="Anthropic added routines to Claude Code: cloud-hosted automations triggered by a schedule, an API call, or a GitHub event. How they differ from /goal and /loop, and when to reach for each."><meta name="author" content="Alberto Arena"><!-- Open Graph / Facebook --><meta property="og:type" content="article"><meta property="og:url" content="https://albertoarena.it/posts/claude-code-routines-vs-goal-loop/"><meta property="og:title" content="Claude Code Routines: A Third Way Beyond /goal and /loop"><meta property="og:description" content="Anthropic added routines to Claude Code: cloud-hosted automations triggered by a schedule, an API call, or a GitHub event. How they differ from /goal and /loop, and when to reach for each."><meta property="og:image" content="https://albertoarena.it/images/posts/claude-code-routines-vs-goal-loop/cover.jpg"><meta property="og:site_name" content="A blog by Alberto Arena"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:url" content="https://albertoarena.it/posts/claude-code-routines-vs-goal-loop/"><meta name="twitter:title" content="Claude Code Routines: A Third Way Beyond /goal and /loop"><meta name="twitter:description" content="Anthropic added routines to Claude Code: cloud-hosted automations triggered by a schedule, an API call, or a GitHub event. How they differ from /goal and /loop, and when to reach for each."><meta name="twitter:image" content="https://albertoarena.it/images/posts/claude-code-routines-vs-goal-loop/cover.jpg"><meta name="twitter:creator" content="@alberto_arena"><!-- Structured data --><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://albertoarena.it/#person","name":"Alberto Arena","url":"https://albertoarena.it/pages/about/","image":"https://albertoarena.it/photo.jpg","jobTitle":"Senior Software Engineer","sameAs":["https://x.com/alberto_arena","https://www.linkedin.com/in/alberto-arena-ba44a624/","https://github.com/albertoarena","https://www.youtube.com/@AlbertoArenaDev"]},{"@type":"WebSite","@id":"https://albertoarena.it/#website","name":"A blog by Alberto Arena","url":"https://albertoarena.it","publisher":{"@id":"https://albertoarena.it/#person"}}]}</script><!-- Theme color, kept in sync with the --accent token per theme --><meta name="theme-color" content="#0b5fd0"><!-- Theme script (prevent flash) --><script>
+      const THEME_COLOR = { light: '#0b5fd0', dark: '#5eb3ff' };
+
+      function setThemeColorMeta(theme) {
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', THEME_COLOR[theme]);
+      }
+
+      function applyTheme() {
+        const theme = (() => {
+          if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+            return localStorage.getItem('theme');
+          }
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
+          }
+          return 'light';
+        })();
+
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+        } else {
+          document.documentElement.classList.add('light');
+          document.documentElement.classList.remove('dark');
+        }
+        setThemeColorMeta(theme);
+      }
+
+      // Apply theme immediately
+      applyTheme();
+
+      // Re-apply after View Transitions swap
+      document.addEventListener('astro:after-swap', applyTheme);
+
+      // Also handle before swap to prevent flash
+      document.addEventListener('astro:before-swap', (event) => {
+        const theme = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        event.newDocument.documentElement.classList.toggle('dark', theme === 'dark');
+        event.newDocument.documentElement.classList.toggle('light', theme === 'light');
+      });
+
+      // Reflect an in-page toggle click immediately, no swap involved
+      document.addEventListener('theme-changed', (event) => setThemeColorMeta(event.detail.theme));
+    </script><!-- Reading mode script (prevent flash, post pages only) --><script>
+      function applyReadingMode() {
+        const onPost = location.pathname.startsWith('/posts/');
+        if (onPost && localStorage.getItem('reading-mode') === '1') {
+          document.documentElement.setAttribute('data-reading', '');
+        } else {
+          document.documentElement.removeAttribute('data-reading');
+        }
+      }
+
+      // Apply immediately
+      applyReadingMode();
+
+      // Re-apply after View Transitions swap
+      document.addEventListener('astro:after-swap', applyReadingMode);
+
+      // Also handle before swap to prevent flash
+      document.addEventListener('astro:before-swap', (event) => {
+        const onPost = event.to.pathname.startsWith('/posts/');
+        const on = onPost && localStorage.getItem('reading-mode') === '1';
+        event.newDocument.documentElement.toggleAttribute('data-reading', on);
+      });
+    </script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CDGfc0hd.js"></script><!-- Google Consent Mode v2 defaults --><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      // Restore prior consent immediately so returning users aren't blocked
+      var _priorConsent = localStorage.getItem('cookieConsent');
+      gtag('consent', 'default', {
+        analytics_storage: _priorConsent === 'accepted' ? 'granted' : 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        wait_for_update: _priorConsent ? 0 : 500,
+      });
+    </script><!-- Google Tag Manager --><script>(function(){const gtmId = "GTM-PDQBJBL3";
+
+      if (gtmId && !window._gtmLoaded) {
+        window._gtmLoaded = true;
+        (function(w,d,s,l,i){
+          w[l]=w[l]||[];
+          w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+          var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s), dl=l!='dataLayer'?'&l='+l:'';
+          j.async=true;
+          j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+          f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer',gtmId);
+
+        // Push page_view on each SPA navigation (View Transitions) — registered once
+        document.addEventListener('astro:after-swap', function() {
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            event: 'page_view',
+            page_location: window.location.href,
+            page_path: window.location.pathname,
+            page_title: document.title,
+          });
+        });
+      }
+    })();</script><link rel="stylesheet" href="/_astro/index.CL4KpOtD.css">
+<style>@keyframes astroFadeInOut{0%{opacity:1}to{opacity:0}}@keyframes astroFadeIn{0%{opacity:0;mix-blend-mode:plus-lighter}to{opacity:1;mix-blend-mode:plus-lighter}}@keyframes astroFadeOut{0%{opacity:1;mix-blend-mode:plus-lighter}to{opacity:0;mix-blend-mode:plus-lighter}}@keyframes astroSlideFromRight{0%{transform:translate(100%)}}@keyframes astroSlideFromLeft{0%{transform:translate(-100%)}}@keyframes astroSlideToRight{to{transform:translate(100%)}}@keyframes astroSlideToLeft{to{transform:translate(-100%)}}@media(prefers-reduced-motion){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}[data-astro-transition-scope]{animation:none!important}}
+</style><style>[data-astro-transition-scope="astro-iogfcb4l-1"] { view-transition-name: newsletter-signup; }@layer astro { ::view-transition-old(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-iogfcb4l-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-iogfcb4l-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-iogfcb4l-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-iogfcb4l-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-iogfcb4l-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-iogfcb4l-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-iogfcb4l-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-iogfcb4l-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head> <body class="min-h-screen"> <!-- Google Tag Manager (noscript) --> <noscript> <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PDQBJBL3" height="0" width="0" style="display:none;visibility:hidden"></iframe> </noscript> <a href="#main-content" class="skip-to-content">Skip to content</a>   <div class="post-shell min-[900px]:grid min-[900px]:grid-cols-[14rem_minmax(0,1fr)] min-[1180px]:grid-cols-[14rem_minmax(0,1fr)_15rem] max-w-[82rem] mx-auto"> <aside class="border-b min-[900px]:border-b-0 min-[900px]:border-r border-rule
+    flex flex-row min-[900px]:flex-col flex-wrap min-[900px]:flex-nowrap
+    items-start gap-x-7 gap-y-3 min-[900px]:gap-y-6
+    px-5 py-5 min-[900px]:pl-5 min-[900px]:pr-6 min-[900px]:pt-9 min-[900px]:pb-8
+    min-[900px]:sticky min-[900px]:top-0 min-[900px]:self-start
+    min-[900px]:h-screen min-[900px]:w-56 min-[900px]:shrink-0
+    print:hidden"> <div class="w-full min-[900px]:w-auto"> <a href="/" class="font-sans font-semibold text-base leading-tight tracking-tight text-ink dark:text-white hover:text-accent transition-colors"> Alberto Arena </a> <div class="font-mono text-[0.6875rem] uppercase tracking-[0.11em] text-muted mt-1.5"> Senior Software Engineer </div> </div> <nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Reading"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> read </div> <a href="/writing/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>writing </a><a href="/series/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>series </a><a href="/cheatsheets/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>cheatsheets </a> </nav><nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Projects"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> build </div> <a href="https://trussphp.com/" target="_blank" rel="noopener noreferrer" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>truss </a><a href="/projects/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>projects </a><a href="https://www.youtube.com/@AlbertoArenaDev" target="_blank" rel="noopener noreferrer" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>videos </a> </nav><nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Work with me"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> work </div> <a href="/pages/consulting/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>consulting </a><a href="/subscribe/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>subscribe </a><a href="/pages/about/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>about </a> </nav> <div class="w-full min-[900px]:w-auto min-[900px]:mt-auto font-mono text-[0.6875rem] leading-relaxed text-muted flex flex-col gap-1"> <span>Sicily, Italy</span> <span class="flex items-center gap-1.5"> <span class="inline-block w-[0.45rem] h-[0.45rem] rounded-full bg-ok shrink-0" aria-hidden="true"></span>
+Available for freelance
+</span>  </div> </aside> <div class="post-shell-main min-w-0 min-[900px]:col-start-2"> <div class="flex justify-end px-6 pt-6 min-[900px]:px-8 min-[900px]:pt-8"> <button data-theme-toggle type="button" class="p-2 text-muted hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent" aria-label="Toggle dark mode"> <!-- Sun icon (shown in dark mode to switch to light) --> <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path> </svg> <!-- Moon icon (shown in light mode to switch to dark) --> <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path> </svg> </button> <script type="module">function t(){const e=document.documentElement.classList.contains("dark"),c=e?"light":"dark";e?(document.documentElement.classList.remove("dark"),document.documentElement.classList.add("light"),localStorage.setItem("theme","light")):(document.documentElement.classList.add("dark"),document.documentElement.classList.remove("light"),localStorage.setItem("theme","dark")),document.dispatchEvent(new CustomEvent("theme-changed",{detail:{theme:c}}))}function n(){document.querySelectorAll("[data-theme-toggle]").forEach(e=>{e.removeEventListener("click",t),e.addEventListener("click",t)})}n();document.addEventListener("astro:after-swap",n);</script> </div> <main id="main-content" class="px-6 pb-12 min-[900px]:px-8 min-[900px]:pb-16"> <article class="post-content"> <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Claude Code Routines: A Third Way Beyond /goal and /loop","description":"Anthropic added routines to Claude Code: cloud-hosted automations triggered by a schedule, an API call, or a GitHub event. How they differ from /goal and /loop, and when to reach for each.","image":"https://albertoarena.it/images/posts/claude-code-routines-vs-goal-loop/cover.jpg","datePublished":"2026-07-19T10:00:00.000Z","author":{"@id":"https://albertoarena.it/#person"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://albertoarena.it/posts/claude-code-routines-vs-goal-loop/"}}</script> <header class="mb-8 max-w-[68ch]"> <p class="eyebrow font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-accent mb-3"> AI </p> <h1 class="font-sans text-[clamp(1.75rem,3.4vw,2.5rem)] leading-[1.15] tracking-[-0.025em] font-[660] mb-4 max-w-[26ch] text-ink dark:text-white"> Claude Code Routines: A Third Way Beyond /goal and /loop </h1> <p class="standfirst text-lg text-ink-2 mb-6 max-w-[60ch]"> Anthropic added routines to Claude Code: cloud-hosted automations triggered by a schedule, an API call, or a GitHub event. How they differ from /goal and /loop, and when to reach for each. </p> <div class="meta font-mono text-xs text-muted flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-b border-rule py-3"> <time datetime="2026-07-19T10:00:00.000Z">July 19, 2026</time> <span>8 min read</span>  <span>2nd in the Claude Code automation thread</span> </div> </header> <figure class="mb-10"> <img src="/images/posts/claude-code-routines-vs-goal-loop/cover.jpg" alt="Claude Code Routines: A Third Way Beyond /goal and /loop" width="1200" height="628" loading="eager" fetchpriority="high" class="w-full aspect-[1.91/1] object-cover border border-rule"> </figure> <details class="toc-mobile min-[1180px]:hidden mb-8 border border-rule px-4 py-3 not-prose"> <summary class="font-mono text-xs uppercase tracking-[0.1em] text-muted cursor-pointer"> On this page </summary> <ul class="toc-list mt-3 font-mono text-sm leading-relaxed"> <li> <a href="#what-a-routine-actually-is" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">What a routine actually is</a> </li><li> <a href="#creating-one" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Creating one</a> </li><li> <a href="#three-ways-to-trigger-one" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Three ways to trigger one</a> </li><li> <a href="#routines-vs-goal-vs-loop" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Routines vs /goal vs /loop</a> </li><li> <a href="#where-routines-shine" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Where routines shine</a> </li><li> <a href="#where-it-gets-tricky" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Where it gets tricky</a> </li><li> <a href="#practical-advice" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Practical advice</a> </li><li> <a href="#closing-thought" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Closing thought</a> </li><li> <a href="#sources" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Sources</a> </li> </ul> </details> <details class="series-mobile min-[1180px]:hidden mb-8 border border-rule px-4 py-3 not-prose"> <summary class="font-mono text-xs uppercase tracking-[0.1em] text-muted cursor-pointer"> Claude Code automation thread </summary> <ul class="mt-3 font-mono text-sm leading-relaxed"> <li class="flex py-[0.25rem]"> <span class="text-muted shrink-0 w-3">1</span> <a href="/posts/goal-command-claude-code/" class="text-ink-2 hover:text-accent">Claude Code /goal vs /loop: Stop Typing, Keep Going</a> </li><li class="flex py-[0.25rem]"> <span class="text-muted shrink-0 w-3">2</span> <span class="text-accent font-semibold">Claude Code Routines: A Third Way Beyond /goal and /loop</span> </li> </ul> <a href="/series/claude-goal-loop/" class="block mt-3 pt-3 border-t border-rule-soft font-mono text-sm text-accent hover:underline"> View series &rarr;
+</a> </details> <!-- Prose body at reading measure --> <div class="prose dark:prose-invert max-w-[68ch]">  <p>A few months ago, Claude Code shipped <a href="/posts/goal-command-claude-code/"><code>/goal</code></a>, a way to stop typing “keep going” every turn and let Claude work until a condition was actually met. That solved a real problem: staying in the loop with an open session so you didn’t have to babysit it turn by turn. It didn’t solve a different problem, the one where you want Claude to do something and you’re not even at your laptop.</p>
+<p>That gap just closed. Anthropic added routines: saved configurations that run on Anthropic’s own cloud infrastructure, triggered by a schedule, an API call, or a GitHub event, with no open session and no machine required. It’s currently in research preview, so behavior and limits may still shift, but the shape of the feature is clear enough to be worth understanding now.</p>
+<h2 id="what-a-routine-actually-is">What a routine actually is</h2>
+<p>A routine bundles three things: a prompt, one or more GitHub repositories, and a set of connectors (Slack, Linear, and other MCP integrations). Package it once, attach a trigger, and it runs on its own from then on, cloning the repository fresh each time and executing as a full, unattended Claude Code session.</p>
+<p>There’s no permission-mode picker and no approval prompts during a run. Whatever the environment and connectors allow, Claude can do without asking. That’s the point (nobody’s there to answer the prompt) but it also means the blast radius of a routine is defined entirely by what you scope it to, not by anything you can intervene on mid-run.</p>
+<h2 id="creating-one">Creating one</h2>
+<p>The fastest way in is <code>/schedule</code> (alias <code>/routines</code>), run inside any CLI session:</p>
+<pre class="astro-code github-dark-default" style="background-color:#0d1117;color:#e6edf3; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>/schedule daily PR review at 9am</span></span></code></pre>
+<pre class="astro-code github-dark-default" style="background-color:#0d1117;color:#e6edf3; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>/schedule in 2 weeks, open a cleanup PR that removes the feature flag</span></span></code></pre>
+<p>Claude asks follow-up questions about the repository, the prompt, and the cadence, then saves the routine to your claude.ai account. <code>/schedule</code> only sets up schedule triggers though: API and GitHub triggers need the web form at claude.ai/code/routines, where you can also review or edit anything the CLI created. <code>/schedule list</code>, <code>/schedule update</code>, and <code>/schedule run</code> manage existing routines from the terminal.</p>
+<h2 id="three-ways-to-trigger-one">Three ways to trigger one</h2>
+<p><strong>Scheduled.</strong> A recurring cadence (hourly, nightly, weekly) or a single run at a specific future time. The minimum interval is one hour, so this isn’t a replacement for tight polling, it’s for the kind of check that genuinely only needs to happen once a day or once a week.</p>
+<p><strong>API.</strong> Each routine gets its own endpoint and bearer token. POST to it and a new session starts, optionally carrying a <code>text</code> field with run-specific context, an alert body, a failing log line, whatever the caller wants to hand off. That text arrives wrapped in a block that labels it as untrusted data, so a routine’s prompt has to explicitly opt in to acting on it. It’s a deliberate guard: anyone holding a leaked token can send text, but they can’t use it to redirect the routine into doing something the saved prompt never asked for.</p>
+<p><strong>GitHub events.</strong> Pull request and release events, with filters on author, title, branch, labels, draft state, and merge state. A routine can watch for <code>pull_request.opened</code> on a specific base branch and run your team’s own review checklist before a human ever looks at the diff.</p>
+<p>A single routine can combine more than one trigger. A PR-review routine might run nightly as a backstop, fire from a deploy script, and also react to every new pull request.</p>
+<h2 id="routines-vs-goal-vs-loop">Routines vs /goal vs /loop</h2>
+<p>The three now cover genuinely different problems, not three flavors of the same one:</p>
+<ul>
+<li><strong><code>/loop</code></strong> re-runs a prompt on an interval, inside a session you have open, on your own machine. No completion check, just repetition. Good for polling a build or babysitting a PR while you’re around.</li>
+<li><strong><code>/goal</code></strong> keeps a session working, on your machine, until a separate evaluator model confirms a condition holds. Good for a bounded task you kicked off and want finished properly before you look again.</li>
+<li><strong>Routines</strong> run on Anthropic’s infrastructure, with no session and no machine required, triggered by time, an API call, or a GitHub event. Good for anything that should happen whether or not you’re at your desk.</li>
+</ul>
+<p>The practical filter: if the automation needs to survive you closing your laptop, it has to be a routine. Neither <code>/loop</code> nor <code>/goal</code> does, both stop the moment the session ends.</p>
+<h2 id="where-routines-shine">Where routines shine</h2>
+<p><strong>Backlog maintenance.</strong> A schedule trigger set to <code>0 22 * * *</code> (nightly at 10pm) reads issues opened since the last run, applies labels, assigns owners by code area, and posts a summary to a <code>#triage</code> Slack channel before the team’s day starts.</p>
+<p><strong>Alert triage.</strong> A monitoring tool posts to the routine’s API endpoint when an error threshold trips. The routine investigates the payload, correlates it with recent commits, and opens a draft PR with a proposed fix, so on-call reviews a diff instead of starting from a blank terminal.</p>
+<p><strong>Bespoke code review.</strong> A GitHub trigger fires on every <code>pull_request.opened</code>, applies your team’s own checklist, and leaves inline comments for the mechanical stuff so human reviewers can focus on design.</p>
+<p><strong>Cross-repo porting.</strong> A GitHub trigger on merged PRs in one SDK repository ports the same change to a parallel SDK in another language, keeping two libraries in step without someone re-implementing each change by hand.</p>
+<h2 id="where-it-gets-tricky">Where it gets tricky</h2>
+<p><strong>Everything a routine does carries your identity.</strong> Commits and pull requests use your GitHub account. Slack messages and Linear tickets use your linked accounts. There’s no separate “bot” identity to fall back on, so a routine with too many connectors attached can do a surprising amount in your name.</p>
+<p><strong>No approval gate means the environment is the only safety net.</strong> Network access, environment variables, and which connectors are included are configured once, up front, and apply to every run after that. Scope them to exactly what the routine needs, not to whatever happens to already be connected to your account.</p>
+<p><strong>Green doesn’t mean the task succeeded.</strong> A green status means the session started and exited without an infrastructure error, nothing more. Whether Claude actually did what the prompt asked is a separate question you still have to check by reading the run.</p>
+<p><strong>Branch pushes are restricted by default.</strong> Claude can only push to <code>claude/</code>-prefixed branches unless you explicitly allow unrestricted pushes for a repository. It’s a sensible default, but worth knowing before a routine’s first PR shows up on an unexpected branch name.</p>
+<p><strong>This is a research preview.</strong> The API surface ships under a dated beta header, and Anthropic has already said behavior, limits, and field shapes may change. Don’t build anything load-bearing on top of it just yet.</p>
+<p><strong>Runs share your regular usage quota, plus a separate daily cap.</strong> Routine runs draw down the same subscription usage as an interactive session, on top of an account-wide daily limit on how many routine runs can start. Set up several nightly routines and it’s easy to assume each gets its own budget. It doesn’t, so check your remaining runs at claude.ai/code/routines before you find out the hard way.</p>
+<h2 id="practical-advice">Practical advice</h2>
+<p>Start with a schedule trigger before reaching for API or GitHub triggers. It’s the easiest to reason about and the easiest to pause if something looks wrong.</p>
+<p>Strip the connector list down to what the routine actually touches. Every connector you leave attached is something Claude can use without asking, on every run, indefinitely.</p>
+<p>Treat routine output the same way you’d treat a CI pipeline: review the diff, don’t trust the status light. A run that “completed successfully” and a run that “did the right thing” are not the same claim.</p>
+<p>If a routine acts on external input (an alert body, a webhook payload), write the prompt to reference that payload explicitly. Otherwise it just sits there as inert context and the routine won’t act on it at all, which is the safe failure mode, but worth knowing in advance rather than discovering it during an incident.</p>
+<h2 id="closing-thought">Closing thought</h2>
+<p><code>/goal</code> solved the problem of staying in a session without re-prompting it. Routines solve the problem of not needing a session at all. Pick the one that matches the problem you actually have, and for the first time, none of them requires bending one tool to do a different job.</p>
+<h2 id="sources">Sources</h2>
+<ul>
+<li><a href="https://code.claude.com/docs/en/routines" rel="noopener noreferrer" target="_blank">Automate work with routines</a>: official Anthropic documentation for routines, covering creation, triggers, connectors, and limits.</li>
+<li><a href="https://code.claude.com/docs/en/scheduled-tasks" rel="noopener noreferrer" target="_blank">Run prompts on a schedule</a>: official documentation for <code>/loop</code> and session-scoped scheduled tasks, including the comparison against routines and Desktop scheduled tasks.</li>
+<li><a href="https://code.claude.com/docs/en/goal" rel="noopener noreferrer" target="_blank">Keep Claude working toward a goal</a>: official documentation for the <code>/goal</code> command.</li>
+<li><a href="/posts/goal-command-claude-code/">Claude Code /goal vs /loop: Stop Typing, Keep Going</a>: the earlier post this one builds on.</li>
+</ul>  </div> <!-- Endnote block (redesign-plan.md §7): tags, author, subscribe, discussion, pager --> <div class="endnote mt-12 pt-6 border-t border-rule max-w-[68ch]"> <div class="post-tags flex flex-wrap gap-2 mb-7 font-mono text-xs"> <a href="/tag/ai/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#AI </a><a href="/tag/claude/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#Claude </a><a href="/tag/developer-tools/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#Developer Tools </a><a href="/tag/claude-code/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#Claude Code </a> </div> <div class="post-author flex items-center gap-3 mb-7"> <img src="/photo.jpg" alt="" class="w-11 h-11 rounded-full"> <div> <p class="font-sans font-semibold text-sm text-ink dark:text-white">Alberto Arena</p> <p class="text-sm text-muted">Senior Software Engineer</p> </div> </div> <div class="post-newsletter border border-rule px-5 py-5 mb-6" data-astro-transition-persist="newsletter-signup" data-astro-transition-scope="astro-iogfcb4l-1"> <h2 class="text-base font-semibold text-ink dark:text-white mb-1">Liked this? Get the next one.</h2> <p class="text-sm text-ink-2 leading-relaxed mb-4">
+Practical notes on Laravel tooling and AI-assisted development, about once a month.
+                    Join the list and I'll send you my
+<a href="/cheatsheets/spatie-event-sourcing/" class="text-accent underline">Spatie Event Sourcing cheat sheet</a>
+to start.
+</p> <div data-form="HjBuvq" class="ml-embedded newsletter-signup-target"></div> <script>(function(){const accountId = "2474575";
+
+  function loadMailerLite() {
+    (function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[])
+    .push(arguments);},l=d.createElement(e),l.async=1,l.src=u,
+    n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})
+    (window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');
+    ml('account', accountId);
+  }
+
+  function initNewsletterSignup() {
+    var target = document.querySelector('.newsletter-signup-target');
+    // Already wired up: either a fresh page's target we've already handled,
+    // or (post-to-post navigation) the same transition:persist node carried
+    // over from the previous page, already loaded or already being watched.
+    if (!target || target.dataset.mlObserved === '1') return;
+    target.dataset.mlObserved = '1';
+
+    // Plain scroll-position polling, not IntersectionObserver: the box is
+    // transition:persist (home page and every post share one DOM node), so
+    // an observer created on first load keeps "watching" that node forever,
+    // even after it's carried into a page it never ran its own init on —
+    // fine on its own, except a same-page TOC jump rides scroll-behavior:
+    // smooth, and an animated scroll can move the target through the
+    // viewport fast enough to land between two observer check frames,
+    // which then never reports isIntersecting at all (same failure mode
+    // already hit and fixed this way for the TOC active-heading tracking).
+    // A rAF-throttled getBoundingClientRect check against every 'scroll'
+    // event can't miss a frame like that, and rides along with the persisted
+    // node onto whichever page it ends up on.
+    var ticking = false;
+    function checkPosition() {
+      ticking = false;
+      var rect = target.getBoundingClientRect();
+      if (rect.top < window.innerHeight + 600 && rect.bottom > -600) {
+        window.removeEventListener('scroll', onScroll);
+        loadMailerLite();
+      }
+    }
+    function onScroll() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(checkPosition);
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    checkPosition();
+  }
+
+  // Astro's View Transitions swap doesn't re-execute an inline script whose
+  // content is byte-identical to one that already ran elsewhere in the
+  // session (this component renders the same script on every post and on
+  // /subscribe), so a target introduced by a client-side navigation from a
+  // page with no newsletter box of its own (e.g. home -> a post) would
+  // otherwise never get observed.
+  initNewsletterSignup();
+  document.addEventListener('astro:after-swap', initNewsletterSignup);
+})();</script> </div> <div class="discuss border-t border-rule-soft pt-4 mb-7 font-mono text-sm text-muted leading-relaxed"> Found a mistake, or disagree?  <a href="https://github.com/albertoarena/albertoarena.it/discussions" target="_blank" rel="noopener noreferrer" class="text-accent underline"> Open a discussion on GitHub </a>  or  <a href="mailto:hello@albertoarena.it" class="text-accent underline"> send me an email </a>.
+</div> <nav class="pager grid grid-cols-1 min-[560px]:grid-cols-2 gap-5" aria-label="Post navigation"> <a href="/posts/goal-command-claude-code/" class="border-t border-rule pt-3 group"> <span class="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-muted block">
+&larr; Previous in thread </span> <span class="font-sans text-[0.9375rem] font-medium leading-snug mt-1 block group-hover:text-accent"> Claude Code /goal vs /loop: Stop Typing, Keep Going </span> </a> <a href="/posts/introducing-truss/" class="border-t border-rule pt-3 text-right group"> <span class="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-muted block"> Next post &rarr;
+</span> <span class="font-sans text-[0.9375rem] font-medium leading-snug mt-1 block group-hover:text-accent"> There&#39;s no artisan schema:show, so I built one </span> </a> </nav> </div> </article> </main> <footer class="site-footer border-t border-rule mt-20 py-8"> <div class="max-w-3xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted"> <span>© 2026 Alberto Arena</span> <div class="flex items-center gap-4"> <a href="/pages/privacy-policy/" class="hover:text-accent transition-colors">Privacy Policy</a> <span aria-hidden="true">·</span> <a href="/pages/credits/" class="hover:text-accent transition-colors">Credits</a> <span aria-hidden="true">·</span> <a href="/rss.xml" class="hover:text-accent transition-colors">RSS</a> <span aria-hidden="true">·</span> <a href="https://www.youtube.com/@AlbertoArenaDev" class="hover:text-accent transition-colors">YouTube</a> </div> </div> </footer> </div> <aside class="hidden min-[1180px]:flex flex-col gap-8 border-l border-rule px-5 py-9 sticky top-0 self-start h-screen overflow-y-auto"> <div> <h3 class="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted mb-2.5"> On this page </h3> <ul id="toc" class="font-mono text-xs leading-[1.55]"> <li> <a href="#what-a-routine-actually-is" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="what-a-routine-actually-is">What a routine actually is</a> </li><li> <a href="#creating-one" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="creating-one">Creating one</a> </li><li> <a href="#three-ways-to-trigger-one" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="three-ways-to-trigger-one">Three ways to trigger one</a> </li><li> <a href="#routines-vs-goal-vs-loop" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="routines-vs-goal-vs-loop">Routines vs /goal vs /loop</a> </li><li> <a href="#where-routines-shine" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="where-routines-shine">Where routines shine</a> </li><li> <a href="#where-it-gets-tricky" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="where-it-gets-tricky">Where it gets tricky</a> </li><li> <a href="#practical-advice" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="practical-advice">Practical advice</a> </li><li> <a href="#closing-thought" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="closing-thought">Closing thought</a> </li><li> <a href="#sources" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="sources">Sources</a> </li> </ul> </div> <div> <h3 class="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted mb-2.5"> <a href="/series/claude-goal-loop/" class="hover:text-accent">Claude Code automation thread</a> </h3> <ul class="font-mono text-xs leading-[1.5]"> <li class="flex py-[0.3rem]"> <span class="text-muted shrink-0 w-3">1</span> <a href="/posts/goal-command-claude-code/" class="text-ink-2 hover:text-accent">Claude Code /goal vs /loop: Stop Typing, Keep Going</a> </li><li class="flex py-[0.3rem]"> <span class="text-muted shrink-0 w-3">2</span> <span class="text-accent font-semibold">Claude Code Routines: A Third Way Beyond /goal and /loop</span> </li> </ul> </div> </aside> </div> <button id="reading-mode-toggle" type="button" aria-pressed="false" class="fixed right-4 z-50 border border-rule bg-paper px-4 py-2 font-mono text-sm text-accent shadow-lg transition-colors hover:border-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 motion-reduce:transition-none" style="bottom: calc(1rem + env(safe-area-inset-bottom));">
+Reading mode
+</button> <script type="module">const i="reading-mode";function n(){const t=document.documentElement.toggleAttribute("data-reading");localStorage.setItem(i,t?"1":"0"),o()}function o(){const e=document.getElementById("reading-mode-toggle");if(!e)return;const t=document.documentElement.hasAttribute("data-reading");e.setAttribute("aria-pressed",String(t)),e.textContent=t?"Exit reading mode":"Reading mode"}function d(){const e=document.getElementById("reading-mode-toggle");e&&(e.removeEventListener("click",n),e.addEventListener("click",n),o())}d();document.addEventListener("astro:after-swap",d);</script> <div id="cookie-consent" class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-paper border-t border-rule shadow-lg" role="dialog" aria-labelledby="cookie-consent-title" aria-describedby="cookie-consent-description"> <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"> <div class="text-sm text-ink dark:text-white"> <p id="cookie-consent-title" class="font-semibold mb-1">We use cookies</p> <p id="cookie-consent-description" class="text-ink-2">
+We use analytics cookies to understand how you use this site and improve your experience.
+        No advertising or profiling cookies are used.
+<a href="/pages/privacy-policy/" class="underline hover:text-accent transition-colors ml-1">Privacy Policy</a> </p> </div> <div class="flex gap-3 flex-shrink-0"> <button id="decline-cookies" class="px-4 py-2 text-sm text-muted hover:text-ink dark:hover:text-white transition-colors" aria-label="Decline analytics cookies">
+Decline
+</button> <button id="accept-cookies" class="px-4 py-2 text-sm bg-accent text-white hover:bg-accent/90 transition-colors" aria-label="Accept analytics cookies">
+Accept analytics
+</button> </div> </div> </div> <script type="module">function n(...e){window.dataLayer=window.dataLayer||[],window.dataLayer.push(e)}function o(){const e=localStorage.getItem("cookieConsent"),t=document.getElementById("cookie-consent");if(e){t?.remove(),e==="accepted"&&n("consent","update",{analytics_storage:"granted"});return}document.getElementById("accept-cookies")?.addEventListener("click",()=>{n("consent","update",{analytics_storage:"granted"}),localStorage.setItem("cookieConsent","accepted"),t?.remove()}),document.getElementById("decline-cookies")?.addEventListener("click",()=>{n("consent","update",{analytics_storage:"denied"}),localStorage.setItem("cookieConsent","declined"),t?.remove()})}o();document.addEventListener("astro:after-swap",o);</script>  </body></html> <script type="module">let n;function l(){n&&(window.removeEventListener("scroll",n),n=void 0);const o=Array.from(document.querySelectorAll("#toc a[data-target]")),i=o.map(e=>document.getElementById(e.dataset.target)).filter(e=>!!e);if(!i.length)return;const s=()=>window.innerHeight*.2;function a(){const e=s();let c=i[0].id;for(const t of i)if(t.getBoundingClientRect().top<=e)c=t.id;else break;o.forEach(t=>{t.classList.toggle("toc-active",t.dataset.target===c)})}let r=!1;n=()=>{r||(r=!0,requestAnimationFrame(()=>{r=!1,a()}))},window.addEventListener("scroll",n,{passive:!0}),a()}l();document.addEventListener("astro:after-swap",l);</script>

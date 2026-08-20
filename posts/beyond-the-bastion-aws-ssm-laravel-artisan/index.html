@@ -1,0 +1,331 @@
+<!DOCTYPE html><html lang="en" class="light"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="canonical" href="https://albertoarena.it/posts/beyond-the-bastion-aws-ssm-laravel-artisan/"><link rel="sitemap" href="/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="A blog by Alberto Arena" href="/rss.xml"><!-- Preload the body serif and the mono weight actually used at first paint --><link rel="preload" as="font" type="font/woff2" href="/_astro/source-serif-4-latin-wght-normal.D9elroTD.woff2" crossorigin="anonymous"><link rel="preload" as="font" type="font/woff2" href="/_astro/ibm-plex-mono-latin-400-normal.DMJ8VG8y.woff2" crossorigin="anonymous"><title>Beyond the Bastion: Secure Artisan Command Execution with AWS Systems Manager</title><meta name="description" content="When IT blocks SSH for compliance, your manual Artisan operations go dark. Here is how AWS Systems Manager Run Command replaces the bastion host with an IAM-authenticated, CloudTrail-audited alternative, and the engineering decisions behind building a reusable toolkit around it."><meta name="author" content="Alberto Arena"><!-- Open Graph / Facebook --><meta property="og:type" content="article"><meta property="og:url" content="https://albertoarena.it/posts/beyond-the-bastion-aws-ssm-laravel-artisan/"><meta property="og:title" content="Beyond the Bastion: Secure Artisan Command Execution with AWS Systems Manager"><meta property="og:description" content="When IT blocks SSH for compliance, your manual Artisan operations go dark. Here is how AWS Systems Manager Run Command replaces the bastion host with an IAM-authenticated, CloudTrail-audited alternative, and the engineering decisions behind building a reusable toolkit around it."><meta property="og:image" content="https://albertoarena.it/images/posts/beyond-the-bastion-aws-ssm-laravel-artisan/cover.jpg"><meta property="og:site_name" content="A blog by Alberto Arena"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:url" content="https://albertoarena.it/posts/beyond-the-bastion-aws-ssm-laravel-artisan/"><meta name="twitter:title" content="Beyond the Bastion: Secure Artisan Command Execution with AWS Systems Manager"><meta name="twitter:description" content="When IT blocks SSH for compliance, your manual Artisan operations go dark. Here is how AWS Systems Manager Run Command replaces the bastion host with an IAM-authenticated, CloudTrail-audited alternative, and the engineering decisions behind building a reusable toolkit around it."><meta name="twitter:image" content="https://albertoarena.it/images/posts/beyond-the-bastion-aws-ssm-laravel-artisan/cover.jpg"><meta name="twitter:creator" content="@alberto_arena"><!-- Structured data --><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://albertoarena.it/#person","name":"Alberto Arena","url":"https://albertoarena.it/pages/about/","image":"https://albertoarena.it/photo.jpg","jobTitle":"Senior Software Engineer","sameAs":["https://x.com/alberto_arena","https://www.linkedin.com/in/alberto-arena-ba44a624/","https://github.com/albertoarena","https://www.youtube.com/@AlbertoArenaDev"]},{"@type":"WebSite","@id":"https://albertoarena.it/#website","name":"A blog by Alberto Arena","url":"https://albertoarena.it","publisher":{"@id":"https://albertoarena.it/#person"}}]}</script><!-- Theme color, kept in sync with the --accent token per theme --><meta name="theme-color" content="#0b5fd0"><!-- Theme script (prevent flash) --><script>
+      const THEME_COLOR = { light: '#0b5fd0', dark: '#5eb3ff' };
+
+      function setThemeColorMeta(theme) {
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', THEME_COLOR[theme]);
+      }
+
+      function applyTheme() {
+        const theme = (() => {
+          if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+            return localStorage.getItem('theme');
+          }
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
+          }
+          return 'light';
+        })();
+
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+        } else {
+          document.documentElement.classList.add('light');
+          document.documentElement.classList.remove('dark');
+        }
+        setThemeColorMeta(theme);
+      }
+
+      // Apply theme immediately
+      applyTheme();
+
+      // Re-apply after View Transitions swap
+      document.addEventListener('astro:after-swap', applyTheme);
+
+      // Also handle before swap to prevent flash
+      document.addEventListener('astro:before-swap', (event) => {
+        const theme = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        event.newDocument.documentElement.classList.toggle('dark', theme === 'dark');
+        event.newDocument.documentElement.classList.toggle('light', theme === 'light');
+      });
+
+      // Reflect an in-page toggle click immediately, no swap involved
+      document.addEventListener('theme-changed', (event) => setThemeColorMeta(event.detail.theme));
+    </script><!-- Reading mode script (prevent flash, post pages only) --><script>
+      function applyReadingMode() {
+        const onPost = location.pathname.startsWith('/posts/');
+        if (onPost && localStorage.getItem('reading-mode') === '1') {
+          document.documentElement.setAttribute('data-reading', '');
+        } else {
+          document.documentElement.removeAttribute('data-reading');
+        }
+      }
+
+      // Apply immediately
+      applyReadingMode();
+
+      // Re-apply after View Transitions swap
+      document.addEventListener('astro:after-swap', applyReadingMode);
+
+      // Also handle before swap to prevent flash
+      document.addEventListener('astro:before-swap', (event) => {
+        const onPost = event.to.pathname.startsWith('/posts/');
+        const on = onPost && localStorage.getItem('reading-mode') === '1';
+        event.newDocument.documentElement.toggleAttribute('data-reading', on);
+      });
+    </script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CDGfc0hd.js"></script><!-- Google Consent Mode v2 defaults --><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      // Restore prior consent immediately so returning users aren't blocked
+      var _priorConsent = localStorage.getItem('cookieConsent');
+      gtag('consent', 'default', {
+        analytics_storage: _priorConsent === 'accepted' ? 'granted' : 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        wait_for_update: _priorConsent ? 0 : 500,
+      });
+    </script><!-- Google Tag Manager --><script>(function(){const gtmId = "GTM-PDQBJBL3";
+
+      if (gtmId && !window._gtmLoaded) {
+        window._gtmLoaded = true;
+        (function(w,d,s,l,i){
+          w[l]=w[l]||[];
+          w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+          var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s), dl=l!='dataLayer'?'&l='+l:'';
+          j.async=true;
+          j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+          f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer',gtmId);
+
+        // Push page_view on each SPA navigation (View Transitions) — registered once
+        document.addEventListener('astro:after-swap', function() {
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            event: 'page_view',
+            page_location: window.location.href,
+            page_path: window.location.pathname,
+            page_title: document.title,
+          });
+        });
+      }
+    })();</script><link rel="stylesheet" href="/_astro/index.CL4KpOtD.css">
+<style>@keyframes astroFadeInOut{0%{opacity:1}to{opacity:0}}@keyframes astroFadeIn{0%{opacity:0;mix-blend-mode:plus-lighter}to{opacity:1;mix-blend-mode:plus-lighter}}@keyframes astroFadeOut{0%{opacity:1;mix-blend-mode:plus-lighter}to{opacity:0;mix-blend-mode:plus-lighter}}@keyframes astroSlideFromRight{0%{transform:translate(100%)}}@keyframes astroSlideFromLeft{0%{transform:translate(-100%)}}@keyframes astroSlideToRight{to{transform:translate(100%)}}@keyframes astroSlideToLeft{to{transform:translate(-100%)}}@media(prefers-reduced-motion){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}[data-astro-transition-scope]{animation:none!important}}
+</style><style>[data-astro-transition-scope="astro-iogfcb4l-1"] { view-transition-name: newsletter-signup; }@layer astro { ::view-transition-old(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-iogfcb4l-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-iogfcb4l-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-iogfcb4l-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-iogfcb4l-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-iogfcb4l-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-iogfcb4l-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-iogfcb4l-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-iogfcb4l-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head> <body class="min-h-screen"> <!-- Google Tag Manager (noscript) --> <noscript> <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PDQBJBL3" height="0" width="0" style="display:none;visibility:hidden"></iframe> </noscript> <a href="#main-content" class="skip-to-content">Skip to content</a>   <div class="post-shell min-[900px]:grid min-[900px]:grid-cols-[14rem_minmax(0,1fr)] min-[1180px]:grid-cols-[14rem_minmax(0,1fr)_15rem] max-w-[82rem] mx-auto"> <aside class="border-b min-[900px]:border-b-0 min-[900px]:border-r border-rule
+    flex flex-row min-[900px]:flex-col flex-wrap min-[900px]:flex-nowrap
+    items-start gap-x-7 gap-y-3 min-[900px]:gap-y-6
+    px-5 py-5 min-[900px]:pl-5 min-[900px]:pr-6 min-[900px]:pt-9 min-[900px]:pb-8
+    min-[900px]:sticky min-[900px]:top-0 min-[900px]:self-start
+    min-[900px]:h-screen min-[900px]:w-56 min-[900px]:shrink-0
+    print:hidden"> <div class="w-full min-[900px]:w-auto"> <a href="/" class="font-sans font-semibold text-base leading-tight tracking-tight text-ink dark:text-white hover:text-accent transition-colors"> Alberto Arena </a> <div class="font-mono text-[0.6875rem] uppercase tracking-[0.11em] text-muted mt-1.5"> Senior Software Engineer </div> </div> <nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Reading"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> read </div> <a href="/writing/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>writing </a><a href="/series/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>series </a><a href="/cheatsheets/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>cheatsheets </a> </nav><nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Projects"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> build </div> <a href="https://trussphp.com/" target="_blank" rel="noopener noreferrer" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>truss </a><a href="/projects/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>projects </a><a href="https://www.youtube.com/@AlbertoArenaDev" target="_blank" rel="noopener noreferrer" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>videos </a> </nav><nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Work with me"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> work </div> <a href="/pages/consulting/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>consulting </a><a href="/subscribe/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>subscribe </a><a href="/pages/about/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>about </a> </nav> <div class="w-full min-[900px]:w-auto min-[900px]:mt-auto font-mono text-[0.6875rem] leading-relaxed text-muted flex flex-col gap-1"> <span>Sicily, Italy</span> <span class="flex items-center gap-1.5"> <span class="inline-block w-[0.45rem] h-[0.45rem] rounded-full bg-ok shrink-0" aria-hidden="true"></span>
+Available for freelance
+</span>  </div> </aside> <div class="post-shell-main min-w-0 min-[900px]:col-start-2"> <div class="flex justify-end px-6 pt-6 min-[900px]:px-8 min-[900px]:pt-8"> <button data-theme-toggle type="button" class="p-2 text-muted hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent" aria-label="Toggle dark mode"> <!-- Sun icon (shown in dark mode to switch to light) --> <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path> </svg> <!-- Moon icon (shown in light mode to switch to dark) --> <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path> </svg> </button> <script type="module">function t(){const e=document.documentElement.classList.contains("dark"),c=e?"light":"dark";e?(document.documentElement.classList.remove("dark"),document.documentElement.classList.add("light"),localStorage.setItem("theme","light")):(document.documentElement.classList.add("dark"),document.documentElement.classList.remove("light"),localStorage.setItem("theme","dark")),document.dispatchEvent(new CustomEvent("theme-changed",{detail:{theme:c}}))}function n(){document.querySelectorAll("[data-theme-toggle]").forEach(e=>{e.removeEventListener("click",t),e.addEventListener("click",t)})}n();document.addEventListener("astro:after-swap",n);</script> </div> <main id="main-content" class="px-6 pb-12 min-[900px]:px-8 min-[900px]:pb-16"> <article class="post-content"> <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Beyond the Bastion: Secure Artisan Command Execution with AWS Systems Manager","description":"When IT blocks SSH for compliance, your manual Artisan operations go dark. Here is how AWS Systems Manager Run Command replaces the bastion host with an IAM-authenticated, CloudTrail-audited alternative, and the engineering decisions behind building a reusable toolkit around it.","image":"https://albertoarena.it/images/posts/beyond-the-bastion-aws-ssm-laravel-artisan/cover.jpg","datePublished":"2026-07-06T10:00:00.000Z","author":{"@id":"https://albertoarena.it/#person"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://albertoarena.it/posts/beyond-the-bastion-aws-ssm-laravel-artisan/"}}</script> <header class="mb-8 max-w-[68ch]"> <p class="eyebrow font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-accent mb-3"> AWS </p> <h1 class="font-sans text-[clamp(1.75rem,3.4vw,2.5rem)] leading-[1.15] tracking-[-0.025em] font-[660] mb-4 max-w-[26ch] text-ink dark:text-white"> Beyond the Bastion: Secure Artisan Command Execution with AWS Systems Manager </h1> <p class="standfirst text-lg text-ink-2 mb-6 max-w-[60ch]"> When IT blocks SSH for compliance, your manual Artisan operations go dark. Here is how AWS Systems Manager Run Command replaces the bastion host with an IAM-authenticated, CloudTrail-audited alternative, and the engineering decisions behind building a reusable toolkit around it. </p> <div class="meta font-mono text-xs text-muted flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-b border-rule py-3"> <time datetime="2026-07-06T10:00:00.000Z">July 6, 2026</time> <span>6 min read</span>   </div> </header> <figure class="mb-10"> <img src="/images/posts/beyond-the-bastion-aws-ssm-laravel-artisan/cover.jpg" alt="Beyond the Bastion: Secure Artisan Command Execution with AWS Systems Manager" width="1200" height="628" loading="eager" fetchpriority="high" class="w-full aspect-[1.91/1] object-cover border border-rule"> </figure> <details class="toc-mobile min-[1180px]:hidden mb-8 border border-rule px-4 py-3 not-prose"> <summary class="font-mono text-xs uppercase tracking-[0.1em] text-muted cursor-pointer"> On this page </summary> <ul class="toc-list mt-3 font-mono text-sm leading-relaxed"> <li> <a href="#why-not-the-obvious-alternatives" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Why not the obvious alternatives</a> </li><li> <a href="#how-ssm-run-command-works" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">How SSM Run Command works</a> </li><li> <a href="#the-toolkit" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">The toolkit</a> </li><li> <a href="#the-design-decisions-worth-explaining" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">The design decisions worth explaining</a> </li><li> <a href="#iam-the-minimum-blast-radius" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">IAM: the minimum blast radius</a> </li><li> <a href="#testing-without-live-aws" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Testing without live AWS</a> </li><li> <a href="#the-result" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">The result</a> </li> </ul> </details>  <!-- Prose body at reading measure --> <div class="prose dark:prose-invert max-w-[68ch]">  <p>One day IT tells you SSH is going away. Not because anything broke, but because compliance
+and security hardening demand it. Port 22 gets closed. The bastion host or jump box
+disappears. For an infrastructure-level system this is the right call, but for a team
+running corrective operations by SSHing into boxes and typing <code>php artisan</code>, it is a
+sharp cliff.</p>
+<p>This is the problem I had to solve for a fleet of Laravel applications running on EC2.
+Scheduled commands were safe: the Laravel scheduler runs on the box itself and needs no
+interactive login. But everything <em>manual</em> was going to die the moment IT pulled the plug
+on SSH: resending a failed report, clearing a stuck queue, running a one-off data fix.</p>
+<p>This is what I built instead, and what I learned along the way.</p>
+<h2 id="why-not-the-obvious-alternatives">Why not the obvious alternatives</h2>
+<p>Before settling on SSM, I looked at the options you would normally reach for:</p>
+<p><strong>An authenticated admin web UI or HTTP API.</strong> This would work operationally, but it
+reintroduces exactly the attack surface the security hardening is trying to reduce: a
+new publicly-accessible endpoint with its own auth, cert, and attack exposure. Not the
+direction security wants to go.</p>
+<p><strong>Porting the apps to Lambda.</strong> Tempting architecturally, but these are stateful EC2
+Laravel apps with on-box schedulers, S3 integrations, and database migrations. A full
+rewrite is not a corrective action. It is a multi-quarter project.</p>
+<p><strong>A dedicated bastion or jump path.</strong> Still SSH. IT will block that too, and rightly so.</p>
+<p>SSM is the path AWS intends for exactly this situation: managed, IAM-controlled access to
+EC2 instances with no inbound ports, no shared keys, and a full audit trail in CloudTrail.</p>
+<h2 id="how-ssm-run-command-works">How SSM Run Command works</h2>
+<p>AWS Systems Manager Run Command lets you execute shell commands on EC2 instances from
+your own machine, authenticated by your IAM credentials. The instance never needs to
+accept an inbound connection. The SSM Agent on the box polls AWS endpoints over outbound
+HTTPS (port 443), picks up the command, executes it, and reports the result back. No open
+ports at all.</p>
+<p>The flow looks like this:</p>
+<img src="/images/posts/beyond-the-bastion-aws-ssm-laravel-artisan/diagram.webp" alt="SSM flow diagram" class="mx-auto block dark:invert max-w-xs">
+<p>The prerequisites are modest: the SSM Agent must be running on the instance (pre-installed
+on Amazon Linux; on Ubuntu it is a snap), the instance role needs the
+<code>AmazonSSMManagedInstanceCore</code> managed policy, and outbound 443 to the SSM endpoints must
+be open (or you use VPC endpoints). No SSH daemon, no open inbound port.</p>
+<h2 id="the-toolkit">The toolkit</h2>
+<p>Rather than having engineers hand-craft <code>aws ssm send-command</code> strings, I built a small
+CLI wrapper:</p>
+<pre class="astro-code github-dark-default" style="background-color:#0d1117;color:#e6edf3; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#FFA657">ssm-run</span><span style="color:#FF7B72"> &#x3C;</span><span style="color:#A5D6FF">ap</span><span style="color:#E6EDF3">p</span><span style="color:#FF7B72">></span><span style="color:#79C0FF"> --</span><span style="color:#FF7B72"> &#x3C;</span><span style="color:#A5D6FF">artisan</span><span style="color:#A5D6FF"> command</span><span style="color:#A5D6FF"> and</span><span style="color:#A5D6FF"> arg</span><span style="color:#E6EDF3">s</span><span style="color:#FF7B72">></span></span></code></pre>
+<p>The environment defaults to Stage. Reaching production requires an explicit <code>--env prod</code>,
+which encodes the “verify on Stage first” policy in the tool itself rather than in a
+wiki page nobody reads.</p>
+<p>The wrapper resolves the config for the named app and environment, picks the right EC2
+instance, assembles the SSM call, fires it, polls for completion, and prints the output
+inline, with no server-side changes to the applications.</p>
+<p>The tool is written in pure Bash, with <code>aws</code> CLI v2 and <code>jq</code> as its only runtime
+dependencies. No framework, no package manager, no installation onto the servers. It runs
+entirely on the operator’s machine using their own AWS credentials.</p>
+<h2 id="the-design-decisions-worth-explaining">The design decisions worth explaining</h2>
+<p>Building something that drives production infrastructure forced me to think carefully
+about the failure modes. A few decisions shaped the final design.</p>
+<h3 id="fail-loudly-on-fleet-mismatch">Fail loudly on fleet mismatch</h3>
+<p>In a multi-app shared environment, running an Artisan command on one instance is
+sufficient and correct. Running it on all of them would duplicate side effects: send the
+same report email twice, process the same records twice.</p>
+<p>The toolkit declares the expected set of instances per environment in config, then
+verifies the <em>running</em> set matches before firing. If an undeclared instance has appeared,
+if one of the declared boxes is offline, or if the count is wrong, the command fails
+loudly rather than silently proceeding. This deterministic pick-and-assert approach treats
+a mismatched fleet as an error, not an inconvenience.</p>
+<h3 id="route-through-the-on-box-wrapper">Route through the on-box wrapper</h3>
+<p>The applications already had an on-box wrapper script that prevents overlapping runs of
+the same Artisan command: two engineers triggering the same command simultaneously would
+otherwise process the same records twice or send duplicate emails. The toolkit routes every
+command through this wrapper rather than calling <code>php artisan</code> directly. This preserves
+the overlap-protection guarantee that already exists for scheduled commands, keeps
+privilege escalation in one well-known place, and means there is a single source of truth
+for how a command runs on the box.</p>
+<h3 id="no-artisan-allow-list-in-v1">No Artisan allow-list in v1</h3>
+<p>I considered restricting which commands could be sent. Ultimately I left this out of the
+first version. The real control gate is IAM: only engineers who have <code>ssm:SendCommand</code>
+in their policy can use the tool at all, and every invocation is recorded in CloudTrail.
+An explicit allow-list is a v2 concern, if security asks for it.</p>
+<h2 id="iam-the-minimum-blast-radius">IAM: the minimum blast radius</h2>
+<p>The IAM policy for an operator is minimal: <code>ssm:SendCommand</code> scoped to the specific EC2
+instance ARNs and the <code>AWS-RunShellScript</code> document, plus <code>ssm:DescribeInstanceInformation</code>
+and <code>ssm:GetCommandInvocation</code> for the polling side.</p>
+<p>One notable caveat: <code>DescribeInstanceInformation</code> and <code>GetCommandInvocation</code> do <strong>not</strong>
+support resource-level scoping in IAM. AWS’s own service authorization reference lists
+no ARN form for these actions. Any attempt to narrow <code>Resource</code> to a specific instance
+ARN silently matches nothing and denies every call. These two actions genuinely require
+<code>Resource: *</code>. They are read-only status checks, so the risk is low, but it is worth
+flagging the caveat when working with IT to approve the policy.</p>
+<p>Every <code>send-command</code> call appears in CloudTrail. The command-level audit trail is
+automatic.</p>
+<h2 id="testing-without-live-aws">Testing without live AWS</h2>
+<p>No tests, no code is a mantra I try to stick to, and a Bash toolkit is no exception.
+The toolkit is tested with <a href="https://github.com/bats-core/bats-core" rel="noopener noreferrer" target="_blank">Bats</a>, with the <code>aws</code>
+CLI stubbed out so the suite runs with no live infrastructure. The unit tests cover config
+resolution, target selection, and the assembled command string: the parts most likely to
+be wrong quietly. Shellcheck runs as a lint gate on every commit, and a dry-run mode
+(which prints the exact <code>aws</code> call without firing it) bridges the gap between
+“tests pass” and “this looks right on prod.”</p>
+<h2 id="the-result">The result</h2>
+<p>The toolkit is in production, verified live on both Stage and Prod. Adding a new Laravel
+application takes about ten minutes: drop a config file with the deploy path, confirm the
+SSM agent is online, smoke test on Stage.</p>
+<p>The interesting part of this project was not the AWS mechanics. The SSM Run Command API
+is well-documented and straightforward. It was the design work around it: the fleet
+assertion, the stage-first default, the on-box wrapper integration. The primitives are
+simple. The decisions about how to compose them safely are where the engineering lives.</p>  </div> <!-- Endnote block (redesign-plan.md §7): tags, author, subscribe, discussion, pager --> <div class="endnote mt-12 pt-6 border-t border-rule max-w-[68ch]"> <div class="post-tags flex flex-wrap gap-2 mb-7 font-mono text-xs"> <a href="/tag/aws/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#AWS </a><a href="/tag/ssm/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#SSM </a><a href="/tag/laravel/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#Laravel </a><a href="/tag/php/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#PHP </a><a href="/tag/devops/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#DevOps </a><a href="/tag/security/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#Security </a><a href="/tag/ec2/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#EC2 </a> </div> <div class="post-author flex items-center gap-3 mb-7"> <img src="/photo.jpg" alt="" class="w-11 h-11 rounded-full"> <div> <p class="font-sans font-semibold text-sm text-ink dark:text-white">Alberto Arena</p> <p class="text-sm text-muted">Senior Software Engineer</p> </div> </div> <div class="post-newsletter border border-rule px-5 py-5 mb-6" data-astro-transition-persist="newsletter-signup" data-astro-transition-scope="astro-iogfcb4l-1"> <h2 class="text-base font-semibold text-ink dark:text-white mb-1">Liked this? Get the next one.</h2> <p class="text-sm text-ink-2 leading-relaxed mb-4">
+Practical notes on Laravel tooling and AI-assisted development, about once a month.
+                    Join the list and I'll send you my
+<a href="/cheatsheets/spatie-event-sourcing/" class="text-accent underline">Spatie Event Sourcing cheat sheet</a>
+to start.
+</p> <div data-form="HjBuvq" class="ml-embedded newsletter-signup-target"></div> <script>(function(){const accountId = "2474575";
+
+  function loadMailerLite() {
+    (function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[])
+    .push(arguments);},l=d.createElement(e),l.async=1,l.src=u,
+    n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})
+    (window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');
+    ml('account', accountId);
+  }
+
+  function initNewsletterSignup() {
+    var target = document.querySelector('.newsletter-signup-target');
+    // Already wired up: either a fresh page's target we've already handled,
+    // or (post-to-post navigation) the same transition:persist node carried
+    // over from the previous page, already loaded or already being watched.
+    if (!target || target.dataset.mlObserved === '1') return;
+    target.dataset.mlObserved = '1';
+
+    // Plain scroll-position polling, not IntersectionObserver: the box is
+    // transition:persist (home page and every post share one DOM node), so
+    // an observer created on first load keeps "watching" that node forever,
+    // even after it's carried into a page it never ran its own init on —
+    // fine on its own, except a same-page TOC jump rides scroll-behavior:
+    // smooth, and an animated scroll can move the target through the
+    // viewport fast enough to land between two observer check frames,
+    // which then never reports isIntersecting at all (same failure mode
+    // already hit and fixed this way for the TOC active-heading tracking).
+    // A rAF-throttled getBoundingClientRect check against every 'scroll'
+    // event can't miss a frame like that, and rides along with the persisted
+    // node onto whichever page it ends up on.
+    var ticking = false;
+    function checkPosition() {
+      ticking = false;
+      var rect = target.getBoundingClientRect();
+      if (rect.top < window.innerHeight + 600 && rect.bottom > -600) {
+        window.removeEventListener('scroll', onScroll);
+        loadMailerLite();
+      }
+    }
+    function onScroll() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(checkPosition);
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    checkPosition();
+  }
+
+  // Astro's View Transitions swap doesn't re-execute an inline script whose
+  // content is byte-identical to one that already ran elsewhere in the
+  // session (this component renders the same script on every post and on
+  // /subscribe), so a target introduced by a client-side navigation from a
+  // page with no newsletter box of its own (e.g. home -> a post) would
+  // otherwise never get observed.
+  initNewsletterSignup();
+  document.addEventListener('astro:after-swap', initNewsletterSignup);
+})();</script> </div> <div class="discuss border-t border-rule-soft pt-4 mb-7 font-mono text-sm text-muted leading-relaxed"> Found a mistake, or disagree?  <a href="https://github.com/albertoarena/albertoarena.it/discussions" target="_blank" rel="noopener noreferrer" class="text-accent underline"> Open a discussion on GitHub </a>  or  <a href="mailto:hello@albertoarena.it" class="text-accent underline"> send me an email </a>.
+</div> <nav class="pager grid grid-cols-1 min-[560px]:grid-cols-2 gap-5" aria-label="Post navigation"> <a href="/posts/laravel-event-sourcing-generator-10k/" class="border-t border-rule pt-3 group"> <span class="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-muted block">
+&larr; Previous post </span> <span class="font-sans text-[0.9375rem] font-medium leading-snug mt-1 block group-hover:text-accent"> 10,000 downloads </span> </a> <a href="/posts/claudes-working-memory-is-smaller-than-you-think/" class="border-t border-rule pt-3 text-right group"> <span class="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-muted block"> Next post &rarr;
+</span> <span class="font-sans text-[0.9375rem] font-medium leading-snug mt-1 block group-hover:text-accent"> Claude&#39;s Working Memory Is Smaller Than You Think </span> </a> </nav> </div> </article> </main> <footer class="site-footer border-t border-rule mt-20 py-8"> <div class="max-w-3xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted"> <span>© 2026 Alberto Arena</span> <div class="flex items-center gap-4"> <a href="/pages/privacy-policy/" class="hover:text-accent transition-colors">Privacy Policy</a> <span aria-hidden="true">·</span> <a href="/pages/credits/" class="hover:text-accent transition-colors">Credits</a> <span aria-hidden="true">·</span> <a href="/rss.xml" class="hover:text-accent transition-colors">RSS</a> <span aria-hidden="true">·</span> <a href="https://www.youtube.com/@AlbertoArenaDev" class="hover:text-accent transition-colors">YouTube</a> </div> </div> </footer> </div> <aside class="hidden min-[1180px]:flex flex-col gap-8 border-l border-rule px-5 py-9 sticky top-0 self-start h-screen overflow-y-auto"> <div> <h3 class="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted mb-2.5"> On this page </h3> <ul id="toc" class="font-mono text-xs leading-[1.55]"> <li> <a href="#why-not-the-obvious-alternatives" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="why-not-the-obvious-alternatives">Why not the obvious alternatives</a> </li><li> <a href="#how-ssm-run-command-works" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="how-ssm-run-command-works">How SSM Run Command works</a> </li><li> <a href="#the-toolkit" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="the-toolkit">The toolkit</a> </li><li> <a href="#the-design-decisions-worth-explaining" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="the-design-decisions-worth-explaining">The design decisions worth explaining</a> </li><li> <a href="#iam-the-minimum-blast-radius" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="iam-the-minimum-blast-radius">IAM: the minimum blast radius</a> </li><li> <a href="#testing-without-live-aws" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="testing-without-live-aws">Testing without live AWS</a> </li><li> <a href="#the-result" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="the-result">The result</a> </li> </ul> </div>  </aside> </div> <button id="reading-mode-toggle" type="button" aria-pressed="false" class="fixed right-4 z-50 border border-rule bg-paper px-4 py-2 font-mono text-sm text-accent shadow-lg transition-colors hover:border-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 motion-reduce:transition-none" style="bottom: calc(1rem + env(safe-area-inset-bottom));">
+Reading mode
+</button> <script type="module">const i="reading-mode";function n(){const t=document.documentElement.toggleAttribute("data-reading");localStorage.setItem(i,t?"1":"0"),o()}function o(){const e=document.getElementById("reading-mode-toggle");if(!e)return;const t=document.documentElement.hasAttribute("data-reading");e.setAttribute("aria-pressed",String(t)),e.textContent=t?"Exit reading mode":"Reading mode"}function d(){const e=document.getElementById("reading-mode-toggle");e&&(e.removeEventListener("click",n),e.addEventListener("click",n),o())}d();document.addEventListener("astro:after-swap",d);</script> <div id="cookie-consent" class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-paper border-t border-rule shadow-lg" role="dialog" aria-labelledby="cookie-consent-title" aria-describedby="cookie-consent-description"> <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"> <div class="text-sm text-ink dark:text-white"> <p id="cookie-consent-title" class="font-semibold mb-1">We use cookies</p> <p id="cookie-consent-description" class="text-ink-2">
+We use analytics cookies to understand how you use this site and improve your experience.
+        No advertising or profiling cookies are used.
+<a href="/pages/privacy-policy/" class="underline hover:text-accent transition-colors ml-1">Privacy Policy</a> </p> </div> <div class="flex gap-3 flex-shrink-0"> <button id="decline-cookies" class="px-4 py-2 text-sm text-muted hover:text-ink dark:hover:text-white transition-colors" aria-label="Decline analytics cookies">
+Decline
+</button> <button id="accept-cookies" class="px-4 py-2 text-sm bg-accent text-white hover:bg-accent/90 transition-colors" aria-label="Accept analytics cookies">
+Accept analytics
+</button> </div> </div> </div> <script type="module">function n(...e){window.dataLayer=window.dataLayer||[],window.dataLayer.push(e)}function o(){const e=localStorage.getItem("cookieConsent"),t=document.getElementById("cookie-consent");if(e){t?.remove(),e==="accepted"&&n("consent","update",{analytics_storage:"granted"});return}document.getElementById("accept-cookies")?.addEventListener("click",()=>{n("consent","update",{analytics_storage:"granted"}),localStorage.setItem("cookieConsent","accepted"),t?.remove()}),document.getElementById("decline-cookies")?.addEventListener("click",()=>{n("consent","update",{analytics_storage:"denied"}),localStorage.setItem("cookieConsent","declined"),t?.remove()})}o();document.addEventListener("astro:after-swap",o);</script>  </body></html> <script type="module">let n;function l(){n&&(window.removeEventListener("scroll",n),n=void 0);const o=Array.from(document.querySelectorAll("#toc a[data-target]")),i=o.map(e=>document.getElementById(e.dataset.target)).filter(e=>!!e);if(!i.length)return;const s=()=>window.innerHeight*.2;function a(){const e=s();let c=i[0].id;for(const t of i)if(t.getBoundingClientRect().top<=e)c=t.id;else break;o.forEach(t=>{t.classList.toggle("toc-active",t.dataset.target===c)})}let r=!1;n=()=>{r||(r=!0,requestAnimationFrame(()=>{r=!1,a()}))},window.addEventListener("scroll",n,{passive:!0}),a()}l();document.addEventListener("astro:after-swap",l);</script>
