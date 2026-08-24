@@ -26,6 +26,17 @@ the rule file with the detail; this is the flat list to actually check off.
 - [ ] **No em dashes** anywhere in the post (body, description, title).
       Signals AI-written content; replace with commas, colons, or
       parentheses.
+- [ ] **Every temporal claim is checked against real history, not
+      estimated.** Any specific duration or date ("for two years", "since
+      2019", "for months") about a project, package, or codebase must be
+      verified against its actual history (`git log --reverse` for the
+      first commit, a changelog, a release date) before publishing, not
+      inferred from how long the work has felt like or how it reads. Caught
+      on the paste-parser post (2026-08-24): claimed Truss's schema viewer
+      had been trusting live connections "for two years" when the package's
+      first commit was 2026-07-22, about a month earlier. Fixed same-day,
+      pre-cross-post, by dropping the duration rather than correcting the
+      number, since the sentence didn't need one.
 - [ ] **Date doesn't collide** with another post's `date` (down to the
       timestamp). A stable sort on a shared timestamp lets an older post
       keep winning the homepage "Latest" slot over the new one — grep
