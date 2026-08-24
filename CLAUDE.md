@@ -40,6 +40,13 @@ magick input.jpg -resize 1200x630^ -gravity center -extent 1200x630 -quality 85 
 magick input.jpg -resize 1200x\> -quality 82 output.webp
 ```
 
+### Choosing a cover image
+
+When presenting cover candidates for review (e.g. sourced from Unsplash),
+always share the source page link for each candidate alongside the
+cropped preview, not the preview alone. The user reviews covers visually
+in the original before deciding.
+
 ### Third-party image attribution
 
 Any third-party image used in a post (photos, book covers, logos, screenshots of external projects) must be referenced in `/src/content/pages/credits/index.md`. Add a row to the relevant table (Photography for Unsplash photos, Images & logos for everything else) with the post link, image description, and source/author.

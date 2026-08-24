@@ -26,6 +26,7 @@ Cover images for some posts are sourced from **[Unsplash](https://unsplash.com)*
 
 | Post | Photo | Photographer |
 |------|-------|--------------|
+| [The bug that only showed up once strangers could paste a schema](/posts/what-a-trusted-connection-was-doing-for-you/) | A windowpane shattered by a single impact, cracks radiating outward | [Mick Haupt](https://unsplash.com/@rocinante_11) on Unsplash |
 | [Introducing envaudit](/posts/introducing-envaudit/) | A rusty old key on a wooden table | [Nick Russill](https://unsplash.com/@nickrussill) on Unsplash |
 | [Claude Code /goal vs /loop: Stop Typing, Keep Going](/posts/goal-command-claude-code/) | Runners crossing the finish line at a race | [RETRATO DEPORTIVO](https://unsplash.com/@retratodeportivo) on Unsplash |
 | [Your README Deserves Real Numbers](/posts/traffic-badge-github-action/) | Graphs of performance analytics on a laptop screen | [Luke Chesser](https://unsplash.com/@lukechesser) on Unsplash |
