@@ -11,7 +11,7 @@ Alberto Arena is a Senior Software Engineer based in Sicily, Italy, with a backg
 
 ## Posts
 
-- [The bug that only showed up once strangers could paste a schema](https://albertoarena.it/posts/what-a-trusted-connection-was-doing-for-you/): A schema viewer that always read a live database connection was quietly relying on that connection being trustworthy. Here's what broke, silently, the moment the input became a pasted file from a stranger, and the three checks that catch it.
+- [The bug that only showed up once strangers could paste a schema](https://albertoarena.it/posts/the-bug-that-only-showed-up-with-pasted-schemas/): A schema viewer that always read a live database connection was quietly relying on that connection being trustworthy. Here's what broke, silently, the moment the input became a pasted file from a stranger, and the three checks that catch it.
 - [Context Engineering: The Discipline That Keeps AI From Writing Slop](https://albertoarena.it/posts/context-engineering-not-slop/): AI slop isn't usually a bad model, it's bad context. Here's the discipline that prevents it, the failure modes behind it, and three checks you can actually run to enforce it.
 - [My coding agent kept inventing columns](https://albertoarena.it/posts/my-coding-agent-kept-inventing-columns/): Laravel Truss 1.8 turns your schema export into grounding context for a coding agent: annotations, focused and compact exports, and an optional read-only MCP server.
 - [Claude Code Auto Mode: What Still Needs a Human](https://albertoarena.it/posts/claude-code-auto-mode-still-needs-a-human/): Anthropic says auto mode catches 89% of dangerous commands against 13.6% for human reviewers, and still calls it not risk-free. The config, hooks, and review habits that keep it honest.

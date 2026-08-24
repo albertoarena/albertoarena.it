@@ -37,6 +37,20 @@ the rule file with the detail; this is the flat list to actually check off.
       first commit was 2026-07-22, about a month earlier. Fixed same-day,
       pre-cross-post, by dropping the duration rather than correcting the
       number, since the sentence didn't need one.
+- [ ] **Slug matches the current title**, not an earlier draft title. If
+      the title changes at any point before merging, re-check the `slug`
+      frontmatter (and, if it's a series post, the `slug` in
+      `src/data/trussSeries.ts`) against the *final* title, not whatever it
+      was when the post was first drafted. Caught on the paste-parser post
+      (2026-08-24): the title changed from "What a trusted connection was
+      doing for you" to "The bug that only showed up once strangers could
+      paste a schema" mid-review, but the slug (and the content/image
+      directory names, `credits/index.md` link, `llms.txt` link, and a
+      `utm_campaign` value baked into the post's own closing CTA) stayed on
+      the old title and only got caught after merge, requiring a 301
+      redirect (`public/.htaccess`) to fix live. If the slug is already
+      merged and live when a title changes, add the redirect immediately,
+      don't wait — the URL may already be cached or crawled.
 - [ ] **Date doesn't collide** with another post's `date` (down to the
       timestamp). A stable sort on a shared timestamp lets an older post
       keep winning the homepage "Latest" slot over the new one — grep

@@ -3,7 +3,7 @@ title: "The bug that only showed up once strangers could paste a schema"
 date: "2026-08-24T10:00:00.000Z"
 template: "post"
 draft: false
-slug: "what-a-trusted-connection-was-doing-for-you"
+slug: "the-bug-that-only-showed-up-with-pasted-schemas"
 category: "Laravel"
 tags:
   - "PHP"
@@ -11,7 +11,7 @@ tags:
   - "Developer Tools"
   - "Database"
 description: "A schema viewer that always read a live database connection was quietly relying on that connection being trustworthy. Here's what broke, silently, the moment the input became a pasted file from a stranger, and the three checks that catch it."
-socialImage: "/images/posts/what-a-trusted-connection-was-doing-for-you/cover.jpg"
+socialImage: "/images/posts/the-bug-that-only-showed-up-with-pasted-schemas/cover.jpg"
 coverAlt: "A windowpane shattered by a single impact, cracks radiating outward against a blue sky and trees"
 series:
   slug: "truss"
@@ -59,4 +59,4 @@ That promise was never the hard part. The hard part was noticing how many other 
 
 ---
 
-[Truss](https://github.com/albertoarena/laravel-truss) is the Laravel schema viewer I maintain. You can try it on your own schema, no install required, at [trussphp.com/demo/your-schema](https://trussphp.com/demo/your-schema/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=what-a-trusted-connection-was-doing-for-you). Structure only, never data.
+[Truss](https://github.com/albertoarena/laravel-truss) is the Laravel schema viewer I maintain. You can try it on your own schema, no install required, at [trussphp.com/demo/your-schema](https://trussphp.com/demo/your-schema/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=the-bug-that-only-showed-up-with-pasted-schemas). Structure only, never data.

@@ -26,6 +26,13 @@ RewriteCond %{HTTP_HOST} ^www\.albertoarena\.it$ [NC,OR]
 RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://albertoarena.it/$1 [L,R=301]
 
+# Post slug renamed post-publish (2026-08-24): the title changed from "What
+# a trusted connection was doing for you" to "The bug that only showed up
+# once strangers could paste a schema" a few hours after it went live, so
+# the old URL may already be cached/indexed. Safe to remove once confident
+# nothing external still links to the old slug.
+RewriteRule ^posts/what-a-trusted-connection-was-doing-for-you/?$ /posts/the-bug-that-only-showed-up-with-pasted-schemas/ [R=301,L]
+
 # Custom error pages
 #
 # The local-path argument is resolved against the docroot, not this file's
