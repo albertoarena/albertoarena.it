@@ -21,7 +21,7 @@ discussion: "albertoarena/laravel-truss"
 
 People kept asking the same question about the schema viewer I maintain: "what does this look like on *my* schema?" The demo only ever offered a sample database to look at, so the honest answer was "install the package and point it at yours." That's a fair amount of friction for someone who just wants to see whether the tool is worth their time.
 
-So I added a page that parses a pasted `mysqldump` in the browser and draws it with the same dashboard the package ships. No install, no upload, nothing leaves the tab. That part was the easy sell. The part worth writing about is everything the code had been getting away with for two years, because until that page existed, every schema it had ever drawn came from a database connection the person running it had configured themselves.
+So I added a page that parses a pasted `mysqldump` in the browser and draws it with the same dashboard the package ships. No install, no upload, nothing leaves the tab. That part was the easy sell. The part worth writing about is everything the code had been getting away with, because until that page existed, every schema it had ever drawn came from a database connection the person running it had configured themselves.
 
 A connection string is a small trust decision that's easy to forget you made. You typed it, or an environment variable did, and either way something you controlled put it there. A pasted file has no such history. It could be a colleague's export, a tutorial's sample data, or nine hundred lines of MySQL DDL from someone you've never met. Same parser, same renderer, same code path, wildly different set of things it's now allowed to assume.
 
