@@ -77,7 +77,7 @@ Ho inserito Truss in alcuni dei miei progetti Laravel da quando l'ho costruito, 
 
 ## Per iniziare
 
-La [documentazione](https://trussphp.com) copre installazione, avvio rapido e autorizzazione per ambienti non locali in maggior dettaglio. Richiede PHP 8.3+ e Laravel 12+. C'è anche una [roadmap](https://trussphp.com/roadmap/) pubblica: il prossimo passo è lo schema diff, per vedere cosa è cambiato dall'ultima migration.
+La [documentazione](https://trussphp.com) copre installazione, avvio rapido e autorizzazione per ambienti non locali in maggior dettaglio. Richiede PHP 8.2+ e Laravel 12+. C'è anche una [roadmap](https://trussphp.com/roadmap/) pubblica: il prossimo passo è lo schema diff, per vedere cosa è cambiato dall'ultima migration.
 
 Feedback benvenuto, come sempre.
 
@@ -86,3 +86,5 @@ Feedback benvenuto, come sempre.
 Il 29 luglio 2026, Truss ha raggiunto la v1.3.1: un dizionario dati e l'export DBML sono arrivati nella v1.3.0, e la v1.3.1 ha limitato l'introspezione dello schema al database della connessione, così un server condiviso non espone più le tabelle di altri database. La documentazione si è anche spostata su un sito dedicato, [trussphp.com](https://trussphp.com), con una [roadmap](https://trussphp.com/roadmap/) pubblica.
 
 Il 31 luglio 2026, Truss ha raggiunto la v1.5.0, aggiungendo `truss:doctor`: una revisione deterministica e basata solo sulla struttura del tuo schema, su tredici regole tra integrità, indici e tipi, eseguibile da terminale, CI o dal nuovo pannello Health della dashboard. Vedi [Il dottore dello schema è in ambulatorio](/posts/the-schema-doctor-is-in/it/).
+
+Il 27 agosto 2026, Truss ha raggiunto la v1.10.0, abbassando la versione minima di PHP da 8.3 a 8.2, il minimo richiesto da Laravel 12 stesso. Include anche le linee guida e una skill per Laravel Boost, e restringe la regola `TRUSS-INT-007` sulle tabelle pivot dopo averla misurata su schemi reali. Vedi le [note di rilascio](https://github.com/albertoarena/laravel-truss/releases/tag/v1.10.0).
