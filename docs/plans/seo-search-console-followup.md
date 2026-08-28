@@ -1,7 +1,7 @@
 # SEO / Search Console follow-up
 
-**Status: 2026-08-28 — found a second, still-live redirect-chain bug (mod_dir
-exposing `/current/`); fix drafted, not yet shipped — see bottom section**
+**Status: 2026-08-28 — `/current/` leak fix shipped (#32), deployed,
+live-verified clean; GSC validation requested, awaiting recrawl**
 **Date:** 2026-07-18 (see 2026-07-28, 2026-07-29, 2026-08-08 and 2026-08-28
 updates at the bottom)
 
@@ -745,3 +745,29 @@ set) — good to get this from an independent check rather than assuming.
 
 No action needed here beyond the playbook update — this is trussphp.com's
 fix to ship, tracked in its own repo.
+
+### Shipped, deployed, live-verified; GSC validation requested
+
+PR [#32](https://github.com/albertoarena/albertoarena.it/pull/32) merged
+to `master`. CI publish run succeeded, server-pull cron deployed within
+~5 min. All five `curl -sI` cases from the PR's test plan verified clean
+against production — no `/current/` at any hop, hop counts exactly as
+predicted (1 hop for `/pages/credits`, `/projects`, `/tag/javascript`; the
+direct `/current/pages/credits/` hit still collapses to 1 hop, not
+regressed to 2; the `http://www.albertoarena.it/category/react` combo at
+2 hops, matching the confirmed floor). Broader smoke test also clean:
+homepage, static assets (`favicon.svg`, `photo.jpg` — confirms the new
+rule's `-d` check doesn't misfire on files), an already-canonical post,
+the 08-24 slug-rename redirect, RSS, sitemap, `robots.txt`, the custom 404
+page, and the `/writing/page/2/` pagination route all behaved correctly.
+
+User clicked "Convalida" on "Pagina con reindirizzamento" in Search
+Console, 2026-08-28.
+
+**Next check-in:** per the playbook, validation cycles run days to weeks —
+no dashboard change expected immediately. Come back to this doc rather
+than re-diagnosing from scratch. If this row still fails validation after
+this round despite the fix being live-verified correct, the `/current/`
+leak can be ruled out as the cause (unlike prior rounds, this one has
+direct production evidence the redirect is now clean) and the remaining
+gap is most likely just Google's own recrawl/reclassification lag.
