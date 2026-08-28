@@ -33,6 +33,13 @@
   --color-ink: #13171d;
   --color-ink-2: #3b4552;
   --color-muted: #5c6773;
+  /*
+    Deliberately NOT redefined under the dark variant. It is only ever painted
+    on the code block, whose background is the same #1f2937 in both themes, so
+    a theme-flipping value is what broke it. 6.06:1 there, comfortably over AA,
+    and still far quieter than the code text itself at 11.86:1.
+  */
+  --color-code-label: #9ca8b4;
   --color-rule: #e2e8ee;
   --color-rule-soft: #eef2f6;
   --color-accent: #0b5fd0;
@@ -251,6 +258,32 @@
 
 .prose a:hover {
   color: hsl(31, 92%, 62%);
+}
+
+/*
+  Honour per-column alignment in markdown tables.
+
+  A `|---:|` column makes the markdown renderer emit `<td align="right">`, but
+  `align` is a presentational attribute and loses to any CSS rule, so Typography's
+  `text-align: start` on th/td silently wins and every column renders left. The
+  markdown looks correct, the page does not, and nothing reports it.
+
+  It matters wherever a column is read down rather than across: a table whose
+  point is the descent from 87% to 0% is much harder to scan ragged-left.
+*/
+.prose th[align='right'],
+.prose td[align='right'] {
+  text-align: right;
+}
+
+.prose th[align='center'],
+.prose td[align='center'] {
+  text-align: center;
+}
+
+.prose th[align='left'],
+.prose td[align='left'] {
+  text-align: left;
 }
 
 .prose code::before,
@@ -478,7 +511,19 @@ html[data-reading] .post-content pre {
   font-size: 0.6875rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--color-muted);
+  /*
+    Not --color-muted. That token flips with the theme because it is designed
+    for the page background, but this label sits on --tw-prose-pre-bg, which is
+    #1f2937 in BOTH themes. In light mode the pairing was #5c6773 on #1f2937,
+    2.55:1, which fails AA (4.5:1) and fails even the large-text floor (3:1).
+    Dark mode was fine at 4.94:1, so it only ever looked wrong on half the site.
+
+    axe-core did not catch it and never will: its colour-contrast rule skips
+    ::before/::after, because it cannot resolve a background for generated
+    content. The suite crawls every page in dist/ and still passed. Hence the
+    explicit token and the test in tests/code-label-contrast.test.js.
+  */
+  color: var(--color-code-label);
   margin-bottom: 0.4rem;
 }
 

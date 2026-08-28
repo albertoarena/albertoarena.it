@@ -49,6 +49,7 @@ Cover images for some posts are sourced from **[Unsplash](https://unsplash.com)*
 | [Claude Code Auto Mode: What Still Needs a Human](/posts/claude-code-auto-mode-still-needs-a-human/) | A red-and-white boom barrier gate lowered across a road, blocking a waiting car | [Mauro Sbicego](https://unsplash.com/@maurosbicego) on Unsplash |
 | [Context Engineering: The Discipline That Keeps AI From Writing Slop](/posts/context-engineering-not-slop/) | Top-down flat lay of an architectural blueprint, ruler, pens, and an orange set square on a wooden desk | [Toby Wong](https://unsplash.com/@hitobywong) on Unsplash |
 | 404 page | A red and white road sign reading WRONG WAY | [Julian Gentile](https://unsplash.com/@juliangentile) on Unsplash |
+| [The Laravel schema nobody chose](/posts/the-laravel-schema-nobody-chose/) | Rows of labelled wooden drawers in an old library card catalog | [Ilya Semenov](https://unsplash.com/@si1og) on Unsplash |
 
 ## Diagrams
 

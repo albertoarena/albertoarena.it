@@ -24,7 +24,7 @@ export const projects: Project[] = [
       'Live, zoomable ER diagram viewer for Laravel. Scans your actual database schema, not migration files, and renders it in-app with Mermaid, safe to run in production. Structure only, never data.',
     tech: ['Laravel', 'PHP', 'Database', 'Mermaid'],
     github: 'https://github.com/albertoarena/laravel-truss',
-    url: 'https://trussphp.com/',
+    url: 'https://trussphp.com/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=projects',
     postSlug: 'introducing-truss',
     status: 'active',
     featured: true,
