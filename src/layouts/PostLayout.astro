@@ -252,84 +252,106 @@ const blogPostingSchema = {
             <slot />
         </div>
 
-        <!-- Endnote block (redesign-plan.md §7): tags, author, subscribe, discussion, pager -->
-        <div class="endnote mt-12 pt-6 border-t border-rule max-w-[68ch]">
-            {post.data.tags && post.data.tags.length > 0 && (
-                <div class="post-tags flex flex-wrap gap-2 mb-7 font-mono text-xs">
-                    {post.data.tags.map((tag) => (
-                        <a
-                            href={`/tag/${tag.toLowerCase().replace(/\s+/g, '-')}/`}
-                            class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors"
-                        >
-                            #{tag}
-                        </a>
-                    ))}
-                </div>
-            )}
-
-            <div class="post-author flex items-center gap-3 mb-7">
-                <img
-                    src={siteConfig.author.photo}
-                    alt=""
-                    class="w-11 h-11 rounded-full"
-                />
-                <div>
-                    <p class="font-sans font-semibold text-sm text-ink dark:text-white">{siteConfig.author.name}</p>
-                    <p class="text-sm text-muted">{siteConfig.author.bio}</p>
-                </div>
+        <!--
+            Tags, author bio, newsletter box, discussion link, and pager are
+            post metadata, not article body content. Readability
+            (Safari Reader, Firefox Reader View, and this site's own
+            reading-mode toggle) unconditionally strips every <aside>
+            element from whatever content it selects
+            (Readability.js's _grabArticle calls this._clean(articleContent,
+            "aside")), regardless of nesting depth or how that content
+            scores — unlike styling via class name, which only *penalises* a
+            node's score and doesn't guarantee removal. This used to be a
+            <div>, which Readability kept on shorter posts where the real
+            article text didn't outweigh this block's own paragraph density.
+            See docs/plans/reader-mode-boundary-leaks.md.
+        -->
+        <aside class="endnote mt-12 pt-6 border-t border-rule max-w-[68ch]">
+        {post.data.tags && post.data.tags.length > 0 && (
+            <div class="post-tags flex flex-wrap gap-2 mb-7 font-mono text-xs">
+                {post.data.tags.map((tag) => (
+                    <a
+                        href={`/tag/${tag.toLowerCase().replace(/\s+/g, '-')}/`}
+                        class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors"
+                    >
+                        #{tag}
+                    </a>
+                ))}
             </div>
+        )}
 
-            <div
-                class="post-newsletter border border-rule px-5 py-5 mb-6"
-                transition:persist
-                transition:name="newsletter-signup"
-            >
-                <h2 class="text-base font-semibold text-ink dark:text-white mb-1">Liked this? Get the next one.</h2>
-                <p class="text-sm text-ink-2 leading-relaxed mb-4">
-                    Practical notes on Laravel tooling and AI-assisted development, about once a month.
-                    Join the list and I'll send you my
-                    <a href="/cheatsheets/spatie-event-sourcing/" class="text-accent underline">Spatie Event Sourcing cheat sheet</a>
-                    to start.
-                </p>
-                <NewsletterSignup />
+        <div class="post-author flex items-center gap-3 mb-7">
+            <img
+                src={siteConfig.author.photo}
+                alt=""
+                class="w-11 h-11 rounded-full"
+            />
+            <div>
+                <p class="font-sans font-semibold text-sm text-ink dark:text-white">{siteConfig.author.name}</p>
+                <p class="text-sm text-muted">{siteConfig.author.bio}</p>
             </div>
-
-            <div class="discuss border-t border-rule-soft pt-4 mb-7 font-mono text-sm text-muted leading-relaxed">
-                {lang === 'it' ? 'Hai trovato un errore, o non sei d’accordo?' : 'Found a mistake, or disagree?'}{' '}
-                <a href={discussionUrl} target="_blank" rel="noopener noreferrer" class="text-accent underline">
-                    {lang === 'it' ? 'Apri una discussione su GitHub' : 'Open a discussion on GitHub'}
-                </a>{' '}
-                {lang === 'it' ? 'o ' : 'or '}
-                <a href="mailto:hello@albertoarena.it" class="text-accent underline">
-                    {lang === 'it' ? 'inviami un’email' : 'send me an email'}
-                </a>.
-            </div>
-
-            {(prevPost || nextPost) && (
-                <nav class="pager grid grid-cols-1 min-[560px]:grid-cols-2 gap-5" aria-label="Post navigation">
-                    {prevPost ? (
-                        <a href={`/posts/${getPostSlug(prevPost)}/`} class="border-t border-rule pt-3 group">
-                            <span class="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-muted block">
-                                &larr; {prevViaSeries ? 'Previous in thread' : 'Previous post'}
-                            </span>
-                            <span class="font-sans text-[0.9375rem] font-medium leading-snug mt-1 block group-hover:text-accent">
-                                {prevPost.data.title}
-                            </span>
-                        </a>
-                    ) : <span />}
-                    {nextPost && (
-                        <a href={`/posts/${getPostSlug(nextPost)}/`} class="border-t border-rule pt-3 text-right group">
-                            <span class="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-muted block">
-                                {nextViaSeries ? 'Next in thread' : 'Next post'} &rarr;
-                            </span>
-                            <span class="font-sans text-[0.9375rem] font-medium leading-snug mt-1 block group-hover:text-accent">
-                                {nextPost.data.title}
-                            </span>
-                        </a>
-                    )}
-                </nav>
-            )}
         </div>
+
+        <div
+            class="post-newsletter border border-rule px-5 py-5 mb-6"
+            transition:persist
+            transition:name="newsletter-signup"
+        >
+            <h2 class="text-base font-semibold text-ink dark:text-white mb-1">Liked this? Get the next one.</h2>
+            <p class="text-sm text-ink-2 leading-relaxed mb-4">
+                Practical notes on Laravel tooling and AI-assisted development, about once a month.
+                Join the list and I'll send you my
+                <a href="/cheatsheets/spatie-event-sourcing/" class="text-accent underline">Spatie Event Sourcing cheat sheet</a>
+                to start.
+            </p>
+            <NewsletterSignup />
+        </div>
+
+        <div class="discuss border-t border-rule-soft pt-4 mb-7 font-mono text-sm text-muted leading-relaxed">
+            {lang === 'it' ? 'Hai trovato un errore, o non sei d’accordo?' : 'Found a mistake, or disagree?'}{' '}
+            <a href={discussionUrl} target="_blank" rel="noopener noreferrer" class="text-accent underline">
+                {lang === 'it' ? 'Apri una discussione su GitHub' : 'Open a discussion on GitHub'}
+            </a>{' '}
+            {lang === 'it' ? 'o ' : 'or '}
+            <a href="mailto:hello@albertoarena.it" class="text-accent underline">
+                {lang === 'it' ? 'inviami un’email' : 'send me an email'}
+            </a>.
+        </div>
+        </aside>
+
+        <!--
+            Left outside the <aside> above, and left off reading mode's
+            hide list in global.css: prev/next navigation stays useful even
+            in a focused read, unlike the bio/newsletter/discuss chrome.
+            It doesn't need <aside> treatment to stay out of Readability's
+            output either — "pager" already matches Readability's own
+            unlikelyCandidates regex (pagination|pager), so it's excluded
+            on its own.
+        -->
+        {(prevPost || nextPost) && (
+            <nav class="pager max-w-[68ch] grid grid-cols-1 min-[560px]:grid-cols-2 gap-5" aria-label="Post navigation">
+                {prevPost ? (
+                    <a href={`/posts/${getPostSlug(prevPost)}/`} class="border-t border-rule pt-3 group">
+                        <span class="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-muted block">
+                            &larr; {prevViaSeries ? 'Previous in thread' : 'Previous post'}
+                        </span>
+                        <span class="font-sans text-[0.9375rem] font-medium leading-snug mt-1 block group-hover:text-accent">
+                            {prevPost.data.title}
+                        </span>
+                    </a>
+                ) : <span />}
+                {nextPost && (
+                    <a href={`/posts/${getPostSlug(nextPost)}/`} class="border-t border-rule pt-3 text-right group">
+                        <span class="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-muted block">
+                            {nextViaSeries ? 'Next in thread' : 'Next post'} &rarr;
+                        </span>
+                        <span class="font-sans text-[0.9375rem] font-medium leading-snug mt-1 block group-hover:text-accent">
+                            {nextPost.data.title}
+                        </span>
+                    </a>
+                )}
+            </nav>
+        )}
     </article>
     </main>
       <Footer />

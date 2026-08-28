@@ -429,10 +429,23 @@
 }
 
 /*
-  Reading mode (post pages only, see ReadingModeToggle.astro). `aside` covers
-  both the rail and the post's TOC/series column (Shell B, redesign-plan.md
-  §5) — both are the only <aside> elements PostLayout ever renders, so this
-  is safe as a blanket selector without needing an extra marker attribute.
+  Reading mode (post pages only, see ReadingModeToggle.astro). `aside`
+  covers the rail, the post's TOC/series column (Shell B, redesign-plan.md
+  §5), and the endnote block (tags, author bio, newsletter box, discuss
+  line — also an <aside> since docs/plans/reader-mode-boundary-leaks.md,
+  for an unrelated reason: Readability.js strips every <aside> from
+  whatever it extracts, which is what keeps this same chrome out of Safari
+  Reader / Firefox Reader View). The prev/next pager is deliberately NOT
+  inside that <aside> and not in this hide list either — unlike the rest
+  of the endnote, it stays useful in a focused read, and it doesn't need
+  <aside> treatment to stay out of Readability's output ("pager" already
+  matches Readability's own unlikelyCandidates regex on its own).
+  These are the only <aside> elements PostLayout ever renders, so this is
+  safe as a blanket selector without needing an extra marker attribute. The
+  per-class selectors below are now redundant with the blanket one (all
+  four classes live inside the endnote <aside>) but are kept as the
+  explicit, readable list of what reading mode actually removes, in case a
+  future change pulls one of them back out of an <aside>.
 */
 html[data-reading] aside,
 html[data-reading] .site-footer,
