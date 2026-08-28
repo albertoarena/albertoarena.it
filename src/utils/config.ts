@@ -31,7 +31,14 @@ export const siteConfig = {
       label: 'build',
       ariaLabel: 'Projects',
       items: [
-        { label: 'truss', path: 'https://trussphp.com/' },
+        /*
+          Tagged because it is an owned site on another domain (R14). Untagged,
+          every click off the rail arrives at trussphp.com as a bare referral
+          from this host, indistinguishable from a link in someone else's post,
+          and the rail is on all 122 pages. trussphp.com self-canonicalises
+          without the query, so tagging costs nothing in GSC.
+        */
+        { label: 'truss', path: 'https://trussphp.com/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=site-nav' },
         { label: 'projects', path: '/projects/' },
         { label: 'videos', path: 'https://www.youtube.com/@AlbertoArenaDev' },
       ],

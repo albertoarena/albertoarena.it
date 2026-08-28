@@ -36,7 +36,12 @@ const trussSeries = trussSeriesData.map((entry) => ({
 		A live, zoomable ER diagram of your Laravel app's actual database schema, safe to run in production. <strong class="font-semibold text-ink dark:text-white">Structure only, never data.</strong> Now speaks MCP, so a coding agent can read your live schema instead of a stale paste.
 	</p>
 	<div class="flex flex-wrap gap-x-6 gap-y-2 font-mono text-sm mb-5">
-		<a href="https://trussphp.com/docs" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">Docs</a>
+		<!--
+			/docs has never existed on trussphp.com and returned 404 from this box.
+			Quick start is the real first page of the documentation, and the link
+			is tagged because a promo box is exactly the surface R14 names.
+		-->
+		<a href="https://trussphp.com/getting-started/quick-start/?utm_source=albertoarena.it&amp;utm_medium=referral&amp;utm_campaign=truss-promo" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">Docs</a>
 		<a href="https://github.com/albertoarena/laravel-truss" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">GitHub</a>
 		<a href="https://packagist.org/packages/albertoarena/laravel-truss" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">Install</a>
 		<a href="https://ko-fi.com/albertoarena" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">Support on Ko-fi</a>
