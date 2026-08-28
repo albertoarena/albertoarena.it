@@ -1,7 +1,9 @@
 # SEO / Search Console follow-up
 
-**Status: 2026-08-08 redirect-chain fix merged (#17), deployed, and live-verified; validation requested from Google, awaiting recrawl**
-**Date:** 2026-07-18 (see 2026-07-28, 2026-07-29 and 2026-08-08 updates at the bottom)
+**Status: 2026-08-28 — found a second, still-live redirect-chain bug (mod_dir
+exposing `/current/`); fix drafted, not yet shipped — see bottom section**
+**Date:** 2026-07-18 (see 2026-07-28, 2026-07-29, 2026-08-08 and 2026-08-28
+updates at the bottom)
 
 ## What was done already
 
@@ -544,3 +546,150 @@ weeks — no dashboard change expected immediately. Come back to this doc
 rather than re-diagnosing from scratch; if "Pagina con reindirizzamento"
 still fails validation after this round, the redirect-chain fix can be
 ruled out as the cause and the search should move elsewhere.
+
+---
+
+## 2026-08-28 update: found a real, currently-live cause — the 08-13 deploy fix collapsed one hop but grew another
+
+User reported a fresh GSC notification ("new reason blocking indexing":
+`noindex` tag) plus screenshots of the Page indexing report, both
+still-failing rows grown since 08-08 (**"Pagina con reindirizzamento" 13 →
+18**, **"Pagina scansionata, ma attualmente non indicizzata" 31 → 23**) and,
+notably, the redirect-page sample now includes URLs never seen in this
+report before: `https://albertoarena.it/current/pages/credits/`,
+`.../current/projects/`, `.../current/posts/introducing-truss/`. Per the
+playbook (step 7), re-verified from scratch with live `curl` rather than
+re-asserting the 08-08 "just stale cache, wait it out" conclusion, since
+the user flagged that recent changes hadn't helped and new `/current/...`
+URLs appearing is a specific, checkable claim, not a vague symptom.
+
+### Root cause: `mod_dir`'s automatic trailing-slash redirect exposes `current/`
+
+Live `curl -sI` hop-by-hop against production:
+
+```
+$ curl -sI https://albertoarena.it/pages/credits          # canonical host+scheme, just missing the slash
+HTTP/2 301
+location: https://albertoarena.it/current/pages/credits/   ← leaks the internal deploy path
+$ curl -sI https://albertoarena.it/current/pages/credits/
+HTTP/2 200                                                  ← the 08-13 fix strips it back here
+```
+
+Same pattern reproduced for every other non-trailing-slash sample from the
+report: `/projects` → `/current/projects/` → 200; `/posts/introducing-truss`
+→ `/current/posts/introducing-truss/` → 200; `/category/static-websites`
+(3 hops via `http://`) → `.../current/category/static-websites/` → 200;
+`/tag/javascript`, `/page/3`, `/posts/is-it-really-an-integer`,
+`/pages/privacy-policy` all show the same middle hop.
+
+The mechanism: `scripts/docroot.htaccess` (mirrored by hand onto the host,
+see DEPLOYMENT.md) internally rewrites every request that isn't already
+under `/current/` to `current/$1` — preserving whatever trailing-slash-ness
+the original request had. When the original request has **no** trailing
+slash and maps to a directory, Apache's own `mod_dir` `DirectorySlash`
+fires a redirect — but it builds that redirect's `Location` from the
+*already-internally-rewritten* path (`current/pages/credits`), not the
+client's original request, because the rewrite happened in an earlier
+per-directory phase. The result: any non-trailing-slash URL anywhere on
+the site now takes an extra hop through a client-visible `/current/...`
+URL before the 08-13 fix's own redirect strips it back to canonical. That
+fix (`b5ade8e3`) only handles *direct* hits on `/current/...` — it doesn't
+prevent this internally-generated exposure, so it turned what used to be a
+single bad outcome (a `/current/...` URL serving 200 directly, i.e.
+duplicate content) into a *two-hop chain that still surfaces the same URL*
+as an intermediate redirect target on every crawl. That's consistent with
+why the redirect bucket grew rather than shrank, and why validation keeps
+failing — Google is being asked to validate a single clean redirect and
+instead keeps finding a longer chain through internal deploy plumbing.
+
+This also plausibly explains part of why "crawled, not indexed" hasn't
+shrunk either: tag/category/pagination pages already carry
+`noindex,follow` at their final URL (re-verified live — `/category/open-source/`,
+`/category/type-checking/`, `/tag/javascript/` all render the tag correctly)
+but every crawl of the old non-slash form now detours through `/current/`
+first, which may be resetting or delaying Google's reclassification into
+the "excluded by noindex tag" bucket instead of a distinct bug.
+
+### Other rows re-checked, no action needed (consistent with prior rounds)
+
+- **`/page/1/` → 404**: confirmed intentional. `src/pages/page/[page].astro`
+  redirects old `/page/N/` URLs to `/writing/page/N/`, but its
+  `getStaticPaths` only generates `N ≥ 2` (page 1 is the homepage/writing
+  index, never had a `/page/1/` route) — this is Google's stale backlog
+  from before the pagination redesign, not a live defect.
+- **"Esclusa in base al tag noindex" (new-reason email)**: same as the
+  08-08 diagnosis — Google recognizing the intentional `noindex,follow` on
+  tag/category/pagination hub pages. Not a regression; no action.
+- **`/rss.xml` in "crawled, not indexed"**: expected, it's a feed not a page.
+
+### Proposed fix — stop relying on `mod_dir`, redirect the slash ourselves
+
+Add a rule to `public/.htaccess` (the release-level file, the only one
+proven to reliably fire on this host per the 08-13 findings) that adds the
+trailing slash directly, before Apache's own `mod_dir` gets a chance to
+build a redirect from the rewritten path:
+
+```apache
+# Add the trailing slash ourselves instead of letting Apache's own mod_dir
+# DirectorySlash do it. By the time this file runs, the docroot .htaccess
+# has already internally rewritten the request to current/$1 (preserving
+# the original's missing slash) -- mod_dir builds its own redirect from
+# that rewritten path, which leaks /current/ into the Location header for
+# every non-trailing-slash URL on the entire site. This rule fires first,
+# using $1 (the per-directory-relative path, already current/-stripped at
+# this point) to build the correct canonical target instead.
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_URI} !/$
+RewriteRule ^(.*)$ https://albertoarena.it/$1/ [R=301,L,QSA]
+```
+
+Placed after the existing current/releases-block rule (so a direct hit on
+`/current/...` still gets handled by that rule first) and before the
+host-canonicalization rules.
+
+**Verification plan — deploy then live-check, no local repro this round:**
+
+The 08-08 round tested against a local Homebrew Apache instance before
+touching production. Revisited 2026-08-28: local dev on this machine is
+Herd (nginx), which doesn't read `.htaccess` at all and has no equivalent
+of `mod_dir`'s automatic directory-slash behavior — the exact interaction
+this bug is about. Testing this rule under nginx would look fine
+regardless of whether it actually works, which is worse than not testing.
+Rather than add an Apache install for a one-off check, this round skips
+local repro and verifies directly against production immediately after
+deploy, with rollback being a one-file revert + push (~5 min via the pull
+cron) if the hop count comes back wrong.
+
+1. Ship the `public/.htaccess` rule.
+2. Deploy (existing server-pull pipeline, ~5 min after merge).
+3. Immediately live-`curl -sI` the exact URLs from this round's GSC
+   sample — `/pages/credits`, `/projects`, `/category/static-websites`,
+   `/tag/javascript`, `/current/pages/credits/` — and confirm
+   `num_redirects=1` (or 2 for `http://`+`www` combinations, matching the
+   08-08-confirmed floor) with **no `/current/` appearing at any hop** in
+   any case, including the direct `/current/...` hit (must still collapse
+   to one hop, not regress to two).
+4. If any case still shows `/current/` in a `Location` header or an
+   unexpected hop count, revert immediately (same PR's revert commit) —
+   don't leave a half-working rewrite live on a domain-wide `.htaccess`.
+5. In Search Console: re-request "Convalida" on "Pagina con
+   reindirizzamento" only after step 3 passes clean — don't request it
+   speculatively, this row has now failed validation across five
+   consecutive rounds and a sixth request without a verified fix underneath
+   it just burns another 1-2 week cycle for nothing.
+6. Leave "Esclusa in base al tag noindex" and "Crawled, not indexed" alone
+   this round (no code change targets them directly); re-assess once the
+   redirect fix has had a couple of weeks to propagate, since it may
+   indirectly unblock the noindex reclassification too.
+
+### Implementation order
+
+1. Ship the `public/.htaccess` rule, PR + merge per the git-workflow rule
+   (fixes are fine direct to master, but given the domain-wide blast radius
+   and five prior failed rounds on this exact row, route it through a PR
+   for a second look before merging).
+2. Deploy (existing server-pull pipeline, ~5 min after merge).
+3. Live-`curl` verification against production (step 3 above), revert
+   immediately if it doesn't check out clean.
+4. Search Console validation request (step 5 above) only after step 3
+   passes.
