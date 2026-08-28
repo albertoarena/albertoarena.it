@@ -13,6 +13,21 @@ RewriteEngine On
 RewriteCond %{THE_REQUEST} \s/+(current|releases)(/|\?|\s) [NC]
 RewriteRule ^(.*)$ https://albertoarena.it/$1 [R=301,L]
 
+# Add the trailing slash ourselves instead of letting Apache's own mod_dir
+# DirectorySlash do it. By the time this file runs, the docroot .htaccess
+# has already internally rewritten the request to current/$1 (preserving
+# the original's missing slash) -- mod_dir builds its own redirect from
+# that rewritten path, which leaks /current/ into the Location header for
+# every non-trailing-slash URL on the entire site (found live 2026-08-28,
+# e.g. /pages/credits redirecting to /current/pages/credits/ instead of
+# straight to /pages/credits/). This rule fires first, using $1 (the
+# per-directory-relative path, already current/-stripped at this point,
+# same technique as the block above) to build the correct canonical
+# target instead of relying on mod_dir.
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_URI} !/$
+RewriteRule ^(.*)$ https://albertoarena.it/$1/ [R=301,L,QSA]
+
 # Collapse host+scheme+trailing-slash normalization into a single 301
 # (avoids a 2-hop chain for e.g. http://www.albertoarena.it/category/react)
 RewriteCond %{HTTP_HOST} ^www\.albertoarena\.it$ [NC,OR]
