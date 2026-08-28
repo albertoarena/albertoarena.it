@@ -189,7 +189,23 @@ regression or a new "not indexed" reason.
    filter (`astro.config.mjs`) doing its job — cross-check that gap against
    GSC's non-indexed count before assuming something is broken.
 
-2. **Check whether excluded-from-sitemap pages are actually blocked, or just
+2. **Check whether the report's sample is the complete set or a subsample,
+   before drawing a conclusion from what's listed.** The "Esempi" table
+   under a reason row only shows the first page of results; if the
+   pagination control (or the `Pagine` count vs. rows-shown) shows more
+   rows exist than are displayed, treat the visible URLs as a sample, not
+   an inventory — a specific bug (like the `/current/` leak below) can be
+   present in the bucket without appearing in what's shown, and absence
+   from a subsample is not evidence of absence from the bucket. Conversely,
+   if the count and the pagination agree the shown rows are everything
+   (e.g. "1-2 di 2" for a 2-page count), treat that as a real, checkable
+   fact — don't blame a hypothetical live bug for an alert email when the
+   complete set demonstrably doesn't contain it yet (caught cross-checking
+   trussphp.com's plan, 2026-08-28: the `/current/`-leak hypothesis was
+   correctly proposed as worth checking there, not asserted as already
+   present — the complete-set check is what confirmed it wasn't, yet).
+
+3. **Check whether excluded-from-sitemap pages are actually blocked, or just
    quietly reachable.**
    ```bash
    grep -rn "robots\|noindex" src/ public/robots.txt
@@ -199,7 +215,7 @@ regression or a new "not indexed" reason.
    will still find it via internal links and it'll show up as
    "crawled/discovered, not indexed" rather than being cleanly invisible.
 
-3. **For "Page with redirect": grep for non-trailing-slash internal links.**
+4. **For "Page with redirect": grep for non-trailing-slash internal links.**
    Astro serves the trailing-slash form as canonical here (no `trailingSlash`
    override in `astro.config.mjs`), so any internal `href="/foo"` without a
    trailing slash costs an unnecessary 301. Check both `.astro` components
@@ -213,13 +229,13 @@ regression or a new "not indexed" reason.
    this repo has some dead components (`Sidebar/`, `Feed/`) with stale links
    that don't affect the real site.
 
-4. **For "Not found (404)": check every unconditional `<link>`/`<img>`/asset
+5. **For "Not found (404)": check every unconditional `<link>`/`<img>`/asset
    reference in the layouts, not just page routes.** GSC's 404 bucket can be a
    single static asset (favicon, manifest icon, OG image) referenced on every
    page, not necessarily a missing route. Cross-check `public/` actually
    contains every file referenced in `BaseLayout.astro`.
 
-5. **For "Duplicate without user-selected canonical" or "Alternate with proper
+6. **For "Duplicate without user-selected canonical" or "Alternate with proper
    canonical": check `BaseLayout.astro`'s canonical logic is still
    self-referencing (`new URL(Astro.url.pathname, Astro.site)`) and that
    `hreflang` pairs (`it.astro` routes) point at each other, not at
@@ -228,13 +244,26 @@ regression or a new "not indexed" reason.
    previous fix — don't chase it further; request revalidation and let it
    clear on the next crawl.
 
-6. **Host/protocol duplication**: confirm `public/.htaccess` still 301s
+7. **Host/protocol duplication**: confirm `public/.htaccess` still 301s
    `www.albertoarena.it` and `http://` to the canonical
    `https://albertoarena.it` host. This is the fix from `9f14504` — if it ever
    regresses (e.g. `.htaccess` gets overwritten by a hosting migration), most
    of the "duplicate content" bucket comes back at once.
 
-7. **After shipping a fix**, don't expect the GSC report to update quickly —
+8. **For "Page with redirect": don't test only the homepage or already-slashed
+   paths.** `curl -sI` a directory-style path *without* its trailing slash
+   (e.g. `/pages/credits`, not `/pages/credits/`) on the canonical host —
+   the 08-08 and 08-28 rounds each found a real live redirect-chain bug that
+   only reproduced on that specific shape of request, and every prior round
+   missed it by testing only the root path or paths that already had their
+   slash. This deploy mechanism (`releases/<ts>/` + `current` symlink,
+   shared with trussphp.com) has an established failure mode where a
+   missing trailing slash on a directory route leaks the internal
+   `/current/` path into the redirect chain — check for it specifically,
+   don't assume the 08-28 fix generalizes without re-testing after any
+   future change to `scripts/docroot.htaccess` or `public/.htaccess`.
+
+9. **After shipping a fix**, don't expect the GSC report to update quickly —
    validation cycles run over days to weeks. Click "Convalida" (Validate fix)
    per reason row in Search Console rather than waiting for the dashboard to
    change on its own, and re-check after ~1-2 weeks.
@@ -693,3 +722,26 @@ cron) if the hop count comes back wrong.
    immediately if it doesn't check out clean.
 4. Search Console validation request (step 5 above) only after step 3
    passes.
+
+### Cross-site confirmation: same bug reproduces on trussphp.com
+
+trussphp.com shares this exact `releases/<ts>` + `current` symlink deploy
+mechanism (see `DEPLOYMENT.md`) and was independently investigating its own
+"page with redirect" alert at the same time. Flagged the `/current/`-leak
+hypothesis to that session as worth checking there; confirmed reproducible:
+`https://trussphp.com/roadmap` (no trailing slash) → `.../current/roadmap/`
+→ `.../roadmap/`, same two-hop shape, same root cause (their `cc4d8af`,
+13/08, is the equivalent of this repo's `b5ade8e3` — cleans up the second
+hop, doesn't prevent the first).
+
+One correction to the original flag: it was speculated the leak might
+already be sitting inside trussphp's "page with redirect" bucket,
+misdiagnosed as the expected permanent state. Checked and it is not — both
+rows there show a complete set (pagination `1-2 di 2`, all four URLs
+already slashed), not a subsample, so the leak genuinely hasn't surfaced
+in their GSC data yet. Their site is earlier on the same curve this one is
+on. This is the case behind playbook step 2 above (sample vs. complete
+set) — good to get this from an independent check rather than assuming.
+
+No action needed here beyond the playbook update — this is trussphp.com's
+fix to ship, tracked in its own repo.

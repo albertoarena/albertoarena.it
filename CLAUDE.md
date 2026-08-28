@@ -97,6 +97,15 @@ BaseLayout (html/head/scripts)
 Use these import aliases (configured in tsconfig.json):
 - `@/*` → `./src/*`
 
+## Deployment triggers on push to master
+
+Pushing to `master` triggers the production deploy (CI builds and publishes
+to the `deploy` branch; the host pulls it within ~5 minutes — see
+`DEPLOYMENT.md`). There is no staging environment: every push to `master`
+is live. Always get explicit user approval before pushing to `master`,
+including for docs-only or seemingly low-risk changes — don't push
+unprompted just because a change is finished and looks safe.
+
 ## Confidential information
 
 This repo is public. Never commit server/account IPs, cPanel usernames,
