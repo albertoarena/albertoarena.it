@@ -50,6 +50,7 @@ Cover images for some posts are sourced from **[Unsplash](https://unsplash.com)*
 | [Context Engineering: The Discipline That Keeps AI From Writing Slop](/posts/context-engineering-not-slop/) | Top-down flat lay of an architectural blueprint, ruler, pens, and an orange set square on a wooden desk | [Toby Wong](https://unsplash.com/@hitobywong) on Unsplash |
 | 404 page | A red and white road sign reading WRONG WAY | [Julian Gentile](https://unsplash.com/@juliangentile) on Unsplash |
 | [The Laravel schema nobody chose](/posts/the-laravel-schema-nobody-chose/) | Rows of labelled wooden drawers in an old library card catalog | [Ilya Semenov](https://unsplash.com/@si1og) on Unsplash |
+| [Three ways to build a Laravel ERD, and what each one costs](/posts/three-ways-to-build-a-laravel-erd/) | Railway tracks converging at a switch, seen directly from above | [Mihai Lazăr](https://unsplash.com/@mihai14) on Unsplash |
 
 ## Diagrams
 
