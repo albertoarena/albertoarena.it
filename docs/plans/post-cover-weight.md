@@ -1,6 +1,6 @@
 # Post cover weight
 
-**Status:** Phase 1 done. Phase 2 not started.
+**Status:** Phase 1 and Phase 2 both done.
 **Date:** 2026-08-31
 **Related:** `three-ways-to-build-a-laravel-erd` (the cover that surfaced it),
 `lighthouserc.json` (already in CI, asserts accessibility only)
@@ -118,6 +118,11 @@ and closing that last gap is a diminishing return not worth chasing here. **Not
 done**: the "less texture-dense crop" option in step 4, and re-encoding the JPG
 (correctly, per step 3 — it wasn't touched).
 
+**Superseded by Phase 2, same day.** The `fs.existsSync`-against-three-hand-generated-files
+mechanism described above (and the `cover-{700,900,1400}.webp` files it checked for)
+is gone. Phase 2 item 2 replaced it with Astro's own asset pipeline, so this
+section is a record of what shipped first, not of what the code does now.
+
 ## Phase 2: the other 32 covers, and stopping it recurring
 
 **Not urgent.** The mean is 100 KB and most covers are fine. Including the ERD
@@ -156,6 +161,73 @@ cover, nine site-wide are over 150 KB; excluding it, the other eight are:
 **Order matters.** The budget first, because it stops the problem growing while the
 structural work waits. Doing the structural work first and the budget never is how
 this comes back in six months.
+
+### Phase 2 result, shipped 2026-08-31
+
+**Item 1, the budget test, done as specced.** `tests/image-budget.test.ts` globs
+`public/images/posts/*/cover.<jpg|jpeg|png>`, fails if any is over 300,000 bytes,
+wired into `npm run test` as `test:image-budget` (last in the chain). Sanity-checked
+against a synthetic 400 KB fixture to confirm it actually flags an over-budget file
+rather than silently passing, then confirmed clean against the real repo.
+
+**Item 2, the structural split, done differently than first sketched — no `src/`
+frontmatter migration, no new content-collection schema field.** The plan's own
+text said "the in-page image moves into `src/`"; what that turned out to mean in
+practice: a new `src/assets/covers/<slug>.<ext>` directory that `PostLayout.astro`
+looks up by the post's slug via `import.meta.glob('/src/assets/covers/*', { eager:
+true })`, entirely decoupled from `post.data.socialImage`/`cover` frontmatter. A
+post gets the treatment by having a file show up in that folder under its slug —
+nothing to change in its `index.md`. When `PostLayout` finds one, it renders
+[`<Picture>`](https://docs.astro.build/en/guides/images/#picture-) from
+`astro:assets` (`formats={["webp"]}`, `widths={[700, 900, 1400]}`, same `sizes`
+measured in Phase 1); when it doesn't, the post keeps the exact plain `<img>` it
+already had. `og:image`/`twitter:image` never read this map — they still resolve
+`post.data.socialImage` straight to the unhashed `public/` JPG, confirmed
+unchanged in the built HTML for every post checked below.
+
+**Applied to the 8 posts over 150 KB, plus re-did the ERD post's Phase 1 files
+through the same mechanism** (retiring the hand-rolled one — see the superseded
+note above), for one pipeline instead of two. Source for the 8: their existing
+`public/` `cover.jpg` copied as-is into `src/assets/covers/`, since none had a
+higher-resolution original still on hand and re-compressing an already-compressed
+JPG into correctly-*sized* WebP is still a net win — this is the same premise the
+Phase 1 measurement table used. Source for the ERD post: the original Unsplash
+download, re-cropped to 1600×840 (same center-gravity crop as the live
+`cover.jpg`, just larger) so the 1400w candidate isn't upscaled. Astro's own
+image service **silently caps `widths` at the source's native resolution** for
+the other 8 — confirmed in the built HTML, `introducing-truss`'s `<source>`
+lists `700w, 900w, 1200w`, not `1400w`, since its source is only 1200 px wide.
+That's the correct behavior (no upscale blur) and needed no code on this end.
+
+**Before/after, summed across all 9 migrated covers:**
+
+| | Total (9 covers) | vs. original |
+|---|---|---|
+| Original `cover.jpg` | 1,813,021 B (1.73 MiB) | — |
+| 700w WebP (mobile candidate) | 500,390 B (489 KiB) | **-72%** |
+| 900w WebP (desktop candidate) | 761,980 B (744 KiB) | **-58%** |
+
+Same percentages as the single-post Phase 1 measurement, holding across all 9 —
+expected, since it's the same crop ratio and the same two measured slot widths
+(364 px mobile, 784 px desktop) every time. Per-post numbers are in the commit
+that shipped this.
+
+**Verified, not assumed:** `npm run build` succeeds; every post's `<img>` (plain
+or `<Picture>`-generated) resolves to a real file, checked across every
+`dist/posts/**/index.html`; exactly 9 pages plus their 2 Italian translations
+(`introducing-truss/it/`, `the-bug-that-only-showed-up-with-pasted-schemas/it/`)
+render a `<picture>`, nowhere else; `npm run test` (all 7 suites, including the
+new budget test) passes; `npx lighthouse` on a migrated post
+(`generator-vs-ai-skill`) shows the same shape of improvement Phase 1 measured
+(80,718 B served on mobile / 131,450 B on desktop, against a 260,875 B original).
+
+**Left out, deliberately:** the other 23 posts under 150 KB (plan called them
+"fine" and the budget test now backstops them regardless); AVIF (WebP alone
+already got the site-wide numbers above — chasing AVIF's further few percent
+wasn't worth a second format's build-time cost for this pass); a script or
+guide for adding new posts to `src/assets/covers/` going forward (the mechanism
+is opt-in by file presence, self-explanatory from `PostLayout.astro`'s comment,
+and no post has needed it since — revisit if that stops being true).
 
 ## What this plan does not claim
 
