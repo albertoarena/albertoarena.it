@@ -13,6 +13,8 @@ import ReadingModeToggle from "../components/ReadingModeToggle.astro";
 import { getPostSlug } from "../utils/helpers";
 import { getSeriesEntry } from "../data/series";
 import readingTime from "reading-time";
+import fs from "node:fs";
+import path from "node:path";
 
 interface Heading {
     depth: number;
@@ -52,6 +54,33 @@ const postItalianUrl = (englishUrl && italianUrl) || lang === 'it' ? `/posts/${s
 const coverSrc = post.data.cover
     ? (post.data.cover.startsWith('http') ? post.data.cover : `/images/posts/${post.data.cover}`)
     : post.data.socialImage;
+
+// Opt-in per-post WebP srcset for the in-page cover render (docs/plans/post-cover-weight.md
+// Phase 1): og:image/twitter:image keep pointing at the JPG untouched, this only swaps what's
+// painted on the page. A post gets this by shipping cover-700/900/1400.webp next to its
+// cover.jpg in public/ — most posts don't have those files yet, so they keep the plain <img>.
+// Three widths, not two: the post-shell main column measures ~784-891px on real desktop
+// breakpoints (900px-wide viewport rail-only up to the 1312px container cap), which sits in
+// the gap between 700w and 1400w and forced every DPR-1 desktop hit to round up to the 1400w
+// file until 900w was added (measured with `npx lighthouse --preset=desktop`).
+const coverWebpWidths = [700, 900, 1400];
+// Requires the literal filename cover.<ext> — a handful of older posts set
+// socialImage/cover to a different basename (thumbnail.webp, gatsby.webp, ...),
+// and .replace() against a pattern that doesn't match is a silent no-op, which
+// previously left coverWebpSrcs holding three copies of the original path and
+// hasCoverWebp true for a "variant set" that was really the same file three times.
+const coverWebpBase = /^\/images\/posts\/[^/]+\/cover\.[a-z]+$/.test(coverSrc ?? '')
+    ? coverSrc.replace(/cover\.[a-z]+$/, '')
+    : null;
+const coverWebpSrcs = coverWebpBase
+    ? coverWebpWidths.map((w) => `${coverWebpBase}cover-${w}.webp`)
+    : [];
+const hasCoverWebp =
+    coverWebpSrcs.length > 0 &&
+    coverWebpSrcs.every((src) => fs.existsSync(path.join(process.cwd(), 'public', src)));
+const coverWebpSrcset = coverWebpSrcs
+    .map((src, i) => `${src} ${coverWebpWidths[i]}w`)
+    .join(', ');
 
 const toc = headings.filter((h) => h.depth === 2);
 
@@ -197,15 +226,24 @@ const blogPostingSchema = {
 
         {coverSrc && (
             <figure class="mb-10">
-                <img
-                    src={coverSrc}
-                    alt={post.data.coverAlt ?? post.data.title}
-                    width="1200"
-                    height="628"
-                    loading="eager"
-                    fetchpriority="high"
-                    class="w-full aspect-[1.91/1] object-cover border border-rule"
-                />
+                <picture>
+                    {hasCoverWebp && (
+                        <source
+                            type="image/webp"
+                            srcset={coverWebpSrcset}
+                            sizes="(min-width: 900px) 784px, calc(100vw - 3rem)"
+                        />
+                    )}
+                    <img
+                        src={coverSrc}
+                        alt={post.data.coverAlt ?? post.data.title}
+                        width="1200"
+                        height="628"
+                        loading="eager"
+                        fetchpriority="high"
+                        class="w-full aspect-[1.91/1] object-cover border border-rule"
+                    />
+                </picture>
             </figure>
         )}
 
