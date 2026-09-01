@@ -87,3 +87,5 @@ On July 29, 2026, Truss reached v1.3.1: a data dictionary and DBML export shippe
 On July 31, 2026, Truss reached v1.5.0, adding `truss:doctor`: a deterministic, structure-only review of your schema across thirteen rules spanning integrity, indexes, and types, runnable from the terminal, CI, or the dashboard's new Health panel. See [The schema doctor is in](/posts/the-schema-doctor-is-in/).
 
 On August 27, 2026, Truss reached v1.10.0, lowering the minimum PHP version from 8.3 to 8.2, the floor Laravel 12 itself requires. It also ships Laravel Boost guidelines and a skill, and narrows the `TRUSS-INT-007` pivot-table rule after measuring it against real schemas. See the [release notes](https://github.com/albertoarena/laravel-truss/releases/tag/v1.10.0).
+
+On September 1, 2026, Truss reached v1.11.0, adding `TRUSS-INT-010`: it flags a foreign key that references the wrong table when a table matching its column name actually exists, while leaving genuine aliases (like `parent_id` or `variant_id`) alone. See the [release notes](https://github.com/albertoarena/laravel-truss/releases/tag/v1.11.0).
