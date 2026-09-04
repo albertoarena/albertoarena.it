@@ -1,0 +1,378 @@
+<!DOCTYPE html><html lang="it" class="light"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="canonical" href="https://albertoarena.it/posts/the-laravel-schema-nobody-chose/it/"><link rel="alternate" hreflang="en" href="https://albertoarena.it/posts/the-laravel-schema-nobody-chose/"><link rel="alternate" hreflang="it" href="https://albertoarena.it/posts/the-laravel-schema-nobody-chose/it/"><link rel="alternate" hreflang="x-default" href="https://albertoarena.it/posts/the-laravel-schema-nobody-chose/"><link rel="sitemap" href="/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="A blog by Alberto Arena" href="/rss.xml"><!-- Preload the body serif and the mono weight actually used at first paint --><link rel="preload" as="font" type="font/woff2" href="/_astro/source-serif-4-latin-wght-normal.D9elroTD.woff2" crossorigin="anonymous"><link rel="preload" as="font" type="font/woff2" href="/_astro/ibm-plex-mono-latin-400-normal.DMJ8VG8y.woff2" crossorigin="anonymous"><title>Lo schema Laravel che nessuno ha scelto</title><meta name="description" content="Un censimento strutturale di quindici codebase Laravel reali: che aspetto hanno i loro schemi, quanto sono connessi, e quanto di tutto questo non è mai stato davvero una scelta."><meta name="author" content="Alberto Arena"><!-- Open Graph / Facebook --><meta property="og:type" content="article"><meta property="og:url" content="https://albertoarena.it/posts/the-laravel-schema-nobody-chose/it/"><meta property="og:title" content="Lo schema Laravel che nessuno ha scelto"><meta property="og:description" content="Un censimento strutturale di quindici codebase Laravel reali: che aspetto hanno i loro schemi, quanto sono connessi, e quanto di tutto questo non è mai stato davvero una scelta."><meta property="og:image" content="https://albertoarena.it/images/posts/the-laravel-schema-nobody-chose/cover.jpg"><meta property="og:site_name" content="A blog by Alberto Arena"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:url" content="https://albertoarena.it/posts/the-laravel-schema-nobody-chose/it/"><meta name="twitter:title" content="Lo schema Laravel che nessuno ha scelto"><meta name="twitter:description" content="Un censimento strutturale di quindici codebase Laravel reali: che aspetto hanno i loro schemi, quanto sono connessi, e quanto di tutto questo non è mai stato davvero una scelta."><meta name="twitter:image" content="https://albertoarena.it/images/posts/the-laravel-schema-nobody-chose/cover.jpg"><meta name="twitter:creator" content="@alberto_arena"><!-- Structured data --><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://albertoarena.it/#person","name":"Alberto Arena","url":"https://albertoarena.it/pages/about/","image":"https://albertoarena.it/photo.jpg","jobTitle":"Senior Software Engineer","sameAs":["https://x.com/alberto_arena","https://www.linkedin.com/in/alberto-arena-ba44a624/","https://github.com/albertoarena","https://www.youtube.com/@AlbertoArenaDev"]},{"@type":"WebSite","@id":"https://albertoarena.it/#website","name":"A blog by Alberto Arena","url":"https://albertoarena.it","publisher":{"@id":"https://albertoarena.it/#person"}}]}</script><!-- Theme color, kept in sync with the --accent token per theme --><meta name="theme-color" content="#0b5fd0"><!-- Theme script (prevent flash) --><script>
+      const THEME_COLOR = { light: '#0b5fd0', dark: '#5eb3ff' };
+
+      function setThemeColorMeta(theme) {
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', THEME_COLOR[theme]);
+      }
+
+      function applyTheme() {
+        const theme = (() => {
+          if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+            return localStorage.getItem('theme');
+          }
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
+          }
+          return 'light';
+        })();
+
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+        } else {
+          document.documentElement.classList.add('light');
+          document.documentElement.classList.remove('dark');
+        }
+        setThemeColorMeta(theme);
+      }
+
+      // Apply theme immediately
+      applyTheme();
+
+      // Re-apply after View Transitions swap
+      document.addEventListener('astro:after-swap', applyTheme);
+
+      // Also handle before swap to prevent flash
+      document.addEventListener('astro:before-swap', (event) => {
+        const theme = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        event.newDocument.documentElement.classList.toggle('dark', theme === 'dark');
+        event.newDocument.documentElement.classList.toggle('light', theme === 'light');
+      });
+
+      // Reflect an in-page toggle click immediately, no swap involved
+      document.addEventListener('theme-changed', (event) => setThemeColorMeta(event.detail.theme));
+    </script><!-- Reading mode script (prevent flash, post pages only) --><script>
+      function applyReadingMode() {
+        const onPost = location.pathname.startsWith('/posts/');
+        if (onPost && localStorage.getItem('reading-mode') === '1') {
+          document.documentElement.setAttribute('data-reading', '');
+        } else {
+          document.documentElement.removeAttribute('data-reading');
+        }
+      }
+
+      // Apply immediately
+      applyReadingMode();
+
+      // Re-apply after View Transitions swap
+      document.addEventListener('astro:after-swap', applyReadingMode);
+
+      // Also handle before swap to prevent flash
+      document.addEventListener('astro:before-swap', (event) => {
+        const onPost = event.to.pathname.startsWith('/posts/');
+        const on = onPost && localStorage.getItem('reading-mode') === '1';
+        event.newDocument.documentElement.toggleAttribute('data-reading', on);
+      });
+    </script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CDGfc0hd.js"></script><!-- Google Consent Mode v2 defaults --><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      // Restore prior consent immediately so returning users aren't blocked
+      var _priorConsent = localStorage.getItem('cookieConsent');
+      gtag('consent', 'default', {
+        analytics_storage: _priorConsent === 'accepted' ? 'granted' : 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        wait_for_update: _priorConsent ? 0 : 500,
+      });
+    </script><!-- Google Tag Manager --><script>(function(){const gtmId = "GTM-PDQBJBL3";
+
+      if (gtmId && !window._gtmLoaded) {
+        window._gtmLoaded = true;
+        (function(w,d,s,l,i){
+          w[l]=w[l]||[];
+          w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+          var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s), dl=l!='dataLayer'?'&l='+l:'';
+          j.async=true;
+          j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+          f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer',gtmId);
+
+        // Push page_view on each SPA navigation (View Transitions) — registered once
+        document.addEventListener('astro:after-swap', function() {
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            event: 'page_view',
+            page_location: window.location.href,
+            page_path: window.location.pathname,
+            page_title: document.title,
+          });
+        });
+      }
+    })();</script><link rel="stylesheet" href="/_astro/index.CDCDG0uk.css">
+<style>@keyframes astroFadeInOut{0%{opacity:1}to{opacity:0}}@keyframes astroFadeIn{0%{opacity:0;mix-blend-mode:plus-lighter}to{opacity:1;mix-blend-mode:plus-lighter}}@keyframes astroFadeOut{0%{opacity:1;mix-blend-mode:plus-lighter}to{opacity:0;mix-blend-mode:plus-lighter}}@keyframes astroSlideFromRight{0%{transform:translate(100%)}}@keyframes astroSlideFromLeft{0%{transform:translate(-100%)}}@keyframes astroSlideToRight{to{transform:translate(100%)}}@keyframes astroSlideToLeft{to{transform:translate(-100%)}}@media(prefers-reduced-motion){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}[data-astro-transition-scope]{animation:none!important}}
+</style><style>[data-astro-transition-scope="astro-kqlc46iq-1"] { view-transition-name: newsletter-signup; }@layer astro { ::view-transition-old(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-kqlc46iq-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-kqlc46iq-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-kqlc46iq-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-kqlc46iq-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-kqlc46iq-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-kqlc46iq-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-kqlc46iq-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-kqlc46iq-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head> <body class="min-h-screen"> <!-- Google Tag Manager (noscript) --> <noscript> <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PDQBJBL3" height="0" width="0" style="display:none;visibility:hidden"></iframe> </noscript> <a href="#main-content" class="skip-to-content">Skip to content</a>   <div class="post-shell min-[900px]:grid min-[900px]:grid-cols-[14rem_minmax(0,1fr)] min-[1180px]:grid-cols-[14rem_minmax(0,1fr)_15rem] max-w-[82rem] mx-auto"> <aside class="border-b min-[900px]:border-b-0 min-[900px]:border-r border-rule
+    flex flex-row min-[900px]:flex-col flex-wrap min-[900px]:flex-nowrap
+    items-start gap-x-7 gap-y-3 min-[900px]:gap-y-6
+    px-5 py-5 min-[900px]:pl-5 min-[900px]:pr-6 min-[900px]:pt-9 min-[900px]:pb-8
+    min-[900px]:sticky min-[900px]:top-0 min-[900px]:self-start
+    min-[900px]:h-screen min-[900px]:w-56 min-[900px]:shrink-0
+    print:hidden"> <div class="w-full min-[900px]:w-auto"> <a href="/" class="font-sans font-semibold text-base leading-tight tracking-tight text-ink dark:text-white hover:text-accent transition-colors"> Alberto Arena </a> <div class="font-mono text-[0.6875rem] uppercase tracking-[0.11em] text-muted mt-1.5"> Senior Software Engineer </div> </div> <nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Reading"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> read </div> <a href="/writing/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>writing </a><a href="/series/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>series </a><a href="/cheatsheets/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>cheatsheets </a> </nav><nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Projects"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> build </div> <a href="https://trussphp.com/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=site-nav" target="_blank" rel="noopener noreferrer" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>truss </a><a href="/projects/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>projects </a><a href="https://www.youtube.com/@AlbertoArenaDev" target="_blank" rel="noopener noreferrer" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>videos </a> </nav><nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Work with me"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> work </div> <a href="/pages/consulting/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>consulting </a><a href="/subscribe/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>subscribe </a><a href="/pages/about/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>about </a> </nav> <div class="w-full min-[900px]:w-auto min-[900px]:mt-auto font-mono text-[0.6875rem] leading-relaxed text-muted flex flex-col gap-1"> <span>Sicily, Italy</span> <span class="flex items-center gap-1.5"> <span class="inline-block w-[0.45rem] h-[0.45rem] rounded-full bg-ok shrink-0" aria-hidden="true"></span>
+Available for freelance
+</span>  </div> </aside> <div class="post-shell-main min-w-0 min-[900px]:col-start-2"> <div class="flex justify-end px-6 pt-6 min-[900px]:px-8 min-[900px]:pt-8"> <button data-theme-toggle type="button" class="p-2 text-muted hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent" aria-label="Toggle dark mode"> <!-- Sun icon (shown in dark mode to switch to light) --> <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path> </svg> <!-- Moon icon (shown in light mode to switch to dark) --> <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path> </svg> </button> <script type="module">function t(){const e=document.documentElement.classList.contains("dark"),c=e?"light":"dark";e?(document.documentElement.classList.remove("dark"),document.documentElement.classList.add("light"),localStorage.setItem("theme","light")):(document.documentElement.classList.add("dark"),document.documentElement.classList.remove("light"),localStorage.setItem("theme","dark")),document.dispatchEvent(new CustomEvent("theme-changed",{detail:{theme:c}}))}function n(){document.querySelectorAll("[data-theme-toggle]").forEach(e=>{e.removeEventListener("click",t),e.addEventListener("click",t)})}n();document.addEventListener("astro:after-swap",n);</script> </div> <main id="main-content" class="px-6 pb-12 min-[900px]:px-8 min-[900px]:pb-16"> <article class="post-content"> <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Lo schema Laravel che nessuno ha scelto","description":"Un censimento strutturale di quindici codebase Laravel reali: che aspetto hanno i loro schemi, quanto sono connessi, e quanto di tutto questo non è mai stato davvero una scelta.","image":"https://albertoarena.it/images/posts/the-laravel-schema-nobody-chose/cover.jpg","datePublished":"2026-08-28T10:00:00.000Z","author":{"@id":"https://albertoarena.it/#person"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://albertoarena.it/posts/the-laravel-schema-nobody-chose/it/"}}</script> <header class="mb-8 max-w-[68ch]"> <p class="eyebrow font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-accent mb-3"> Laravel </p> <h1 class="font-sans text-[clamp(1.75rem,3.4vw,2.5rem)] leading-[1.15] tracking-[-0.025em] font-[660] mb-4 max-w-[26ch] text-ink dark:text-white"> Lo schema Laravel che nessuno ha scelto </h1> <p class="standfirst text-lg text-ink-2 mb-6 max-w-[60ch]"> Un censimento strutturale di quindici codebase Laravel reali: che aspetto hanno i loro schemi, quanto sono connessi, e quanto di tutto questo non è mai stato davvero una scelta. </p> <div class="meta font-mono text-xs text-muted flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-b border-rule py-3"> <time datetime="2026-08-28T10:00:00.000Z">28 agosto 2026</time> <span>9 min read</span> <span class="font-mono"> <a href="/posts/the-laravel-schema-nobody-chose/" class="text-accent hover:underline">EN</a> <span class="text-muted"> &middot; </span> <a href="/posts/the-laravel-schema-nobody-chose/it/" aria-current="page" class="text-ink dark:text-white font-semibold">IT</a> </span> <span>6° in Truss series</span> </div> </header>  <figure class="mb-10"> <img src="/images/posts/the-laravel-schema-nobody-chose/cover.jpg" alt="File di cassetti di legno etichettati in un vecchio schedario di biblioteca, visti da un'angolazione" width="1200" height="628" loading="eager" fetchpriority="high" class="w-full aspect-[1.91/1] object-cover border border-rule"> </figure> <details class="toc-mobile min-[1180px]:hidden mb-8 border border-rule px-4 py-3 not-prose"> <summary class="font-mono text-xs uppercase tracking-[0.1em] text-muted cursor-pointer"> In questa pagina </summary> <ul class="toc-list mt-3 font-mono text-sm leading-relaxed"> <li> <a href="#una-tabella-che-nessuno-ha-scritto-di-proposito" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Una tabella che nessuno ha scritto di proposito</a> </li><li> <a href="#quanto-è-connesso-davvero-uno-schema-reale" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Quanto è connesso davvero uno schema reale</a> </li><li> <a href="#la-portabilità-ha-un-costo-ed-è-la-chiave-esterna" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">La portabilità ha un costo, ed è la chiave esterna</a> </li><li> <a href="#cosa-aggiunge-uno-starter-kit-e-cosa-non-fa-un-cms-a-file-piatti" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Cosa aggiunge uno starter kit, e cosa non fa un CMS a file piatti</a> </li><li> <a href="#cosa-mostra-questo-censimento-e-cosa-non-mostra" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Cosa mostra questo censimento, e cosa non mostra</a> </li><li> <a href="#lo-strumento-in-breve" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Lo strumento, in breve</a> </li> </ul> </details> <details class="series-mobile min-[1180px]:hidden mb-8 border border-rule px-4 py-3 not-prose"> <summary class="font-mono text-xs uppercase tracking-[0.1em] text-muted cursor-pointer"> Truss series </summary> <ul class="mt-3 font-mono text-sm leading-relaxed"> <li class="flex py-[0.25rem]"> <span class="text-muted shrink-0 w-3">1</span> <a href="/posts/introducing-truss/it/" class="text-ink-2 hover:text-accent">Non esiste un artisan schema:show, quindi l&#39;ho costruito io</a> </li><li class="flex py-[0.25rem]"> <span class="text-muted shrink-0 w-3">2</span> <a href="/posts/the-schema-doctor-is-in/it/" class="text-ink-2 hover:text-accent">Il dottore dello schema è in ambulatorio</a> </li><li class="flex py-[0.25rem]"> <span class="text-muted shrink-0 w-3">3</span> <a href="/posts/gave-my-schema-viewer-your-app-colours/it/" class="text-ink-2 hover:text-accent">Ho dato al mio visualizzatore di schema i colori della tua app</a> </li><li class="flex py-[0.25rem]"> <span class="text-muted shrink-0 w-3">4</span> <a href="/posts/my-coding-agent-kept-inventing-columns/it/" class="text-ink-2 hover:text-accent">Il mio agente di coding inventava le colonne</a> </li><li class="flex py-[0.25rem]"> <span class="text-muted shrink-0 w-3">5</span> <a href="/posts/the-bug-that-only-showed-up-with-pasted-schemas/it/" class="text-ink-2 hover:text-accent">Il bug comparso solo quando degli sconosciuti hanno potuto incollare uno schema</a> </li><li class="flex py-[0.25rem]"> <span class="text-muted shrink-0 w-3">6</span> <span class="text-accent font-semibold">Lo schema Laravel che nessuno ha scelto</span> </li> </ul> <a href="/series/truss/" class="block mt-3 pt-3 border-t border-rule-soft font-mono text-sm text-accent hover:underline"> Vedi la serie &rarr;
+</a> </details> <!-- Prose body at reading measure --> <div class="prose dark:prose-invert max-w-[68ch]">  <p>Quindici applicazioni Laravel reali, ognuna delle quali una codebase che puoi andare a leggere. 811 tabelle. Un unico database MySQL 8.0 fissato, solo migrazioni, nessun seed. Ogni applicazione installata da un clone pulito e migrata prima che una sola tabella venisse letta.</p>
+<p>Questa non è una recensione di quei quindici progetti. È un censimento: uno sguardo a come appare davvero uno schema Laravel una volta che un’applicazione è stata rilasciata ed è cresciuta oltre lo stadio da tutorial. Durante la lettura sono emersi alcuni problemi reali, e ciascuno di essi verrà comunicato privatamente al progetto che lo possiede prima che se ne scriva qui qualcosa. Quello che resta, una volta messi da parte, è comunque più interessante. Questi progetti condividono convenzioni che non hanno mai discusso, perché il framework o l’ecosistema attorno ad esso ha scelto per primo.</p>
+<p>Dietro questo articolo ci sono due letture distinte, che coprono insiemi diversi, e le tengo separate per tutto il testo. I conteggi delle relazioni coprono tutte e quindici le applicazioni. I controlli strutturali sono più lenti, e alcune di queste applicazioni non riuscivano a eseguire lo strumento al momento della lettura, quindi coprono un insieme più piccolo: dodici database e 482 tabelle, di cui sette sono applicazioni reali e cinque sono installazioni Laravel di base tenute come controllo. Ovunque compaia un numero qui sotto, viene indicato da quale delle due letture proviene.</p>
+<h2 id="una-tabella-che-nessuno-ha-scritto-di-proposito">Una tabella che nessuno ha scritto di proposito</h2>
+<p>Sei tabelle in quattro di questi progetti non hanno alcuna chiave primaria. In Bagisto ce ne sono tre, <code>password_resets</code>, <code>admin_password_resets</code> e <code>customer_password_resets</code>. Firefly III e Koel ne hanno una ciascuno con il primo di questi nomi. Twill ne ha una con il proprio prefisso. Tutte e sei condividono la stessa forma:</p>
+<pre class="astro-code github-dark-default" style="background-color:#0d1117;color:#e6edf3; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="sql"><code><span class="line"><span style="color:#E6EDF3">email        </span><span style="color:#FF7B72">varchar</span><span style="color:#E6EDF3">(</span><span style="color:#79C0FF">255</span><span style="color:#E6EDF3">) </span><span style="color:#FF7B72">NOT NULL</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#E6EDF3">token        </span><span style="color:#FF7B72">varchar</span><span style="color:#E6EDF3">(</span><span style="color:#79C0FF">255</span><span style="color:#E6EDF3">) </span><span style="color:#FF7B72">NOT NULL</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#E6EDF3">created_at   </span><span style="color:#FF7B72">timestamp</span><span style="color:#FF7B72"> NULL</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#FF7B72">KEY</span><span style="color:#E6EDF3"> (email)  </span><span style="color:#8B949E">-- and nothing declared PRIMARY</span></span></code></pre>
+<p>Questa forma non è un errore commesso da nessuno di questi quattro progetti. È il vecchio scaffold di Laravel stesso, quello che ogni progetto generava di default per anni. Laravel nel frattempo l’ha sostituito: un’installazione Laravel 13 attuale include una tabella chiamata <code>password_reset_tokens</code>, con la colonna email come vera chiave primaria.</p>
+<p>Twill è la prova più chiara di cosa sia successo qui. A un certo punto ha rinominato la propria copia in <code>twill_password_resets</code>, un nome proprio nella propria migrazione, ma ha comunque mantenuto il vecchio design senza chiave. Nessuno si è seduto a decidere che una tabella di reset password non dovesse avere una chiave primaria. Un generatore del framework ha preso quella decisione anni fa, e da allora è stata trasportata avanti da progetti che non avevano motivo di rivederla.</p>
+<p>Leggetela con attenzione: dice qualcosa su come si propaga lo scaffolding di Laravel, non sulla trascuratezza di nessuno dei quattro progetti che la portano ancora.</p>
+<h2 id="quanto-è-connesso-davvero-uno-schema-reale">Quanto è connesso davvero uno schema reale</h2>
+<p>Il risultato più forte di questo censimento non è arrivato affatto dalle regole strutturali. È arrivato da una domanda molto più semplice, posta a tutte e quindici le applicazioni: di tutte le tabelle in uno schema, quante si trovano effettivamente in almeno una relazione di chiave esterna con un’altra tabella?</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>App</th><th align="right">Tabelle</th><th align="right">Chiavi esterne</th><th align="right">Tabelle in una relazione</th></tr></thead><tbody><tr><td><a href="https://github.com/bagisto/bagisto" rel="noopener noreferrer" target="_blank">Bagisto</a></td><td align="right">146</td><td align="right">185</td><td align="right">87%</td></tr><tr><td><a href="https://github.com/monicahq/monica" rel="noopener noreferrer" target="_blank">Monica</a></td><td align="right">100</td><td align="right">138</td><td align="right">86%</td></tr><tr><td><a href="https://github.com/lunarphp/lunar" rel="noopener noreferrer" target="_blank">Lunar</a></td><td align="right">75</td><td align="right">82</td><td align="right">85%</td></tr><tr><td><a href="https://github.com/firefly-iii/firefly-iii" rel="noopener noreferrer" target="_blank">Firefly III</a></td><td align="right">81</td><td align="right">114</td><td align="right">79%</td></tr><tr><td><a href="https://github.com/koel/koel" rel="noopener noreferrer" target="_blank">Koel</a></td><td align="right">40</td><td align="right">42</td><td align="right">75%</td></tr><tr><td><a href="https://github.com/pterodactyl/panel" rel="noopener noreferrer" target="_blank">Pterodactyl</a></td><td align="right">35</td><td align="right">35</td><td align="right">74%</td></tr><tr><td><a href="https://github.com/InvoiceShelf/InvoiceShelf" rel="noopener noreferrer" target="_blank">InvoiceShelf</a></td><td align="right">49</td><td align="right">79</td><td align="right">69%</td></tr><tr><td><a href="https://github.com/LycheeOrg/Lychee" rel="noopener noreferrer" target="_blank">Lychee</a></td><td align="right">52</td><td align="right">55</td><td align="right">67%</td></tr><tr><td><a href="https://github.com/Azuriom/Azuriom" rel="noopener noreferrer" target="_blank">Azuriom</a></td><td align="right">28</td><td align="right">22</td><td align="right">64%</td></tr><tr><td><a href="https://github.com/area17/twill" rel="noopener noreferrer" target="_blank">Twill</a></td><td align="right">24</td><td align="right">4</td><td align="right">33%</td></tr><tr><td><a href="https://github.com/cachethq/cachet" rel="noopener noreferrer" target="_blank">Cachet</a></td><td align="right">32</td><td align="right">3</td><td align="right">16%</td></tr><tr><td><a href="https://github.com/BookStackApp/BookStack" rel="noopener noreferrer" target="_blank">BookStack</a></td><td align="right">41</td><td align="right">4</td><td align="right">12%</td></tr><tr><td><a href="https://github.com/snipe/snipe-it" rel="noopener noreferrer" target="_blank">Snipe-IT</a></td><td align="right">58</td><td align="right">1</td><td align="right">3%</td></tr><tr><td><a href="https://github.com/octobercms/october" rel="noopener noreferrer" target="_blank">October CMS</a></td><td align="right">41</td><td align="right">0</td><td align="right">0%</td></tr></tbody></table>
+<p><a href="https://github.com/statamic/cms" rel="noopener noreferrer" target="_blank">Statamic</a> è la quindicesima ed è esclusa da questa tabella, per una ragione che ha una propria sezione più sotto.</p>
+<p>Guardate in fondo a quella lista. Snipe-IT è un asset manager maturo con 58 tabelle tenute insieme da esattamente una chiave esterna. October CMS ha 41 tabelle e nessuna: i suoi moduli principali portano 35 dichiarazioni di relazione in puro PHP, <code>belongsTo</code>, <code>hasMany</code>, <code>morphTo</code>, il solito vocabolario di Eloquent, e nemmeno una riga fuori da <code>vendor/</code> chiama mai <code>->foreign()</code>. Le relazioni sono reali. Il database non ne applica nessuna.</p>
+<p>Detto altrimenti: metà di questo corpus disegnerebbe un diagramma ER (ERD) con quasi nessuna linea, non perché le relazioni manchino, ma perché vivono in un posto che un diagramma non può vedere.</p>
+<p>Non è un difetto di nessuno in questa lista. È una biforcazione reale in come vengono costruite le applicazioni Laravel, che sta lì in piena vista, e a cui nessuno aveva mai dato un numero prima. Metà di questo corpus si appoggia al database per tenere insieme le proprie relazioni. L’altra metà le mantiene tutte nel codice applicativo e non chiede nulla allo schema. Entrambi sono software funzionante. Sono solo costruiti su due assunzioni diverse su cosa serva un database.</p>
+<h2 id="la-portabilità-ha-un-costo-ed-è-la-chiave-esterna">La portabilità ha un costo, ed è la chiave esterna</h2>
+<p>Parte di questa divisione ha una spiegazione semplice. Diversi di questi progetti distribuiscono migrazioni pensate per funzionare su più di un motore di database, MySQL, PostgreSQL e SQLite allo stesso modo. Questa scelta ha un costo diretto e visibile nello schema, e la chiave esterna è la principale vittima.</p>
+<p>Cachet è l’esempio più chiaro: 32 tabelle, e 3 chiavi esterne tra loro. Il suo schema è pieno di colonne chiaramente pensate per fare riferimento a un’altra tabella, con naming <code>_id</code>, il tipo giusto, posizionate proprio accanto alla tabella a cui puntano, e nessun vincolo dichiarato. Una chiamata a <code>->foreign()</code> è legata alla sintassi dei vincoli di un motore specifico in un modo in cui una semplice colonna intera non lo è, quindi uno schema pensato per funzionare ovunque rinuncia al vincolo per mantenere quella promessa.</p>
+<p>Vale la pena tenerlo a mente prima di leggere il fondo della tabella come un segnale di qualità. Un progetto self-hostable che deve funzionare su qualunque motore qualcuno abbia a disposizione è sotto un vincolo che un’applicazione privata, costruita per un solo motore fin dal primo giorno, non affronta mai.</p>
+<h2 id="cosa-aggiunge-uno-starter-kit-e-cosa-non-fa-un-cms-a-file-piatti">Cosa aggiunge uno starter kit, e cosa non fa un CMS a file piatti</h2>
+<p>Due risultati qui non sono sorprese, ed entrambi vale la pena affermarli chiaramente, perché escludono alcune possibilità.</p>
+<p>Il primo riguarda gli starter kit. La lettura strutturale ha incluso uno scheletro Laravel nudo come controllo, migrato senza nient’altro installato, e tre dei modi comuni in cui un progetto viene avviato sopra di esso. Breeze e Filament sono entrambi atterrati esattamente su 9 tabelle, lo stesso numero del controllo nudo, senza nulla segnalato in nessuno dei due. Jetstream aggiunge altre cinque tabelle per il supporto ai team e torna comunque senza nulla segnalato con il profilo predefinito. Quindi lo schema con cui parte un progetto Laravel appena creato non dipende davvero da quale di questi venga scelto. Vale la pena saperlo prima di dare per scontato che un problema di schema in un progetto giovane derivi dalla scelta dello starter kit, perché quasi certamente non è così.</p>
+<p>Il secondo è Statamic, ed è per questo che è esclusa dalla tabella sopra. Statamic ha ottenuto esattamente lo stesso risultato del controllo nudo: 9 tabelle, nulla segnalato. Questo è il risultato atteso piuttosto che sorprendente, ed è facile dimenticarlo mentre si legge una colonna di percentuali. Statamic è un CMS a file piatti. Il contenuto vive nei file, non nelle righe. Il suo database esiste solo per le parti di Laravel che ne hanno bisogno, sessioni, cache, il solito scaffolding. Classificarlo in base a quanto è connesso il suo schema non direbbe nulla, perché non ha tabelle applicative da connettere.</p>
+<h2 id="cosa-mostra-questo-censimento-e-cosa-non-mostra">Cosa mostra questo censimento, e cosa non mostra</h2>
+<p>Ogni codebase qui pubblica il proprio codice sorgente, ma non è la licenza a creare il bias, e vale la pena essere precisi su questo. Dodici di queste quindici sono MIT, AGPL o GPL. Tre sono prodotti commerciali che si trovano a distribuire codice sorgente leggibile: Cachet, October CMS e Statamic. Ciò che tutte e quindici condividono davvero è un modello di distribuzione. Vengono distribuite su infrastrutture che non controllano, quindi le loro migrazioni devono funzionare su qualunque motore abbia a disposizione chi le installa.</p>
+<p>Questa è la pressione che sopprime le chiavi esterne, e grava allo stesso modo sulle tre commerciali come sulle altre dodici. Un’applicazione privata, costruita per un solo motore fin dal primo giorno e distribuita solo dal team che l’ha scritta, non ne è soggetta e di conseguenza apparirà molto più connessa. È una popolazione diversa, e questo censimento non può vederla.</p>
+<p>Un’applicazione che avrebbe dovuto far parte di questo insieme non ha mai finito il processo. Le migrazioni di Coolify si fermano a metà su MySQL: il nome di un indice risolve a 72 caratteri, oltre il limite di 64 di MySQL. Non è un difetto di Coolify. È un’applicazione pensata prima di tutto per PostgreSQL che si comporta esattamente come tale, su un motore per cui non è mai stata progettata, e non poteva essere salvata cambiando motore, perché un unico MySQL fissato è la prima regola di questo setup.</p>
+<h2 id="lo-strumento-in-breve">Lo strumento, in breve</h2>
+<p>Ogni schema qui è stato letto con <a href="https://trussphp.com/?utm_source=albertoarena.it&#x26;utm_medium=referral&#x26;utm_campaign=schema-census" rel="noopener noreferrer" target="_blank"><code>truss:doctor</code></a>, un controllo strutturale che ho costruito dentro Laravel Truss. È la ragione per cui questo censimento è stato possibile: è ciò che ha trasformato centinaia di tabelle su quindici database in qualcosa che una sola persona potesse effettivamente leggere in un tempo ragionevole. Solo struttura, mai i dati.</p>
+<p>Non è il soggetto di questo articolo, e qualunque problema reale emerso lungo il percorso viene comunicato al progetto che lo possiede prima di andare ovunque in pubblico. Non è una promessa fatta solo qui: la <a href="https://trussphp.com/reference/tested-applications/?utm_source=albertoarena.it&#x26;utm_medium=referral&#x26;utm_campaign=schema-census" rel="noopener noreferrer" target="_blank">lista delle applicazioni contro cui è stato eseguito</a> dice la stessa cosa, e deliberatamente non pubblica alcun risultato.</p>
+<p>Ciò che è pubblico è la parte che non è colpa di nessuno. Molto di ciò che sembra una decisione di schema in un’applicazione Laravel matura non è mai stato davvero deciso da quell’applicazione.</p>  </div> <!--
+            Tags, author bio, newsletter box, discussion link, and pager are
+            post metadata, not article body content. Readability
+            (Safari Reader, Firefox Reader View, and this site's own
+            reading-mode toggle) unconditionally strips every <aside>
+            element from whatever content it selects
+            (Readability.js's _grabArticle calls this._clean(articleContent,
+            "aside")), regardless of nesting depth or how that content
+            scores — unlike styling via class name, which only *penalises* a
+            node's score and doesn't guarantee removal. This used to be a
+            <div>, which Readability kept on shorter posts where the real
+            article text didn't outweigh this block's own paragraph density.
+            See docs/plans/reader-mode-boundary-leaks.md.
+        --> <aside class="endnote mt-12 pt-6 border-t border-rule max-w-[68ch]"> <div class="post-tags flex flex-wrap gap-2 mb-7 font-mono text-xs"> <a href="/tag/php/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#PHP </a><a href="/tag/laravel/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#Laravel </a><a href="/tag/database/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#Database </a><a href="/tag/open-source/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#Open Source </a> </div> <div class="post-author flex items-center gap-3 mb-7"> <img src="/photo.jpg" alt="" class="w-11 h-11 rounded-full"> <div> <p class="font-sans font-semibold text-sm text-ink dark:text-white">Alberto Arena</p> <p class="text-sm text-muted">Senior Software Engineer</p> </div> </div> <div class="post-newsletter border border-rule px-5 py-5 mb-6" data-astro-transition-persist="newsletter-signup" data-astro-transition-scope="astro-kqlc46iq-1"> <h2 class="text-base font-semibold text-ink dark:text-white mb-1">Liked this? Get the next one.</h2> <p class="text-sm text-ink-2 leading-relaxed mb-4">
+Practical notes on Laravel tooling and AI-assisted development, about once a month.
+                Join the list and I'll send you my
+<a href="/cheatsheets/spatie-event-sourcing/" class="text-accent underline">Spatie Event Sourcing cheat sheet</a>
+to start.
+</p> <div data-form="HjBuvq" class="ml-embedded newsletter-signup-target"></div> <script>(function(){const accountId = "2474575";
+
+  function loadMailerLite() {
+    (function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[])
+    .push(arguments);},l=d.createElement(e),l.async=1,l.src=u,
+    n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})
+    (window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');
+    ml('account', accountId);
+  }
+
+  function initNewsletterSignup() {
+    var target = document.querySelector('.newsletter-signup-target');
+    // Already wired up: either a fresh page's target we've already handled,
+    // or (post-to-post navigation) the same transition:persist node carried
+    // over from the previous page, already loaded or already being watched.
+    if (!target || target.dataset.mlObserved === '1') return;
+    target.dataset.mlObserved = '1';
+
+    // Plain scroll-position polling, not IntersectionObserver: the box is
+    // transition:persist (home page and every post share one DOM node), so
+    // an observer created on first load keeps "watching" that node forever,
+    // even after it's carried into a page it never ran its own init on —
+    // fine on its own, except a same-page TOC jump rides scroll-behavior:
+    // smooth, and an animated scroll can move the target through the
+    // viewport fast enough to land between two observer check frames,
+    // which then never reports isIntersecting at all (same failure mode
+    // already hit and fixed this way for the TOC active-heading tracking).
+    // A rAF-throttled getBoundingClientRect check against every 'scroll'
+    // event can't miss a frame like that, and rides along with the persisted
+    // node onto whichever page it ends up on.
+    var ticking = false;
+    function checkPosition() {
+      ticking = false;
+      var rect = target.getBoundingClientRect();
+      if (rect.top < window.innerHeight + 600 && rect.bottom > -600) {
+        window.removeEventListener('scroll', onScroll);
+        loadMailerLite();
+      }
+    }
+    function onScroll() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(checkPosition);
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    checkPosition();
+  }
+
+  // Astro's View Transitions swap doesn't re-execute an inline script whose
+  // content is byte-identical to one that already ran elsewhere in the
+  // session (this component renders the same script on every post and on
+  // /subscribe), so a target introduced by a client-side navigation from a
+  // page with no newsletter box of its own (e.g. home -> a post) would
+  // otherwise never get observed.
+  initNewsletterSignup();
+  document.addEventListener('astro:after-swap', initNewsletterSignup);
+})();</script> </div> <div class="discuss border-t border-rule-soft pt-4 mb-7 font-mono text-sm text-muted leading-relaxed"> Hai trovato un errore, o non sei d’accordo?  <a href="https://github.com/albertoarena/laravel-truss/discussions" target="_blank" rel="noopener noreferrer" class="text-accent underline"> Apri una discussione su GitHub </a>  o  <a href="mailto:hello@albertoarena.it" class="text-accent underline"> inviami un’email </a>.
+</div> </aside> <!--
+            Left outside the <aside> above, and left off reading mode's
+            hide list in global.css: prev/next navigation stays useful even
+            in a focused read, unlike the bio/newsletter/discuss chrome.
+            It doesn't need <aside> treatment to stay out of Readability's
+            output either — "pager" already matches Readability's own
+            unlikelyCandidates regex (pagination|pager), so it's excluded
+            on its own.
+        -->  </article> </main> <footer class="site-footer border-t border-rule mt-20 py-8"> <div class="max-w-3xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted"> <span>© 2026 Alberto Arena</span> <div class="flex items-center gap-4"> <a href="/pages/privacy-policy/" class="hover:text-accent transition-colors">Privacy Policy</a> <span aria-hidden="true">·</span> <a href="/pages/credits/" class="hover:text-accent transition-colors">Credits</a> <span aria-hidden="true">·</span> <a href="/rss.xml" class="hover:text-accent transition-colors">RSS</a> <span aria-hidden="true">·</span> <a href="https://www.youtube.com/@AlbertoArenaDev" class="hover:text-accent transition-colors">YouTube</a> </div> </div> </footer> </div> <aside class="hidden min-[1180px]:flex flex-col gap-8 border-l border-rule px-5 py-9 sticky top-0 self-start h-screen overflow-y-auto"> <div> <h3 class="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted mb-2.5"> In questa pagina </h3> <ul id="toc" class="font-mono text-xs leading-[1.55]"> <li> <a href="#una-tabella-che-nessuno-ha-scritto-di-proposito" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="una-tabella-che-nessuno-ha-scritto-di-proposito">Una tabella che nessuno ha scritto di proposito</a> </li><li> <a href="#quanto-è-connesso-davvero-uno-schema-reale" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="quanto-è-connesso-davvero-uno-schema-reale">Quanto è connesso davvero uno schema reale</a> </li><li> <a href="#la-portabilità-ha-un-costo-ed-è-la-chiave-esterna" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="la-portabilità-ha-un-costo-ed-è-la-chiave-esterna">La portabilità ha un costo, ed è la chiave esterna</a> </li><li> <a href="#cosa-aggiunge-uno-starter-kit-e-cosa-non-fa-un-cms-a-file-piatti" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="cosa-aggiunge-uno-starter-kit-e-cosa-non-fa-un-cms-a-file-piatti">Cosa aggiunge uno starter kit, e cosa non fa un CMS a file piatti</a> </li><li> <a href="#cosa-mostra-questo-censimento-e-cosa-non-mostra" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="cosa-mostra-questo-censimento-e-cosa-non-mostra">Cosa mostra questo censimento, e cosa non mostra</a> </li><li> <a href="#lo-strumento-in-breve" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="lo-strumento-in-breve">Lo strumento, in breve</a> </li> </ul> </div> <div> <h3 class="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted mb-2.5"> <a href="/series/truss/" class="hover:text-accent">Truss series</a> </h3> <ul class="font-mono text-xs leading-[1.5]"> <li class="flex py-[0.3rem]"> <span class="text-muted shrink-0 w-3">1</span> <a href="/posts/introducing-truss/it/" class="text-ink-2 hover:text-accent">Non esiste un artisan schema:show, quindi l&#39;ho costruito io</a> </li><li class="flex py-[0.3rem]"> <span class="text-muted shrink-0 w-3">2</span> <a href="/posts/the-schema-doctor-is-in/it/" class="text-ink-2 hover:text-accent">Il dottore dello schema è in ambulatorio</a> </li><li class="flex py-[0.3rem]"> <span class="text-muted shrink-0 w-3">3</span> <a href="/posts/gave-my-schema-viewer-your-app-colours/it/" class="text-ink-2 hover:text-accent">Ho dato al mio visualizzatore di schema i colori della tua app</a> </li><li class="flex py-[0.3rem]"> <span class="text-muted shrink-0 w-3">4</span> <a href="/posts/my-coding-agent-kept-inventing-columns/it/" class="text-ink-2 hover:text-accent">Il mio agente di coding inventava le colonne</a> </li><li class="flex py-[0.3rem]"> <span class="text-muted shrink-0 w-3">5</span> <a href="/posts/the-bug-that-only-showed-up-with-pasted-schemas/it/" class="text-ink-2 hover:text-accent">Il bug comparso solo quando degli sconosciuti hanno potuto incollare uno schema</a> </li><li class="flex py-[0.3rem]"> <span class="text-muted shrink-0 w-3">6</span> <span class="text-accent font-semibold">Lo schema Laravel che nessuno ha scelto</span> </li> </ul> </div> </aside> </div> <button id="reading-mode-toggle" type="button" aria-pressed="false" class="fixed right-4 z-50 border border-rule bg-paper px-4 py-2 font-mono text-sm text-accent shadow-lg transition-colors hover:border-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 motion-reduce:transition-none" style="bottom: calc(1rem + env(safe-area-inset-bottom));">
+Reading mode
+</button> <script type="module">const i="reading-mode";function n(){const t=document.documentElement.toggleAttribute("data-reading");localStorage.setItem(i,t?"1":"0"),o()}function o(){const e=document.getElementById("reading-mode-toggle");if(!e)return;const t=document.documentElement.hasAttribute("data-reading");e.setAttribute("aria-pressed",String(t)),e.textContent=t?"Exit reading mode":"Reading mode"}function d(){const e=document.getElementById("reading-mode-toggle");e&&(e.removeEventListener("click",n),e.addEventListener("click",n),o())}d();document.addEventListener("astro:after-swap",d);</script> <div id="cookie-consent" class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-paper border-t border-rule shadow-lg" role="dialog" aria-labelledby="cookie-consent-title" aria-describedby="cookie-consent-description"> <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"> <div class="text-sm text-ink dark:text-white"> <p id="cookie-consent-title" class="font-semibold mb-1">We use cookies</p> <p id="cookie-consent-description" class="text-ink-2">
+We use analytics cookies to understand how you use this site and improve your experience.
+        No advertising or profiling cookies are used.
+<a href="/pages/privacy-policy/" class="underline hover:text-accent transition-colors ml-1">Privacy Policy</a> </p> </div> <div class="flex gap-3 flex-shrink-0"> <button id="decline-cookies" class="px-4 py-2 text-sm text-muted hover:text-ink dark:hover:text-white transition-colors" aria-label="Decline analytics cookies">
+Decline
+</button> <button id="accept-cookies" class="px-4 py-2 text-sm bg-accent text-white hover:bg-accent/90 transition-colors" aria-label="Accept analytics cookies">
+Accept analytics
+</button> </div> </div> </div> <script type="module">function n(...e){window.dataLayer=window.dataLayer||[],window.dataLayer.push(e)}function o(){const e=localStorage.getItem("cookieConsent"),t=document.getElementById("cookie-consent");if(e){t?.remove(),e==="accepted"&&n("consent","update",{analytics_storage:"granted"});return}document.getElementById("accept-cookies")?.addEventListener("click",()=>{n("consent","update",{analytics_storage:"granted"}),localStorage.setItem("cookieConsent","accepted"),t?.remove()}),document.getElementById("decline-cookies")?.addEventListener("click",()=>{n("consent","update",{analytics_storage:"denied"}),localStorage.setItem("cookieConsent","declined"),t?.remove()})}o();document.addEventListener("astro:after-swap",o);</script>  </body></html> <script type="module">let n;function l(){n&&(window.removeEventListener("scroll",n),n=void 0);const o=Array.from(document.querySelectorAll("#toc a[data-target]")),i=o.map(e=>document.getElementById(e.dataset.target)).filter(e=>!!e);if(!i.length)return;const s=()=>window.innerHeight*.2;function a(){const e=s();let c=i[0].id;for(const t of i)if(t.getBoundingClientRect().top<=e)c=t.id;else break;o.forEach(t=>{t.classList.toggle("toc-active",t.dataset.target===c)})}let r=!1;n=()=>{r||(r=!0,requestAnimationFrame(()=>{r=!1,a()}))},window.addEventListener("scroll",n,{passive:!0}),a()}l();document.addEventListener("astro:after-swap",l);</script>

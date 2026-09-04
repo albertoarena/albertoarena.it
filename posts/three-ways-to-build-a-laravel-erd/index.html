@@ -1,0 +1,311 @@
+<!DOCTYPE html><html lang="en" class="light"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="canonical" href="https://albertoarena.it/posts/three-ways-to-build-a-laravel-erd/"><link rel="sitemap" href="/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="A blog by Alberto Arena" href="/rss.xml"><!-- Preload the body serif and the mono weight actually used at first paint --><link rel="preload" as="font" type="font/woff2" href="/_astro/source-serif-4-latin-wght-normal.D9elroTD.woff2" crossorigin="anonymous"><link rel="preload" as="font" type="font/woff2" href="/_astro/ibm-plex-mono-latin-400-normal.DMJ8VG8y.woff2" crossorigin="anonymous"><title>Three ways to build a Laravel ERD, and what each one costs</title><meta name="description" content="Laravel ERD is one name for three different machines: migrations replayed, models reflected, or the live database read. What each source buys you, and what it can never show."><meta name="author" content="Alberto Arena"><!-- Open Graph / Facebook --><meta property="og:type" content="article"><meta property="og:url" content="https://albertoarena.it/posts/three-ways-to-build-a-laravel-erd/"><meta property="og:title" content="Three ways to build a Laravel ERD, and what each one costs"><meta property="og:description" content="Laravel ERD is one name for three different machines: migrations replayed, models reflected, or the live database read. What each source buys you, and what it can never show."><meta property="og:image" content="https://albertoarena.it/images/posts/three-ways-to-build-a-laravel-erd/cover.jpg"><meta property="og:site_name" content="A blog by Alberto Arena"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:url" content="https://albertoarena.it/posts/three-ways-to-build-a-laravel-erd/"><meta name="twitter:title" content="Three ways to build a Laravel ERD, and what each one costs"><meta name="twitter:description" content="Laravel ERD is one name for three different machines: migrations replayed, models reflected, or the live database read. What each source buys you, and what it can never show."><meta name="twitter:image" content="https://albertoarena.it/images/posts/three-ways-to-build-a-laravel-erd/cover.jpg"><meta name="twitter:creator" content="@alberto_arena"><!-- Structured data --><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://albertoarena.it/#person","name":"Alberto Arena","url":"https://albertoarena.it/pages/about/","image":"https://albertoarena.it/photo.jpg","jobTitle":"Senior Software Engineer","sameAs":["https://x.com/alberto_arena","https://www.linkedin.com/in/alberto-arena-ba44a624/","https://github.com/albertoarena","https://www.youtube.com/@AlbertoArenaDev"]},{"@type":"WebSite","@id":"https://albertoarena.it/#website","name":"A blog by Alberto Arena","url":"https://albertoarena.it","publisher":{"@id":"https://albertoarena.it/#person"}}]}</script><!-- Theme color, kept in sync with the --accent token per theme --><meta name="theme-color" content="#0b5fd0"><!-- Theme script (prevent flash) --><script>
+      const THEME_COLOR = { light: '#0b5fd0', dark: '#5eb3ff' };
+
+      function setThemeColorMeta(theme) {
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', THEME_COLOR[theme]);
+      }
+
+      function applyTheme() {
+        const theme = (() => {
+          if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+            return localStorage.getItem('theme');
+          }
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
+          }
+          return 'light';
+        })();
+
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+        } else {
+          document.documentElement.classList.add('light');
+          document.documentElement.classList.remove('dark');
+        }
+        setThemeColorMeta(theme);
+      }
+
+      // Apply theme immediately
+      applyTheme();
+
+      // Re-apply after View Transitions swap
+      document.addEventListener('astro:after-swap', applyTheme);
+
+      // Also handle before swap to prevent flash
+      document.addEventListener('astro:before-swap', (event) => {
+        const theme = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        event.newDocument.documentElement.classList.toggle('dark', theme === 'dark');
+        event.newDocument.documentElement.classList.toggle('light', theme === 'light');
+      });
+
+      // Reflect an in-page toggle click immediately, no swap involved
+      document.addEventListener('theme-changed', (event) => setThemeColorMeta(event.detail.theme));
+    </script><!-- Reading mode script (prevent flash, post pages only) --><script>
+      function applyReadingMode() {
+        const onPost = location.pathname.startsWith('/posts/');
+        if (onPost && localStorage.getItem('reading-mode') === '1') {
+          document.documentElement.setAttribute('data-reading', '');
+        } else {
+          document.documentElement.removeAttribute('data-reading');
+        }
+      }
+
+      // Apply immediately
+      applyReadingMode();
+
+      // Re-apply after View Transitions swap
+      document.addEventListener('astro:after-swap', applyReadingMode);
+
+      // Also handle before swap to prevent flash
+      document.addEventListener('astro:before-swap', (event) => {
+        const onPost = event.to.pathname.startsWith('/posts/');
+        const on = onPost && localStorage.getItem('reading-mode') === '1';
+        event.newDocument.documentElement.toggleAttribute('data-reading', on);
+      });
+    </script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CDGfc0hd.js"></script><!-- Google Consent Mode v2 defaults --><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      // Restore prior consent immediately so returning users aren't blocked
+      var _priorConsent = localStorage.getItem('cookieConsent');
+      gtag('consent', 'default', {
+        analytics_storage: _priorConsent === 'accepted' ? 'granted' : 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        wait_for_update: _priorConsent ? 0 : 500,
+      });
+    </script><!-- Google Tag Manager --><script>(function(){const gtmId = "GTM-PDQBJBL3";
+
+      if (gtmId && !window._gtmLoaded) {
+        window._gtmLoaded = true;
+        (function(w,d,s,l,i){
+          w[l]=w[l]||[];
+          w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+          var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s), dl=l!='dataLayer'?'&l='+l:'';
+          j.async=true;
+          j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+          f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer',gtmId);
+
+        // Push page_view on each SPA navigation (View Transitions) — registered once
+        document.addEventListener('astro:after-swap', function() {
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            event: 'page_view',
+            page_location: window.location.href,
+            page_path: window.location.pathname,
+            page_title: document.title,
+          });
+        });
+      }
+    })();</script><link rel="stylesheet" href="/_astro/index.CDCDG0uk.css">
+<style>@keyframes astroFadeInOut{0%{opacity:1}to{opacity:0}}@keyframes astroFadeIn{0%{opacity:0;mix-blend-mode:plus-lighter}to{opacity:1;mix-blend-mode:plus-lighter}}@keyframes astroFadeOut{0%{opacity:1;mix-blend-mode:plus-lighter}to{opacity:0;mix-blend-mode:plus-lighter}}@keyframes astroSlideFromRight{0%{transform:translate(100%)}}@keyframes astroSlideFromLeft{0%{transform:translate(-100%)}}@keyframes astroSlideToRight{to{transform:translate(100%)}}@keyframes astroSlideToLeft{to{transform:translate(-100%)}}@media(prefers-reduced-motion){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}[data-astro-transition-scope]{animation:none!important}}
+</style><style>[data-astro-transition-scope="astro-kqlc46iq-1"] { view-transition-name: newsletter-signup; }@layer astro { ::view-transition-old(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-kqlc46iq-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-kqlc46iq-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-kqlc46iq-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-kqlc46iq-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-kqlc46iq-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-kqlc46iq-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-kqlc46iq-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-kqlc46iq-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head> <body class="min-h-screen"> <!-- Google Tag Manager (noscript) --> <noscript> <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PDQBJBL3" height="0" width="0" style="display:none;visibility:hidden"></iframe> </noscript> <a href="#main-content" class="skip-to-content">Skip to content</a>   <div class="post-shell min-[900px]:grid min-[900px]:grid-cols-[14rem_minmax(0,1fr)] min-[1180px]:grid-cols-[14rem_minmax(0,1fr)_15rem] max-w-[82rem] mx-auto"> <aside class="border-b min-[900px]:border-b-0 min-[900px]:border-r border-rule
+    flex flex-row min-[900px]:flex-col flex-wrap min-[900px]:flex-nowrap
+    items-start gap-x-7 gap-y-3 min-[900px]:gap-y-6
+    px-5 py-5 min-[900px]:pl-5 min-[900px]:pr-6 min-[900px]:pt-9 min-[900px]:pb-8
+    min-[900px]:sticky min-[900px]:top-0 min-[900px]:self-start
+    min-[900px]:h-screen min-[900px]:w-56 min-[900px]:shrink-0
+    print:hidden"> <div class="w-full min-[900px]:w-auto"> <a href="/" class="font-sans font-semibold text-base leading-tight tracking-tight text-ink dark:text-white hover:text-accent transition-colors"> Alberto Arena </a> <div class="font-mono text-[0.6875rem] uppercase tracking-[0.11em] text-muted mt-1.5"> Senior Software Engineer </div> </div> <nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Reading"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> read </div> <a href="/writing/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>writing </a><a href="/series/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>series </a><a href="/cheatsheets/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>cheatsheets </a> </nav><nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Projects"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> build </div> <a href="https://trussphp.com/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=site-nav" target="_blank" rel="noopener noreferrer" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>truss </a><a href="/projects/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>projects </a><a href="https://www.youtube.com/@AlbertoArenaDev" target="_blank" rel="noopener noreferrer" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>videos </a> </nav><nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Work with me"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> work </div> <a href="/pages/consulting/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>consulting </a><a href="/subscribe/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>subscribe </a><a href="/pages/about/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>about </a> </nav> <div class="w-full min-[900px]:w-auto min-[900px]:mt-auto font-mono text-[0.6875rem] leading-relaxed text-muted flex flex-col gap-1"> <span>Sicily, Italy</span> <span class="flex items-center gap-1.5"> <span class="inline-block w-[0.45rem] h-[0.45rem] rounded-full bg-ok shrink-0" aria-hidden="true"></span>
+Available for freelance
+</span>  </div> </aside> <div class="post-shell-main min-w-0 min-[900px]:col-start-2"> <div class="flex justify-end px-6 pt-6 min-[900px]:px-8 min-[900px]:pt-8"> <button data-theme-toggle type="button" class="p-2 text-muted hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent" aria-label="Toggle dark mode"> <!-- Sun icon (shown in dark mode to switch to light) --> <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path> </svg> <!-- Moon icon (shown in light mode to switch to dark) --> <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path> </svg> </button> <script type="module">function t(){const e=document.documentElement.classList.contains("dark"),c=e?"light":"dark";e?(document.documentElement.classList.remove("dark"),document.documentElement.classList.add("light"),localStorage.setItem("theme","light")):(document.documentElement.classList.add("dark"),document.documentElement.classList.remove("light"),localStorage.setItem("theme","dark")),document.dispatchEvent(new CustomEvent("theme-changed",{detail:{theme:c}}))}function n(){document.querySelectorAll("[data-theme-toggle]").forEach(e=>{e.removeEventListener("click",t),e.addEventListener("click",t)})}n();document.addEventListener("astro:after-swap",n);</script> </div> <main id="main-content" class="px-6 pb-12 min-[900px]:px-8 min-[900px]:pb-16"> <article class="post-content"> <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Three ways to build a Laravel ERD, and what each one costs","description":"Laravel ERD is one name for three different machines: migrations replayed, models reflected, or the live database read. What each source buys you, and what it can never show.","image":"https://albertoarena.it/images/posts/three-ways-to-build-a-laravel-erd/cover.jpg","datePublished":"2026-08-31T10:00:00.000Z","author":{"@id":"https://albertoarena.it/#person"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://albertoarena.it/posts/three-ways-to-build-a-laravel-erd/"}}</script> <header class="mb-8 max-w-[68ch]"> <p class="eyebrow font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-accent mb-3"> Laravel </p> <h1 class="font-sans text-[clamp(1.75rem,3.4vw,2.5rem)] leading-[1.15] tracking-[-0.025em] font-[660] mb-4 max-w-[26ch] text-ink dark:text-white"> Three ways to build a Laravel ERD, and what each one costs </h1> <p class="standfirst text-lg text-ink-2 mb-6 max-w-[60ch]"> Laravel ERD is one name for three different machines: migrations replayed, models reflected, or the live database read. What each source buys you, and what it can never show. </p> <div class="meta font-mono text-xs text-muted flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-b border-rule py-3"> <time datetime="2026-08-31T10:00:00.000Z">August 31, 2026</time> <span>7 min read</span>   </div> </header> <figure class="mb-10"> <picture> <source srcset="/_astro/three-ways-to-build-a-laravel-erd.CQjx7nEE_TSlQ5.webp 700w, /_astro/three-ways-to-build-a-laravel-erd.CQjx7nEE_1uqst6.webp 900w, /_astro/three-ways-to-build-a-laravel-erd.CQjx7nEE_ZwgRGo.webp 1400w" type="image/webp" sizes="(min-width: 900px) 784px, calc(100vw - 3rem)">  <img src="/_astro/three-ways-to-build-a-laravel-erd.CQjx7nEE_2pi7ck.jpg" srcset="/_astro/three-ways-to-build-a-laravel-erd.CQjx7nEE_Z1BwfBW.jpg 700w, /_astro/three-ways-to-build-a-laravel-erd.CQjx7nEE_Z11Y8YV.jpg 900w, /_astro/three-ways-to-build-a-laravel-erd.CQjx7nEE_2lSnDx.jpg 1400w" alt="Railway tracks converging at a switch, seen directly from above" sizes="(min-width: 900px) 784px, calc(100vw - 3rem)" loading="eager" fetchpriority="high" decoding="async" width="1200" height="630" class="w-full aspect-[1.91/1] object-cover border border-rule"> </picture> </figure>  <details class="toc-mobile min-[1180px]:hidden mb-8 border border-rule px-4 py-3 not-prose"> <summary class="font-mono text-xs uppercase tracking-[0.1em] text-muted cursor-pointer"> On this page </summary> <ul class="toc-list mt-3 font-mono text-sm leading-relaxed"> <li> <a href="#three-sources" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Three sources</a> </li><li> <a href="#migrations-what-you-meant-to-build" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Migrations: what you meant to build</a> </li><li> <a href="#models-what-eloquent-believes" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Models: what Eloquent believes</a> </li><li> <a href="#the-database-whats-actually-there" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">The database: what’s actually there</a> </li><li> <a href="#where-that-weakness-lives-and-why-its-honest" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Where that weakness lives, and why it’s honest</a> </li><li> <a href="#three-sources-side-by-side" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Three sources, side by side</a> </li><li> <a href="#pick-the-question-not-the-package" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Pick the question, not the package</a> </li> </ul> </details>  <!-- Prose body at reading measure --> <div class="prose dark:prose-invert max-w-[68ch]">  <p>A developer put together a roundup of five Laravel schema packages a few weeks back, Truss among them, and the graphic that went with it labelled every single one “Laravel ERD.” That’s also the literal name of two other packages in the list. He wasn’t being careless: it’s the only word the category has. And that’s the whole problem, captured in one image. The name describes what comes out of these tools, an ER diagram (ERD), and says nothing about where it came from.</p>
+<p>“Laravel ERD” is one label sitting over three genuinely different machines. Pick a package under that name and you’re not comparing icon sets or export formats, you’re choosing a source of truth, and that choice decides what the resulting ERD can and can’t ever show you.</p>
+<h2 id="three-sources">Three sources</h2>
+<p>There are exactly three places a Laravel ERD tool can go looking for your schema:</p>
+<ul>
+<li><strong>Your migrations.</strong> Replay them into a throwaway database and read back what came out.</li>
+<li><strong>Your models.</strong> Reflect over your Eloquent classes and their relation methods.</li>
+<li><strong>Your database.</strong> Introspect the live connection directly.</li>
+</ul>
+<p>Everything else, three packages or thirty, is one of these three with different packaging. So it’s worth going through each in turn: how it works, what it buys you, and what it can never show you no matter how well it’s built.</p>
+<h2 id="migrations-what-you-meant-to-build">Migrations: what you meant to build</h2>
+<p>A migrations-based tool spins up a disposable database, usually SQLite in memory, runs your migrations against it fresh, and reads the resulting schema back out. Relations mostly come from parsing the model files separately, since a migration file doesn’t declare <code>hasMany</code>.</p>
+<p>What that buys you is real: no live database needed, works straight off a clean checkout, and it’s honest about intent. This is what the team decided to build.</p>
+<p>What it costs is the same fact seen from the other side. It draws what you meant, not what’s actually there. Anything applied by hand, by another service, or by a migration that predates this tool’s own rules is invisible to it. The replay also has to succeed on the substitute engine: a MySQL fulltext index has nowhere to go in SQLite, so a migration built around one simply fails to replay. And a database Laravel didn’t create in the first place, an inherited legacy schema, produces nothing at all.</p>
+<h2 id="models-what-eloquent-believes">Models: what Eloquent believes</h2>
+<p>A models-based tool works the other direction. It finds every Eloquent model and reads its relation methods, in some implementations by actually instantiating each model and calling its own public methods to see which ones hand back a relation, discarding whatever errors along the way.</p>
+<p>That buys something a foreign key structurally cannot express: polymorphic relations. A <code>morphTo</code> or <code>morphMany</code> has no column that a database constraint could ever encode, so a models-based diagram is the only one of the three that can draw them at all. It also draws relations in applications that never added a single database constraint, which turns out to be a lot of them.</p>
+<p>The cost is in what it leaves out and what it trusts. Only tables that have a model attached show up, so pivot tables and legacy tables with no Eloquent class sit outside the picture entirely. Reflecting over model classes means, in some implementations, executing your application code to find out what it does. And what comes back is what Eloquent believes about your data, which isn’t always what the database is actually willing to enforce.</p>
+<p>One package doing this well has over 300,000 installs. It solves a real problem, polymorphic relations most of all, that a database-only tool like Truss doesn’t solve at all.</p>
+<h2 id="the-database-whats-actually-there">The database: what’s actually there</h2>
+<p>The third source doesn’t touch your code. It connects to the live database and reads the schema straight out of it: tables, columns, foreign keys, all of it.</p>
+<p>What that buys you is the property the other two can’t offer at any price: it cannot drift from what’s actually deployed, because it <em>is</em> what’s deployed. It sees tables no model was ever written for. It works on a schema Laravel didn’t create, inherited, third-party, whatever happens to be connected.</p>
+<p>That’s not a claim I’m making from the mechanism alone. It’s been run, installed, booted and drawn something in <a href="https://trussphp.com/reference/tested-applications/?utm_source=albertoarena.it&#x26;utm_medium=referral&#x26;utm_campaign=three-ways-to-build-a-laravel-erd" rel="noopener noreferrer" target="_blank">20 Laravel applications, 861 tables between them</a>, which is closer to measured than reasoned.</p>
+<p>The cost is the one this whole article exists to say out loud, because it’s Truss’s own. If your schema has no foreign keys, you get very few edges. A diagram built this way can only draw the relationships your database actually knows about.</p>
+<h2 id="where-that-weakness-lives-and-why-its-honest">Where that weakness lives, and why it’s honest</h2>
+<p>Somebody said it plainly in a GitHub issue, and it’s worth quoting exactly rather than smoothing it over: “without the model relations, it is not really useful to me.” They’re right. A schema with no declared foreign keys, and there are plenty of those, produces a Truss diagram with almost no lines in it.</p>
+<p>The honest answer isn’t a defence. A diagram with no edges is a finding about the schema, not a failure of the viewer. If your tables aren’t wired together at the database level, that’s worth knowing regardless of which tool tells you. <code>truss:doctor</code>, the structural check built into Truss, names the foreign keys that look missing rather than pretending the diagram’s silence is the whole story, and the rule behind that check went through a real calibration pass against real schemas, tightened from 69 findings down to 14, because a tool that tells you your database is wrong needs to hold itself to that standard first.</p>
+<p>Reading Eloquent relations as a second source of edges, drawn distinctly from the ones the database actually enforces, is on the roadmap. No date on it yet. But it’s the honest fix for an honest limitation, not a walked-back promise.</p>
+<h2 id="three-sources-side-by-side">Three sources, side by side</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Source</th><th>Reads</th><th>Shows uniquely</th><th>Never shows</th></tr></thead><tbody><tr><td>Migrations</td><td>Migration files, replayed into a throwaway database</td><td>Intent: what the team meant to build, no live database needed</td><td>Anything applied outside the migrations: hand edits, other services, a schema it didn’t create</td></tr><tr><td>Models</td><td>Eloquent classes and their relation methods</td><td>Polymorphic relations, and relations with no database constraint at all</td><td>Tables with no model, and anything the database enforces that Eloquent doesn’t declare</td></tr><tr><td>Database</td><td>The live connection, directly</td><td>What’s actually deployed, tables no model knows about</td><td>Relationships that exist only in application code, never as a constraint</td></tr></tbody></table>
+<h2 id="pick-the-question-not-the-package">Pick the question, not the package</h2>
+<p>These three tools aren’t really competing for the same job, whatever the shared name suggests. “What did we mean to build?” is a question for your migrations. “What does Eloquent think the shape of the data is?” is a question for your models. “What’s actually sitting in production right now?” is a question only the database itself can answer.</p>
+<p>A Laravel ERD, whichever one you reach for, is only as good as knowing which of those three questions you’re actually asking. Pick the tool that matches the question, and know which one you picked.</p>
+<p>Structure only, never data.</p>  </div> <!--
+            Tags, author bio, newsletter box, discussion link, and pager are
+            post metadata, not article body content. Readability
+            (Safari Reader, Firefox Reader View, and this site's own
+            reading-mode toggle) unconditionally strips every <aside>
+            element from whatever content it selects
+            (Readability.js's _grabArticle calls this._clean(articleContent,
+            "aside")), regardless of nesting depth or how that content
+            scores — unlike styling via class name, which only *penalises* a
+            node's score and doesn't guarantee removal. This used to be a
+            <div>, which Readability kept on shorter posts where the real
+            article text didn't outweigh this block's own paragraph density.
+            See docs/plans/reader-mode-boundary-leaks.md.
+        --> <aside class="endnote mt-12 pt-6 border-t border-rule max-w-[68ch]"> <div class="post-tags flex flex-wrap gap-2 mb-7 font-mono text-xs"> <a href="/tag/php/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#PHP </a><a href="/tag/laravel/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#Laravel </a><a href="/tag/developer-tools/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#Developer Tools </a><a href="/tag/database/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#Database </a> </div> <div class="post-author flex items-center gap-3 mb-7"> <img src="/photo.jpg" alt="" class="w-11 h-11 rounded-full"> <div> <p class="font-sans font-semibold text-sm text-ink dark:text-white">Alberto Arena</p> <p class="text-sm text-muted">Senior Software Engineer</p> </div> </div> <div class="post-newsletter border border-rule px-5 py-5 mb-6" data-astro-transition-persist="newsletter-signup" data-astro-transition-scope="astro-kqlc46iq-1"> <h2 class="text-base font-semibold text-ink dark:text-white mb-1">Liked this? Get the next one.</h2> <p class="text-sm text-ink-2 leading-relaxed mb-4">
+Practical notes on Laravel tooling and AI-assisted development, about once a month.
+                Join the list and I'll send you my
+<a href="/cheatsheets/spatie-event-sourcing/" class="text-accent underline">Spatie Event Sourcing cheat sheet</a>
+to start.
+</p> <div data-form="HjBuvq" class="ml-embedded newsletter-signup-target"></div> <script>(function(){const accountId = "2474575";
+
+  function loadMailerLite() {
+    (function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[])
+    .push(arguments);},l=d.createElement(e),l.async=1,l.src=u,
+    n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})
+    (window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');
+    ml('account', accountId);
+  }
+
+  function initNewsletterSignup() {
+    var target = document.querySelector('.newsletter-signup-target');
+    // Already wired up: either a fresh page's target we've already handled,
+    // or (post-to-post navigation) the same transition:persist node carried
+    // over from the previous page, already loaded or already being watched.
+    if (!target || target.dataset.mlObserved === '1') return;
+    target.dataset.mlObserved = '1';
+
+    // Plain scroll-position polling, not IntersectionObserver: the box is
+    // transition:persist (home page and every post share one DOM node), so
+    // an observer created on first load keeps "watching" that node forever,
+    // even after it's carried into a page it never ran its own init on —
+    // fine on its own, except a same-page TOC jump rides scroll-behavior:
+    // smooth, and an animated scroll can move the target through the
+    // viewport fast enough to land between two observer check frames,
+    // which then never reports isIntersecting at all (same failure mode
+    // already hit and fixed this way for the TOC active-heading tracking).
+    // A rAF-throttled getBoundingClientRect check against every 'scroll'
+    // event can't miss a frame like that, and rides along with the persisted
+    // node onto whichever page it ends up on.
+    var ticking = false;
+    function checkPosition() {
+      ticking = false;
+      var rect = target.getBoundingClientRect();
+      if (rect.top < window.innerHeight + 600 && rect.bottom > -600) {
+        window.removeEventListener('scroll', onScroll);
+        loadMailerLite();
+      }
+    }
+    function onScroll() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(checkPosition);
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    checkPosition();
+  }
+
+  // Astro's View Transitions swap doesn't re-execute an inline script whose
+  // content is byte-identical to one that already ran elsewhere in the
+  // session (this component renders the same script on every post and on
+  // /subscribe), so a target introduced by a client-side navigation from a
+  // page with no newsletter box of its own (e.g. home -> a post) would
+  // otherwise never get observed.
+  initNewsletterSignup();
+  document.addEventListener('astro:after-swap', initNewsletterSignup);
+})();</script> </div> <div class="discuss border-t border-rule-soft pt-4 mb-7 font-mono text-sm text-muted leading-relaxed"> Found a mistake, or disagree?  <a href="https://github.com/albertoarena/albertoarena.it/discussions" target="_blank" rel="noopener noreferrer" class="text-accent underline"> Open a discussion on GitHub </a>  or  <a href="mailto:hello@albertoarena.it" class="text-accent underline"> send me an email </a>.
+</div> </aside> <!--
+            Left outside the <aside> above, and left off reading mode's
+            hide list in global.css: prev/next navigation stays useful even
+            in a focused read, unlike the bio/newsletter/discuss chrome.
+            It doesn't need <aside> treatment to stay out of Readability's
+            output either — "pager" already matches Readability's own
+            unlikelyCandidates regex (pagination|pager), so it's excluded
+            on its own.
+        --> <nav class="pager max-w-[68ch] grid grid-cols-1 min-[560px]:grid-cols-2 gap-5" aria-label="Post navigation"> <a href="/posts/the-laravel-schema-nobody-chose/" class="border-t border-rule pt-3 group"> <span class="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-muted block">
+&larr; Previous post </span> <span class="font-sans text-[0.9375rem] font-medium leading-snug mt-1 block group-hover:text-accent"> The Laravel schema nobody chose </span> </a>  </nav> </article> </main> <footer class="site-footer border-t border-rule mt-20 py-8"> <div class="max-w-3xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted"> <span>© 2026 Alberto Arena</span> <div class="flex items-center gap-4"> <a href="/pages/privacy-policy/" class="hover:text-accent transition-colors">Privacy Policy</a> <span aria-hidden="true">·</span> <a href="/pages/credits/" class="hover:text-accent transition-colors">Credits</a> <span aria-hidden="true">·</span> <a href="/rss.xml" class="hover:text-accent transition-colors">RSS</a> <span aria-hidden="true">·</span> <a href="https://www.youtube.com/@AlbertoArenaDev" class="hover:text-accent transition-colors">YouTube</a> </div> </div> </footer> </div> <aside class="hidden min-[1180px]:flex flex-col gap-8 border-l border-rule px-5 py-9 sticky top-0 self-start h-screen overflow-y-auto"> <div> <h3 class="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted mb-2.5"> On this page </h3> <ul id="toc" class="font-mono text-xs leading-[1.55]"> <li> <a href="#three-sources" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="three-sources">Three sources</a> </li><li> <a href="#migrations-what-you-meant-to-build" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="migrations-what-you-meant-to-build">Migrations: what you meant to build</a> </li><li> <a href="#models-what-eloquent-believes" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="models-what-eloquent-believes">Models: what Eloquent believes</a> </li><li> <a href="#the-database-whats-actually-there" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="the-database-whats-actually-there">The database: what’s actually there</a> </li><li> <a href="#where-that-weakness-lives-and-why-its-honest" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="where-that-weakness-lives-and-why-its-honest">Where that weakness lives, and why it’s honest</a> </li><li> <a href="#three-sources-side-by-side" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="three-sources-side-by-side">Three sources, side by side</a> </li><li> <a href="#pick-the-question-not-the-package" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="pick-the-question-not-the-package">Pick the question, not the package</a> </li> </ul> </div>  </aside> </div> <button id="reading-mode-toggle" type="button" aria-pressed="false" class="fixed right-4 z-50 border border-rule bg-paper px-4 py-2 font-mono text-sm text-accent shadow-lg transition-colors hover:border-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 motion-reduce:transition-none" style="bottom: calc(1rem + env(safe-area-inset-bottom));">
+Reading mode
+</button> <script type="module">const i="reading-mode";function n(){const t=document.documentElement.toggleAttribute("data-reading");localStorage.setItem(i,t?"1":"0"),o()}function o(){const e=document.getElementById("reading-mode-toggle");if(!e)return;const t=document.documentElement.hasAttribute("data-reading");e.setAttribute("aria-pressed",String(t)),e.textContent=t?"Exit reading mode":"Reading mode"}function d(){const e=document.getElementById("reading-mode-toggle");e&&(e.removeEventListener("click",n),e.addEventListener("click",n),o())}d();document.addEventListener("astro:after-swap",d);</script> <div id="cookie-consent" class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-paper border-t border-rule shadow-lg" role="dialog" aria-labelledby="cookie-consent-title" aria-describedby="cookie-consent-description"> <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"> <div class="text-sm text-ink dark:text-white"> <p id="cookie-consent-title" class="font-semibold mb-1">We use cookies</p> <p id="cookie-consent-description" class="text-ink-2">
+We use analytics cookies to understand how you use this site and improve your experience.
+        No advertising or profiling cookies are used.
+<a href="/pages/privacy-policy/" class="underline hover:text-accent transition-colors ml-1">Privacy Policy</a> </p> </div> <div class="flex gap-3 flex-shrink-0"> <button id="decline-cookies" class="px-4 py-2 text-sm text-muted hover:text-ink dark:hover:text-white transition-colors" aria-label="Decline analytics cookies">
+Decline
+</button> <button id="accept-cookies" class="px-4 py-2 text-sm bg-accent text-white hover:bg-accent/90 transition-colors" aria-label="Accept analytics cookies">
+Accept analytics
+</button> </div> </div> </div> <script type="module">function n(...e){window.dataLayer=window.dataLayer||[],window.dataLayer.push(e)}function o(){const e=localStorage.getItem("cookieConsent"),t=document.getElementById("cookie-consent");if(e){t?.remove(),e==="accepted"&&n("consent","update",{analytics_storage:"granted"});return}document.getElementById("accept-cookies")?.addEventListener("click",()=>{n("consent","update",{analytics_storage:"granted"}),localStorage.setItem("cookieConsent","accepted"),t?.remove()}),document.getElementById("decline-cookies")?.addEventListener("click",()=>{n("consent","update",{analytics_storage:"denied"}),localStorage.setItem("cookieConsent","declined"),t?.remove()})}o();document.addEventListener("astro:after-swap",o);</script>  </body></html> <script type="module">let n;function l(){n&&(window.removeEventListener("scroll",n),n=void 0);const o=Array.from(document.querySelectorAll("#toc a[data-target]")),i=o.map(e=>document.getElementById(e.dataset.target)).filter(e=>!!e);if(!i.length)return;const s=()=>window.innerHeight*.2;function a(){const e=s();let c=i[0].id;for(const t of i)if(t.getBoundingClientRect().top<=e)c=t.id;else break;o.forEach(t=>{t.classList.toggle("toc-active",t.dataset.target===c)})}let r=!1;n=()=>{r||(r=!0,requestAnimationFrame(()=>{r=!1,a()}))},window.addEventListener("scroll",n,{passive:!0}),a()}l();document.addEventListener("astro:after-swap",l);</script>
