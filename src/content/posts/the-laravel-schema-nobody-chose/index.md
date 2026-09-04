@@ -13,6 +13,10 @@ tags:
 description: "A structural census of fifteen real Laravel codebases: what their schemas look like, how connected they are, and how much of it was never really a choice."
 socialImage: "/images/posts/the-laravel-schema-nobody-chose/cover.jpg"
 coverAlt: "Rows of labelled wooden drawers in an old library card catalog, seen at an angle"
+series:
+  slug: "truss"
+  order: 6
+discussion: "albertoarena/laravel-truss"
 ---
 
 Fifteen real Laravel applications, every one of them a codebase you can go and read. 811 tables. One pinned MySQL 8.0 database, migrations only, no seed data. Every application installed from a clean clone and migrated before a single table was read.
