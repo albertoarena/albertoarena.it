@@ -93,7 +93,7 @@ Every codebase here publishes its source, but the licence is not what creates th
 
 That is the pressure that suppresses foreign keys, and it falls just as hard on the three commercial ones as on the twelve. A private application, built for one engine from day one and deployed only by the team that wrote it, is under none of it and will look far more connected as a result. That is a different population, and this census cannot see it.
 
-One application that was meant to be in this set never finished. Coolify's migrations stop partway on MySQL: one index name resolves to 72 characters, past MySQL's limit of 64. That is not a defect in Coolify. It is a PostgreSQL-first application being exactly that, on an engine it was never designed for, and it could not be rescued by switching engines, because one pinned MySQL is the first rule of this setup.
+One application that was meant to be in this set never finished. [Coolify](https://github.com/coollabsio/coolify)'s migrations stop partway on MySQL: one index name resolves to 72 characters, past MySQL's limit of 64. That is not a defect in Coolify. It is a PostgreSQL-first application being exactly that, on an engine it was never designed for, and it could not be rescued by switching engines, because one pinned MySQL is the first rule of this setup.
 
 ## The instrument, briefly
 
