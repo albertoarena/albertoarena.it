@@ -1,10 +1,13 @@
 ---
 /*
   Redesign home page's one filled block (redesign-plan.md §3, §9.2): the
-  only element on the page allowed to use --surface as a background. No
-  icon set per the plan's constraints (§1), so the previous SVG icons are
-  gone in favour of plain mono links, matching every other link row built
-  so far (post tags, endnote, etc).
+  only element on the page allowed to use --surface as a background. The
+  plan's no-icon-set rule (§1) otherwise stands, so the links below stay
+  plain mono text matching every other link row built so far (post tags,
+  endnote, etc) — the one exception is the Truss mark next to the heading,
+  a deliberate, single amendment to §1, see redesign-plan.md §1 and the
+  `.project-mark` class in global.css for the size every future mark has
+  to match.
 
   Version comes from the same project-stats.json cache /projects reads
   (scripts/fetch-project-stats.mjs, Phase 7), with this hardcoded string as
@@ -28,7 +31,17 @@ const trussSeries = trussSeriesData.map((entry) => ({
 ---
 
 <div class="border border-rule bg-surface px-6 py-5">
-	<div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-2.5">
+	<div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-2.5">
+		<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="project-mark text-ink dark:text-white" aria-hidden="true">
+			<path d="M16 5 L27 26 H5 Z" />
+			<path d="M16 5 V17" />
+			<path d="M5 26 L16 17" />
+			<path d="M27 26 L16 17" />
+			<circle cx="16" cy="5" r="1.4" fill="currentColor" stroke="none" />
+			<circle cx="5" cy="26" r="1.4" fill="currentColor" stroke="none" />
+			<circle cx="27" cy="26" r="1.4" fill="currentColor" stroke="none" />
+			<circle cx="16" cy="17" r="1.4" fill="currentColor" stroke="none" />
+		</svg>
 		<h2 class="font-sans text-xl font-semibold text-ink dark:text-white">Laravel Truss</h2>
 		<span class="font-mono text-xs text-accent border border-accent px-1.5 py-0.5">{TRUSS_VERSION}</span>
 	</div>

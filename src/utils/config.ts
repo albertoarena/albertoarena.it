@@ -39,6 +39,7 @@ export const siteConfig = {
           without the query, so tagging costs nothing in GSC.
         */
         { label: 'truss', path: 'https://trussphp.com/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=site-nav' },
+        { label: 'cogway', path: 'https://cogway.dev/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=site-nav' },
         { label: 'projects', path: '/projects/' },
         { label: 'videos', path: 'https://www.youtube.com/@AlbertoArenaDev' },
       ],

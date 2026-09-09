@@ -14,6 +14,8 @@ Over 10 years building production-grade web applications and e-commerce platform
 
 My foundation is **PHP and Laravel**: I architect maintainable, high-performance backends and have delivered complex **Shopify** and headless commerce solutions for real-world businesses.
 
+Outside of client work, I build and maintain open-source developer tooling for the Laravel ecosystem, released and supported on my own time.
+
 In recent years, I've been deliberately moving toward AI-enhanced engineering: integrating Large Language Models into SaaS platforms, designing AI-assisted workflows, and using automation not as a buzzword but as a genuine productivity multiplier embedded into the architecture itself.
 
 What I bring to a project:
@@ -52,4 +54,8 @@ Outside of work I read a lot, play guitar, dabble in constructed languages, and 
 
 ## Portfolio
 
-You can see some of [my projects on LinkedIn](https://www.linkedin.com/in/alberto-arena-ba44a624/details/projects/).
+The full list of open-source tools and professional work is on [the projects page](/projects/); a shorter version also lives on [my LinkedIn profile](https://www.linkedin.com/in/alberto-arena-ba44a624/details/projects/).
+
+[Truss](https://trussphp.com/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=about) is a live ER diagram (ERD) viewer for Laravel, reading your app's actual database schema instead of migration files. **Structure only, never data.**
+
+[Cogway](https://cogway.dev/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=about) is a set of interactive explainers for Laravel and PHP: pages you drive instead of read, for mechanisms like nested transactions and eager loading.

@@ -346,6 +346,17 @@
 }
 
 @layer components {
+  /*
+    Single project mark exemption to the no-icon-set rule (redesign-plan.md
+    §1, amended). One size for every mark that uses it, so a future second
+    mark sits at the same scale as Truss's rather than being eyeballed.
+  */
+  .project-mark {
+    width: 1.15rem;
+    height: 1.15rem;
+    flex-shrink: 0;
+  }
+
   .link-underline {
     @apply relative;
   }
