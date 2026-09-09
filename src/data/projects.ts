@@ -33,6 +33,17 @@ export const projects: Project[] = [
     videoPlaylist: 'https://www.youtube.com/playlist?list=PLdadt28gT2Qc',
   },
   {
+    name: 'Cogway',
+    description:
+      'Interactive explainers for Laravel and PHP. Each page turns one hard-to-picture mechanism, queue retries, eager loading, nested transactions, into a state machine you can drive, scrub and break. Twelve of them, eight Laravel and four core PHP. Static site, no account, nothing running on a server.',
+    tech: ['Laravel', 'PHP', 'Astro', 'Developer Tools'],
+    url: 'https://cogway.dev/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=projects',
+    postSlug: 'i-thought-i-knew-what-a-savepoint-was',
+    status: 'active',
+    featured: true,
+    year: '2026',
+  },
+  {
     name: 'Laravel Event Sourcing Generator',
     description:
       'Code scaffolding tool that generates complete domain structures for event-sourced Laravel apps using Spatie\'s library.',

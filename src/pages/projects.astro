@@ -64,7 +64,7 @@ function hasSeparateDocs(project: (typeof projects)[number]) {
                 <a href={project.github} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">GitHub</a>
               )}
               {hasSeparateDocs(project) && (
-                <a href={project.url} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">Docs</a>
+                <a href={project.url} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">{project.github ? 'Docs' : 'Site'}</a>
               )}
               {project.postSlug && (
                 <a href={`/posts/${project.postSlug}/`} class="text-accent hover:underline">Post</a>
