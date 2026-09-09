@@ -1,6 +1,6 @@
 ---
 title: "I thought I knew what a savepoint was"
-date: "2026-09-09T10:00:00.000Z"
+date: "2026-09-09T12:00:00.000Z"
 template: "post"
 draft: false
 slug: "i-thought-i-knew-what-a-savepoint-was"
