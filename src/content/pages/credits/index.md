@@ -26,6 +26,7 @@ Cover images for some posts are sourced from **[Unsplash](https://unsplash.com)*
 
 | Post | Photo | Photographer |
 |------|-------|--------------|
+| [Agent Teams: Why I Don't Let My Reviewer See My Reasoning](/posts/agent-teams-isolated-reviewer/) | A person's blurred silhouette moving behind a frosted glass office wall | [the blowup](https://unsplash.com/@theblowup) on Unsplash |
 | [The bug that only showed up once strangers could paste a schema](/posts/the-bug-that-only-showed-up-with-pasted-schemas/) | A windowpane shattered by a single impact, cracks radiating outward | [Mick Haupt](https://unsplash.com/@rocinante_11) on Unsplash |
 | [Introducing envaudit](/posts/introducing-envaudit/) | A rusty old key on a wooden table | [Nick Russill](https://unsplash.com/@nickrussill) on Unsplash |
 | [Claude Code /goal vs /loop: Stop Typing, Keep Going](/posts/goal-command-claude-code/) | Runners crossing the finish line at a race | [RETRATO DEPORTIVO](https://unsplash.com/@retratodeportivo) on Unsplash |

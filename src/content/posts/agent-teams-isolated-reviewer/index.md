@@ -1,6 +1,6 @@
 ---
 title: "Agent Teams: Why I Don't Let My Reviewer See My Reasoning"
-date: "2026-08-18T10:00:00.000Z"
+date: "2026-09-14T10:00:00.000Z"
 template: "post"
 draft: false
 slug: "agent-teams-isolated-reviewer"
@@ -8,14 +8,17 @@ category: "AI"
 tags:
   - "AI"
   - "Claude Code"
-  - "Agents"
+  - "Code Quality"
   - "DevTools"
-description: "What actually changes when a second Claude reviews the first Claude's draft, and what happened when I ran that setup on this very post, including the objection it caught that I hadn't thought to raise myself."
+description: "What actually changes when a second Claude reviews the first Claude's draft, and the objection it caught in this post that I'd missed myself."
+socialImage: "/images/posts/agent-teams-isolated-reviewer/cover.jpg"
+coverAlt: "A person's blurred silhouette moving behind a frosted glass office wall, visible but indistinct"
+series:
+  slug: "how-to-use-ai"
+  order: 5
 ---
 
-Most people's first instinct when they hear "agent team" is to picture more of the same agent, in parallel, doing more work per minute. Fair enough, that's real, but it's the boring half of the idea. The half worth stopping for is what you have to *withhold* from a teammate to make the team worth anything at all.
-
-I found this out by accident, doing something almost too mundane to write about: asking one Claude to draft something, and a second Claude to review it.
+I found this out by accident, doing something almost too mundane to write about: asking one Claude to draft something, and a second Claude to review it. What made it worth writing up was what I had to *withhold* from the reviewer to make the team worth anything at all.
 
 ## Why spawn a second instance at all
 
@@ -57,11 +60,11 @@ This is the same lesson as context engineering, just running in the opposite dir
 
 A team applies the same discipline to what an agent does *not* see. The reviewer's context is scoped on purpose: that scoping is the whole point of spawning a separate instance instead of continuing the conversation I was already having. If I'd wanted the reviewer to know my reasoning, I didn't need a second agent. I needed a second message in the same thread. The separate agent exists specifically so that door stays shut.
 
-That generalizes beyond writing review. A verification pass on a bug fix loses most of its value if the verifier can see the fixer's confidence: "I'm pretty sure this handles the edge case" starts getting treated as evidence instead of a claim still waiting to be tested. The same happens to a second opinion on an architecture decision that inherits the first agent's assumptions about the constraints. What's actually being protected in both cases is a second party arriving at its conclusion without being able to borrow the first party's path there.
+That generalizes beyond writing review. A verification pass on a bug fix loses most of its value if the verifier can see the fixer's confidence: "I'm pretty sure this handles the edge case" starts getting treated as evidence instead of a claim still waiting to be tested. The same happens to a second opinion on an architecture decision that inherits the first agent's assumptions about the constraints. What's actually being protected in both cases is smaller than full independence: a second party arriving at its conclusion without being able to borrow the first party's path there.
 
 ## What it costs you
 
-None of this is free. A teammate with no shared context also has no shared shortcuts. The fresh context itself is rarely the expensive part (a short prompt against one file is often cheaper than dragging a long conversation's full history into another turn); the real cost is duplication, paying again for content the artifact already carries, plus the effort of writing a spawn prompt that has to stand entirely on its own. "Review this like you reviewed the last one" doesn't work here. There is no last one, as far as the teammate is concerned, and there shouldn't be.
+None of this is free. A teammate with no shared context also has no shared shortcuts. The real cost is duplication, paying again for content the artifact already carries, plus the effort of writing a spawn prompt that has to stand entirely on its own. "Review this like you reviewed the last one" doesn't work here. There is no last one, as far as the teammate is concerned, and there shouldn't be.
 
 That cost is exactly why this isn't the default move for every task. Splitting into a team is worth it when the value of the work comes specifically from two parties not agreeing by default: review, verification, adversarial checks, independent research on the same question approached from different angles. It's wasted overhead when the task just needs more hands doing the same kind of work, where shared context speeds things up instead of contaminating the result.
 
