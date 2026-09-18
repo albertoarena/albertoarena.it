@@ -34,10 +34,15 @@ The page calls `Truss::payload()` and hands the result straight to Truss's own f
 
 Truss also keeps framework plumbing out of the diagram by design. On its own demo database that is 16 tables with 8 excluded, so the default footer reads `8 of 16 tables` rather than presenting a filtered diagram as if it were the whole schema. If you need to see the excluded tables too, that stays an explicit operator decision, not something a viewer can toggle on themselves.
 
-Below is that same page from the demo application that ships with the plugin, focused on a single table. Focus isolates a table and its foreign-key neighbours, which is also what powers a resource's own link into the diagram:
+Below is that same page from the demo application that ships with the plugin. This is the unfiltered schema, inside the demo panel's own navigation, with the footer reading `8 of 16 tables`:
 
-<img src="/images/posts/erd-for-filament-without-customer-data/panel-light.webp" alt="The filament-truss diagram page in light mode, inside the demo Filament panel's own sidebar, focused on the books table with its columns, keys and foreign-key neighbours visible" class="block dark:hidden rounded-lg border border-white-cloud" />
-<img src="/images/posts/erd-for-filament-without-customer-data/panel-dark.webp" alt="The same filament-truss diagram page in dark mode, the panel's own colours carried through automatically" class="hidden dark:block rounded-lg border border-dark-cloud" />
+<img src="/images/posts/erd-for-filament-without-customer-data/panel-establishing-light.webp" alt="The filament-truss diagram page in light mode, inside the Marginalia Books demo panel's sidebar and navigation, showing the unfiltered schema and the footer reading 8 of 16 tables" class="block dark:hidden rounded-lg border border-white-cloud" />
+<img src="/images/posts/erd-for-filament-without-customer-data/panel-establishing-dark.webp" alt="The same filament-truss diagram page in dark mode, the panel's own colours carried through automatically" class="hidden dark:block rounded-lg border border-dark-cloud" />
+
+And here is `books` and its `publishers` foreign key up close, the same unfiltered schema just panned and zoomed in, footer still reading `8 of 16 tables`:
+
+<img src="/images/posts/erd-for-filament-without-customer-data/panel-detail-light.webp" alt="The books table and its publishers foreign key close up, columns, primary key and foreign key clearly labelled, footer reading 8 of 16 tables" class="block dark:hidden rounded-lg border border-white-cloud" />
+<img src="/images/posts/erd-for-filament-without-customer-data/panel-detail-dark.webp" alt="The same books and publishers detail in dark mode" class="hidden dark:block rounded-lg border border-dark-cloud" />
 
 ## Getting access control right, not just working
 
