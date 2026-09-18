@@ -11,6 +11,7 @@ Alberto Arena is a Senior Software Engineer based in Sicily, Italy, with a backg
 
 ## Posts
 
+- [ER diagrams for Filament, without a single row of customer data](https://albertoarena.it/posts/erd-for-filament-without-customer-data/): filament-truss brings Truss's live entity relationship diagram (ERD) into a Filament panel: structure only, properly gated, themed to match automatically, no build step.
 - [Agent Teams: Why I Don't Let My Reviewer See My Reasoning](https://albertoarena.it/posts/agent-teams-isolated-reviewer/): What actually changes when a second Claude reviews the first Claude's draft, and the objection it caught in this post that I'd missed myself.
 - [I thought I knew what a savepoint was](https://albertoarena.it/posts/i-thought-i-knew-what-a-savepoint-was/): Building Cogway's interactive explainers for nested transactions and eager loading forced an exactness that years of using them never did.
 - [Three ways to build a Laravel ERD, and what each one costs](https://albertoarena.it/posts/three-ways-to-build-a-laravel-erd/): Laravel ERD is one name for three different machines: migrations replayed, models reflected, or the live database read. What each source buys you, and what it can never show.
