@@ -28,6 +28,7 @@ pnpm-debug.log*
 
 # claude code local settings
 .claude/settings.local.json
+CLAUDE.local.md
 
 # local docs
 .docs/
