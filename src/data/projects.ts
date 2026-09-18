@@ -33,6 +33,19 @@ export const projects: Project[] = [
     videoPlaylist: 'https://www.youtube.com/playlist?list=PLdadt28gT2Qc',
   },
   {
+    name: 'Filament Truss',
+    description:
+      'Filament plugin that brings Truss\'s live ER diagram into an admin panel as a native page: structure only, gated through Truss\'s own authorization, and themed to match the panel automatically with no build step.',
+    tech: ['Laravel', 'PHP', 'Filament', 'Database'],
+    github: 'https://github.com/albertoarena/filament-truss',
+    url: 'https://trussphp.com/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=projects',
+    postSlug: 'erd-for-filament-without-customer-data',
+    status: 'active',
+    featured: true,
+    year: '2026',
+    packagist: 'albertoarena/filament-truss',
+  },
+  {
     name: 'Cogway',
     description:
       'Interactive explainers for Laravel and PHP. Each page turns one hard-to-picture mechanism, queue retries, eager loading, nested transactions, into a state machine you can drive, scrub and break. Twelve of them, eight Laravel and four core PHP. Static site, no account, nothing running on a server.',

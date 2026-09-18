@@ -9,8 +9,8 @@
   The package identifiers here (packagist/npmPackage) are duplicated from
   src/data/projects.ts rather than imported from it — that file is TypeScript
   and this is a plain Node script with no TS loader in the toolchain, and
-  there are only six packages, so keeping this list in sync by hand is less
-  overhead than adding a build step just for this. If you add a new
+  there are only a handful of packages, so keeping this list in sync by hand
+  is less overhead than adding a build step just for this. If you add a new
   packagist/npmPackage field to projects.ts, add the identifier here too.
 */
 import { writeFileSync } from 'node:fs';
@@ -22,6 +22,7 @@ const outPath = join(__dirname, '..', 'src', 'data', 'project-stats.json');
 
 const PACKAGIST_PACKAGES = [
   'albertoarena/laravel-truss',
+  'albertoarena/filament-truss',
   'albertoarena/laravel-event-sourcing-generator',
   'albertoarena/filament-event-sourcing',
   'albertoarena/codemetry',

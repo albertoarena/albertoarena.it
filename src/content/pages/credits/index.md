@@ -53,6 +53,7 @@ Cover images for some posts are sourced from **[Unsplash](https://unsplash.com)*
 | 404 page | A red and white road sign reading WRONG WAY | [Julian Gentile](https://unsplash.com/@juliangentile) on Unsplash |
 | [The Laravel schema nobody chose](/posts/the-laravel-schema-nobody-chose/) | Rows of labelled wooden drawers in an old library card catalog | [Ilya Semenov](https://unsplash.com/@si1og) on Unsplash |
 | [Three ways to build a Laravel ERD, and what each one costs](/posts/three-ways-to-build-a-laravel-erd/) | Railway tracks converging at a switch, seen directly from above | [Mihai Lazăr](https://unsplash.com/@mihai14) on Unsplash |
+| [ER diagrams for Filament, without a single row of customer data](/posts/erd-for-filament-without-customer-data/) | A blue architectural cross-section blueprint of a multi-storey building | [Amsterdam City Archives](https://unsplash.com/@amsterdamcityarchives) on Unsplash |
 
 ## Diagrams
 
