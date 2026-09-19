@@ -23,13 +23,13 @@ Jev isn't fuzzy logic. It's a different idea, and worth ten minutes before you w
 
 Fuzzy logic lets you reason in degrees instead of true or false. You write the rules and the weights by hand: "if traffic is unusual and content changed overnight, hacked is likely." Every number in that rule is your own guess, dressed up as logic.
 
-Jev is a trained model. You send it a state and a typed question, and it returns a probability. No rules to write, no weights to tune.
+Jev is a trained model instead: you send it a state and a typed question, and it hands back a probability, skipping the rules and the weight-tuning entirely.
 
-The word that matters is calibrated. Of everything Jev calls 80% likely, about 80 in 100 should actually be true, over enough cases. That's a promise worth checking against your own data before you trust a threshold to it. Fuzzy logic never promised that. A rule scoring something "0.8 hacked" is a guess in fuzzy clothing, not a measured probability.
+The word that matters is calibrated. Of everything Jev calls 80% likely, about 80 in 100 should actually be true, over enough cases. That's a promise worth checking against your own data before you trust a threshold to it. Fuzzy logic never promised that. A rule scoring something "0.8 hacked" is still just a guess, dressed up as a number.
 
 ## Why Jev
 
-A calibrated number is one you can act on. You pick the cutoff based on what a wrong answer costs you: 0.9 for something expensive to get wrong, 0.5 for something a human reviews anyway. That decision is yours, not the model's.
+A calibrated number is one you can act on. You pick the cutoff based on what a wrong answer costs you: 0.9 for something expensive to get wrong, 0.5 for something a human reviews anyway. The model hands you the number; where you draw the line is still up to you.
 
 TypeSafe AI released Jev on 15 September. Two days later, [Laravel's AI SDK added support for it](https://github.com/laravel/ai/pull/1010), merged into the `1.x` branch as a `Classification` API.
 
@@ -54,7 +54,7 @@ $result['urgent']->isTrue(threshold: 0.8); // true
 $result['team']->choice;                   // 'technical'
 ```
 
-`isTrue()` takes a threshold argument, not a fixed 0.5. That's where the decision above actually lands in code.
+`isTrue()` takes a threshold argument instead of assuming 0.5, which is where the decision above actually lands in code.
 
 Testing doesn't need a live call. Fake the gateway and assert on what you asked:
 
