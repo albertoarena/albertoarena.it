@@ -106,6 +106,11 @@ is live. Always get explicit user approval before pushing to `master`,
 including for docs-only or seemingly low-risk changes — don't push
 unprompted just because a change is finished and looks safe.
 
+Ask every time, right before running `git push` against `master` — never
+infer approval from an instruction about the change itself (e.g. "fix it",
+"just do it") or from approval given earlier in the conversation for a
+different push. Confirming the edit is not confirming the push.
+
 ## Confidential information
 
 This repo is public. Never commit server/account IPs, cPanel usernames,
