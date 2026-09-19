@@ -70,7 +70,7 @@ Classification::assertClassified(fn ($prompt) => $prompt->asks('urgent'));
 
 ## What's next
 
-Jev itself is still early: no tagged Laravel AI release yet, and the model is behind a waitlist. The `Classification` API works today against the fake gateway, so the integration can be built and tested before a key ever arrives.
+Jev itself is still early: the `Classification` API is on the `1.x` branch but not in a tagged release yet, and the model is behind a waitlist. It works today against the fake gateway, so the integration can be built and tested before a key ever arrives.
 
 ## Read more
 
