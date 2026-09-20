@@ -33,6 +33,8 @@ A calibrated number is one you can act on. You pick the cutoff based on what a w
 
 TypeSafe AI released Jev on 15 September. Two days later, [Laravel's AI SDK added support for it](https://github.com/laravel/ai/pull/1010), merged into the `1.x` branch as a `Classification` API.
 
+> **Try it**: a live demo lets you build your own yes/no, pick-one, and rating conditions and watch the calibrated probability behind each answer, not just the label. [tryjev.albertoarena.it](https://tryjev.albertoarena.it/?utm_source=albertoarena&utm_medium=referral&utm_campaign=tryjev)
+
 ## Example
 
 Say you're triaging support tickets: is this one urgent, and which team should get it?
