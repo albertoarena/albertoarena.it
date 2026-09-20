@@ -57,6 +57,17 @@ export const projects: Project[] = [
     year: '2026',
   },
   {
+    name: 'Try Jev',
+    description:
+      'Interactive demo of TypeSafe AI\'s Jev: build your own yes/no, pick-one, and rating conditions and see the calibrated probability behind each answer, distribution and all, not just the label.',
+    tech: ['AI', 'PHP'],
+    url: 'https://tryjev.albertoarena.it/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=projects',
+    postSlug: 'i-thought-jev-was-fuzzy-logic',
+    status: 'active',
+    featured: true,
+    year: '2026',
+  },
+  {
     name: 'Laravel Event Sourcing Generator',
     description:
       'Code scaffolding tool that generates complete domain structures for event-sourced Laravel apps using Spatie\'s library.',
