@@ -61,7 +61,7 @@ export const projects: Project[] = [
     description:
       'Interactive demo of TypeSafe AI\'s Jev: build your own yes/no, pick-one, and rating conditions and see the calibrated probability behind each answer, distribution and all, not just the label.',
     tech: ['AI', 'PHP'],
-    url: 'https://tryjev.albertoarena.it/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=projects',
+    url: 'https://tryjev.albertoarena.it/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=tryjev&utm_content=projects',
     postSlug: 'i-thought-jev-was-fuzzy-logic',
     status: 'active',
     featured: true,
