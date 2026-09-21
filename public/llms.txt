@@ -11,6 +11,7 @@ Alberto Arena is a Senior Software Engineer based in Sicily, Italy, with a backg
 
 ## Posts
 
+- [Will Open Source Survive the Agents That Replaced It?](https://albertoarena.it/posts/will-open-source-survive-the-agents-that-replaced-it/): Agents can build in minutes what used to mean installing someone else's package. A debate about whether open source still has a reason to exist once packages are this easy to reinvent.
 - [I thought Jev was fuzzy logic. I was wrong.](https://albertoarena.it/posts/i-thought-jev-was-fuzzy-logic/): Jev looks like fuzzy logic at first glance. It isn't. It's a calibrated model, now callable from Laravel's AI SDK, and here's how to use one.
 - [ER diagrams for Filament, without a single row of customer data](https://albertoarena.it/posts/erd-for-filament-without-customer-data/): filament-truss brings Truss's live entity relationship diagram (ERD) into a Filament panel: structure only, properly gated, themed to match automatically, no build step.
 - [Agent Teams: Why I Don't Let My Reviewer See My Reasoning](https://albertoarena.it/posts/agent-teams-isolated-reviewer/): What actually changes when a second Claude reviews the first Claude's draft, and the objection it caught in this post that I'd missed myself.
