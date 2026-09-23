@@ -15,7 +15,7 @@ socialImage: "/images/posts/how-i-manage-homebrew-from-a-ui/cover.jpg"
 coverAlt: "Rows of beer taps lined up on a bar"
 ---
 
-I like the terminal. `brew install`, `brew upgrade`, `brew list`, that's muscle memory at this point. So when I saw that Homebrew shipped an official macOS GUI, my first reaction was "why would I need that." A week of using it changed my mind, mostly because I realized I hadn't looked at half my outdated packages in months. Scrolling through `brew outdated` in a terminal is nobody's idea of a good time.
+I like the terminal. `brew install`, `brew upgrade`, `brew list`, that's muscle memory at this point. So when I saw that Homebrew shipped an official macOS GUI, my first reaction was "why would I need that." A week of using it changed my mind, mostly because I realized I hadn't looked at half my outdated packages in weeks. Scrolling through `brew outdated` in a terminal is nobody's idea of a good time.
 
 BrewUI is Homebrew's own native macOS app, built by the Homebrew team itself, not a third-party wrapper, and already past 2,200 stars on GitHub. It's licensed AGPL-3.0, a stricter copyleft than Homebrew itself, which ships under BSD-2-Clause. This is how I set it up, what tripped me up in configuration, and two real walkthroughs of upgrading and installing a package through it instead of the shell.
 
