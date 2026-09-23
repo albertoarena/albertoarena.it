@@ -492,4 +492,86 @@ const blogPostingSchema = {
 
   initToc();
   document.addEventListener('astro:after-swap', initToc);
+
+  /*
+    Click-to-zoom for prose screenshots (feedback after the BrewUI post:
+    inline images are unreadable at the 68ch prose width, worse on mobile).
+    A lightbox solves both at once: tap opens the image near full-viewport,
+    then native pinch-zoom (viewport meta has no user-scalable=no) takes it
+    from there, so no separate mobile crop is needed per screenshot.
+
+    The overlay div is created fresh each call because View Transitions
+    swaps <body> content on navigation, destroying the previous one — same
+    reason the Escape key handler is torn down and re-added every time
+    rather than left to accumulate, mirroring currentScrollHandler above.
+  */
+  let currentLightboxKeyHandler: ((e: KeyboardEvent) => void) | undefined;
+
+  function initLightbox() {
+    if (currentLightboxKeyHandler) {
+      document.removeEventListener('keydown', currentLightboxKeyHandler);
+      currentLightboxKeyHandler = undefined;
+    }
+
+    let overlay = document.getElementById('lightbox-overlay') as HTMLDivElement | null;
+    let lastFocused: HTMLElement | null = null;
+
+    function closeLightbox() {
+      overlay!.classList.remove('is-open');
+      document.body.classList.remove('lightbox-locked');
+      lastFocused?.focus();
+    }
+
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'lightbox-overlay';
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-modal', 'true');
+      overlay.setAttribute('aria-label', 'Enlarged image');
+      overlay.innerHTML = '<button type="button" class="lightbox-close" aria-label="Close">&times;</button><img alt="" />';
+      document.body.appendChild(overlay);
+
+      overlay.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        if (target === overlay || target.closest('.lightbox-close')) closeLightbox();
+      });
+    }
+
+    const overlayImg = overlay.querySelector('img');
+    const closeBtn = overlay.querySelector<HTMLButtonElement>('.lightbox-close');
+
+    currentLightboxKeyHandler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && overlay!.classList.contains('is-open')) closeLightbox();
+    };
+    document.addEventListener('keydown', currentLightboxKeyHandler);
+
+    document.querySelectorAll<HTMLImageElement>('.prose img').forEach((img) => {
+      if (img.dataset.lightboxBound) return;
+      img.dataset.lightboxBound = 'true';
+      img.tabIndex = 0;
+      img.setAttribute('role', 'button');
+      img.setAttribute('aria-label', `Enlarge image: ${img.alt || 'screenshot'}`);
+
+      function open() {
+        if (!overlayImg) return;
+        overlayImg.src = img.currentSrc || img.src;
+        overlayImg.alt = img.alt;
+        lastFocused = img;
+        overlay!.classList.add('is-open');
+        document.body.classList.add('lightbox-locked');
+        closeBtn?.focus();
+      }
+
+      img.addEventListener('click', open);
+      img.addEventListener('keydown', (e: KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          open();
+        }
+      });
+    });
+  }
+
+  initLightbox();
+  document.addEventListener('astro:after-swap', initLightbox);
 </script>
