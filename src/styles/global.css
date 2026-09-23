@@ -213,6 +213,86 @@
   }
 }
 
+/* Click-to-zoom lightbox for prose screenshots (PostLayout.astro script) */
+.prose img {
+  cursor: zoom-in;
+}
+
+body.lightbox-locked {
+  overflow: hidden;
+}
+
+#lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(10, 12, 16, 0.92);
+  cursor: zoom-out;
+}
+
+#lightbox-overlay.is-open {
+  display: flex;
+}
+
+#lightbox-overlay img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  cursor: default;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+/*
+  Below this width "fit to viewport" just reproduces the inline thumbnail's
+  own size, since the overlay's available width already equals the prose
+  column's. Render wider than the viewport instead (scrollable, sized off
+  the source screenshots' actual 1200px width) so small UI text is legible
+  without a separate mobile crop per screenshot.
+*/
+@media (max-width: 640px) {
+  #lightbox-overlay {
+    align-items: flex-start;
+    justify-content: flex-start;
+    overflow: auto;
+    padding: 3.5rem 1rem 1.5rem;
+  }
+
+  #lightbox-overlay img {
+    max-width: none;
+    max-height: none;
+    width: 900px;
+    height: auto;
+  }
+}
+
+#lightbox-overlay .lightbox-close {
+  position: fixed;
+  top: 1rem;
+  right: 1.25rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 9999px;
+  color: #fff;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+#lightbox-overlay .lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
 /*
   Prose token overrides — unlayered so they beat the @tailwindcss/typography plugin
   which bakes OKLCH values into @layer utilities. Unlayered CSS wins over all @layer.

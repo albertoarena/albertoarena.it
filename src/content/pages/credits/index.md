@@ -26,6 +26,7 @@ Cover images for some posts are sourced from **[Unsplash](https://unsplash.com)*
 
 | Post | Photo | Photographer |
 |------|-------|--------------|
+| [How I Manage Homebrew From a UI](/posts/how-i-manage-homebrew-from-a-ui/) | A row of beer taps sitting on top of a bar | [Dawn Agran](https://unsplash.com/@dawnagran) on Unsplash |
 | [Will Open Source Survive the Agents That Replaced It?](/posts/will-open-source-survive-the-agents-that-replaced-it/) | A vintage typewriter with paper loaded, next to a modern MacBook, shot from above on a wooden desk | [Glenn Carstens-Peters](https://unsplash.com/@glenncarstenspeters) on Unsplash |
 | [Agent Teams: Why I Don't Let My Reviewer See My Reasoning](/posts/agent-teams-isolated-reviewer/) | A person's blurred silhouette moving behind a frosted glass office wall | [the blowup](https://unsplash.com/@theblowup) on Unsplash |
 | [The bug that only showed up once strangers could paste a schema](/posts/the-bug-that-only-showed-up-with-pasted-schemas/) | A windowpane shattered by a single impact, cracks radiating outward | [Mick Haupt](https://unsplash.com/@rocinante_11) on Unsplash |
