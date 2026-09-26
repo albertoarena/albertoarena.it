@@ -11,6 +11,7 @@ Alberto Arena is a Senior Software Engineer based in Sicily, Italy, with a backg
 
 ## Posts
 
+- [I told Claude not to sign my commits. It signed 25 of them.](https://albertoarena.it/posts/i-told-claude-not-to-sign-my-commits/): Every project I work on forbids AI attribution in writing. The agent signed the commits anyway, on a version where the changelog says that was fixed. What I found when I went looking, and the one setting that actually stopped it.
 - [How I Manage Homebrew From a UI](https://albertoarena.it/posts/how-i-manage-homebrew-from-a-ui/): BrewUI is Homebrew's official macOS GUI. I'm a terminal person by default, but here's why I installed it anyway, how the configuration works, and what upgrading and installing packages looks like from the app instead of a shell.
 - [Will Open Source Survive the Agents That Replaced It?](https://albertoarena.it/posts/will-open-source-survive-the-agents-that-replaced-it/): Agents can build in minutes what used to mean installing someone else's package. A debate about whether open source still has a reason to exist once packages are this easy to reinvent.
 - [I thought Jev was fuzzy logic. I was wrong.](https://albertoarena.it/posts/i-thought-jev-was-fuzzy-logic/): Jev looks like fuzzy logic at first glance. It isn't. It's a calibrated model, now callable from Laravel's AI SDK, and here's how to use one.
