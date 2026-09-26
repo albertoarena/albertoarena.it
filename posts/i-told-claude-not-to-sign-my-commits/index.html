@@ -1,0 +1,579 @@
+<!DOCTYPE html><html lang="en" class="light"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="canonical" href="https://albertoarena.it/posts/i-told-claude-not-to-sign-my-commits/"><link rel="sitemap" href="/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="A blog by Alberto Arena" href="/rss.xml"><!-- Preload the body serif and the mono weight actually used at first paint --><link rel="preload" as="font" type="font/woff2" href="/_astro/source-serif-4-latin-wght-normal.D9elroTD.woff2" crossorigin="anonymous"><link rel="preload" as="font" type="font/woff2" href="/_astro/ibm-plex-mono-latin-400-normal.DMJ8VG8y.woff2" crossorigin="anonymous"><title>I told Claude not to sign my commits. It signed 25 of them.</title><meta name="description" content="Every project I work on forbids AI attribution in writing. The agent signed the commits anyway, on a version where the changelog says that was fixed. What I found when I went looking, and the one setting that actually stopped it."><meta name="author" content="Alberto Arena"><!-- Open Graph / Facebook --><meta property="og:type" content="article"><meta property="og:url" content="https://albertoarena.it/posts/i-told-claude-not-to-sign-my-commits/"><meta property="og:title" content="I told Claude not to sign my commits. It signed 25 of them."><meta property="og:description" content="Every project I work on forbids AI attribution in writing. The agent signed the commits anyway, on a version where the changelog says that was fixed. What I found when I went looking, and the one setting that actually stopped it."><meta property="og:image" content="https://albertoarena.it/images/posts/i-told-claude-not-to-sign-my-commits/cover.jpg"><meta property="og:site_name" content="A blog by Alberto Arena"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:url" content="https://albertoarena.it/posts/i-told-claude-not-to-sign-my-commits/"><meta name="twitter:title" content="I told Claude not to sign my commits. It signed 25 of them."><meta name="twitter:description" content="Every project I work on forbids AI attribution in writing. The agent signed the commits anyway, on a version where the changelog says that was fixed. What I found when I went looking, and the one setting that actually stopped it."><meta name="twitter:image" content="https://albertoarena.it/images/posts/i-told-claude-not-to-sign-my-commits/cover.jpg"><meta name="twitter:creator" content="@alberto_arena"><!-- Structured data --><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://albertoarena.it/#person","name":"Alberto Arena","url":"https://albertoarena.it/pages/about/","image":"https://albertoarena.it/photo.jpg","jobTitle":"Senior Software Engineer","sameAs":["https://x.com/alberto_arena","https://www.linkedin.com/in/alberto-arena-ba44a624/","https://github.com/albertoarena","https://www.youtube.com/@AlbertoArenaDev"]},{"@type":"WebSite","@id":"https://albertoarena.it/#website","name":"A blog by Alberto Arena","url":"https://albertoarena.it","publisher":{"@id":"https://albertoarena.it/#person"}}]}</script><!-- Theme color, kept in sync with the --accent token per theme --><meta name="theme-color" content="#0b5fd0"><!-- Theme script (prevent flash) --><script>
+      const THEME_COLOR = { light: '#0b5fd0', dark: '#5eb3ff' };
+
+      function setThemeColorMeta(theme) {
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', THEME_COLOR[theme]);
+      }
+
+      function applyTheme() {
+        const theme = (() => {
+          if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+            return localStorage.getItem('theme');
+          }
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
+          }
+          return 'light';
+        })();
+
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+        } else {
+          document.documentElement.classList.add('light');
+          document.documentElement.classList.remove('dark');
+        }
+        setThemeColorMeta(theme);
+      }
+
+      // Apply theme immediately
+      applyTheme();
+
+      // Re-apply after View Transitions swap
+      document.addEventListener('astro:after-swap', applyTheme);
+
+      // Also handle before swap to prevent flash
+      document.addEventListener('astro:before-swap', (event) => {
+        const theme = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        event.newDocument.documentElement.classList.toggle('dark', theme === 'dark');
+        event.newDocument.documentElement.classList.toggle('light', theme === 'light');
+      });
+
+      // Reflect an in-page toggle click immediately, no swap involved
+      document.addEventListener('theme-changed', (event) => setThemeColorMeta(event.detail.theme));
+    </script><!-- Reading mode script (prevent flash, post pages only) --><script>
+      function applyReadingMode() {
+        const onPost = location.pathname.startsWith('/posts/');
+        if (onPost && localStorage.getItem('reading-mode') === '1') {
+          document.documentElement.setAttribute('data-reading', '');
+        } else {
+          document.documentElement.removeAttribute('data-reading');
+        }
+      }
+
+      // Apply immediately
+      applyReadingMode();
+
+      // Re-apply after View Transitions swap
+      document.addEventListener('astro:after-swap', applyReadingMode);
+
+      // Also handle before swap to prevent flash
+      document.addEventListener('astro:before-swap', (event) => {
+        const onPost = event.to.pathname.startsWith('/posts/');
+        const on = onPost && localStorage.getItem('reading-mode') === '1';
+        event.newDocument.documentElement.toggleAttribute('data-reading', on);
+      });
+    </script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CDGfc0hd.js"></script><!--
+      Google Consent Mode v2 defaults, plus the GTM loader itself.
+      Nothing is fetched from Google until __loadGTM runs, which happens only
+      on an "Accept" click (CookieConsent.astro) or, for a returning visitor,
+      once here below when prior consent is read back from storage. Consent
+      Mode alone would suppress the cookie while still loading the tag; this
+      withholds the request too, which is what the privacy policy promises.
+    --><script>(function(){const gtmId = "GTM-PDQBJBL3";
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      // define:vars wraps this whole script in an IIFE, so gtag is not
+      // global by default — CookieConsent.astro's withdrawal control needs
+      // to reach it from outside this closure.
+      window.gtag = gtag;
+
+      gtag('consent', 'default', {
+        analytics_storage: 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+      });
+
+      window.__loadGTM = function() {
+        if (!gtmId || window._gtmLoaded) return;
+        window._gtmLoaded = true;
+
+        gtag('consent', 'update', { analytics_storage: 'granted' });
+
+        (function(w,d,s,l,i){
+          w[l]=w[l]||[];
+          w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+          var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s), dl=l!='dataLayer'?'&l='+l:'';
+          j.async=true;
+          j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+          f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer',gtmId);
+
+        // Push page_view on each SPA navigation (View Transitions) — registered once
+        document.addEventListener('astro:after-swap', function() {
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            event: 'page_view',
+            page_location: window.location.href,
+            page_path: window.location.pathname,
+            page_title: document.title,
+          });
+        });
+      };
+
+      if (localStorage.getItem('cookieConsent') === 'accepted') {
+        window.__loadGTM();
+      }
+    })();</script><link rel="stylesheet" href="/_astro/index.C-XXyCZs.css">
+<style>@keyframes astroFadeInOut{0%{opacity:1}to{opacity:0}}@keyframes astroFadeIn{0%{opacity:0;mix-blend-mode:plus-lighter}to{opacity:1;mix-blend-mode:plus-lighter}}@keyframes astroFadeOut{0%{opacity:1;mix-blend-mode:plus-lighter}to{opacity:0;mix-blend-mode:plus-lighter}}@keyframes astroSlideFromRight{0%{transform:translate(100%)}}@keyframes astroSlideFromLeft{0%{transform:translate(-100%)}}@keyframes astroSlideToRight{to{transform:translate(100%)}}@keyframes astroSlideToLeft{to{transform:translate(-100%)}}@media(prefers-reduced-motion){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}[data-astro-transition-scope]{animation:none!important}}
+</style><style>[data-astro-transition-scope="astro-kqlc46iq-1"] { view-transition-name: newsletter-signup; }@layer astro { ::view-transition-old(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-kqlc46iq-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-kqlc46iq-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-kqlc46iq-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-kqlc46iq-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-kqlc46iq-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-kqlc46iq-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-kqlc46iq-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-kqlc46iq-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head> <body class="min-h-screen"> <a href="#main-content" class="skip-to-content">Skip to content</a>   <div class="post-shell min-[900px]:grid min-[900px]:grid-cols-[14rem_minmax(0,1fr)] min-[1180px]:grid-cols-[14rem_minmax(0,1fr)_15rem] max-w-[82rem] mx-auto"> <aside class="border-b min-[900px]:border-b-0 min-[900px]:border-r border-rule
+    flex flex-row min-[900px]:flex-col flex-wrap min-[900px]:flex-nowrap
+    items-start gap-x-7 gap-y-3 min-[900px]:gap-y-6
+    px-5 py-5 min-[900px]:pl-5 min-[900px]:pr-6 min-[900px]:pt-9 min-[900px]:pb-8
+    min-[900px]:sticky min-[900px]:top-0 min-[900px]:self-start
+    min-[900px]:h-screen min-[900px]:w-56 min-[900px]:shrink-0
+    print:hidden"> <div class="w-full min-[900px]:w-auto"> <a href="/" class="font-sans font-semibold text-base leading-tight tracking-tight text-ink dark:text-white hover:text-accent transition-colors"> Alberto Arena </a> <div class="font-mono text-[0.6875rem] uppercase tracking-[0.11em] text-muted mt-1.5"> Senior Software Engineer </div> </div> <nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Reading"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> read </div> <a href="/writing/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>writing </a><a href="/series/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>series </a><a href="/cheatsheets/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>cheatsheets </a> </nav><nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Projects"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> build </div> <a href="https://trussphp.com/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=site-nav" target="_blank" rel="noopener noreferrer" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>truss </a><a href="https://cogway.dev/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=site-nav" target="_blank" rel="noopener noreferrer" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>cogway </a><a href="/projects/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>projects </a><a href="https://www.youtube.com/@AlbertoArenaDev" target="_blank" rel="noopener noreferrer" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>videos </a> </nav><nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Work with me"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> work </div> <a href="/pages/consulting/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>consulting </a><a href="/subscribe/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>subscribe </a><a href="/pages/about/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>about </a> </nav> <div class="w-full min-[900px]:w-auto min-[900px]:mt-auto font-mono text-[0.6875rem] leading-relaxed text-muted flex flex-col gap-1"> <span>Sicily, Italy</span> <span class="flex items-center gap-1.5"> <span class="inline-block w-[0.45rem] h-[0.45rem] rounded-full bg-ok shrink-0" aria-hidden="true"></span>
+Available for freelance
+</span>  </div> </aside> <div class="post-shell-main min-w-0 min-[900px]:col-start-2"> <div class="flex justify-end px-6 pt-6 min-[900px]:px-8 min-[900px]:pt-8"> <button data-theme-toggle type="button" class="p-2 text-muted hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent" aria-label="Toggle dark mode"> <!-- Sun icon (shown in dark mode to switch to light) --> <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path> </svg> <!-- Moon icon (shown in light mode to switch to dark) --> <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path> </svg> </button> <script type="module">function t(){const e=document.documentElement.classList.contains("dark"),c=e?"light":"dark";e?(document.documentElement.classList.remove("dark"),document.documentElement.classList.add("light"),localStorage.setItem("theme","light")):(document.documentElement.classList.add("dark"),document.documentElement.classList.remove("light"),localStorage.setItem("theme","dark")),document.dispatchEvent(new CustomEvent("theme-changed",{detail:{theme:c}}))}function n(){document.querySelectorAll("[data-theme-toggle]").forEach(e=>{e.removeEventListener("click",t),e.addEventListener("click",t)})}n();document.addEventListener("astro:after-swap",n);</script> </div> <main id="main-content" class="px-6 pb-12 min-[900px]:px-8 min-[900px]:pb-16"> <article class="post-content"> <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"I told Claude not to sign my commits. It signed 25 of them.","description":"Every project I work on forbids AI attribution in writing. The agent signed the commits anyway, on a version where the changelog says that was fixed. What I found when I went looking, and the one setting that actually stopped it.","image":"https://albertoarena.it/images/posts/i-told-claude-not-to-sign-my-commits/cover.jpg","datePublished":"2026-09-26T06:00:00.000Z","author":{"@id":"https://albertoarena.it/#person"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://albertoarena.it/posts/i-told-claude-not-to-sign-my-commits/"}}</script> <header class="mb-8 max-w-[68ch]"> <p class="eyebrow font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-accent mb-3"> AI </p> <h1 class="font-sans text-[clamp(1.75rem,3.4vw,2.5rem)] leading-[1.15] tracking-[-0.025em] font-[660] mb-4 max-w-[26ch] text-ink dark:text-white"> I told Claude not to sign my commits. It signed 25 of them. </h1> <p class="standfirst text-lg text-ink-2 mb-6 max-w-[60ch]"> Every project I work on forbids AI attribution in writing. The agent signed the commits anyway, on a version where the changelog says that was fixed. What I found when I went looking, and the one setting that actually stopped it. </p> <div class="meta font-mono text-xs text-muted flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-b border-rule py-3"> <time datetime="2026-09-26T06:00:00.000Z">September 26, 2026</time> <span>11 min read</span>  <span>6th in the how to use AI series</span> </div> </header>  <figure class="mb-10"> <img src="/images/posts/i-told-claude-not-to-sign-my-commits/cover.jpg" alt="A university degree certificate with a red seal and two handwritten signatures" width="1200" height="628" loading="eager" fetchpriority="high" class="w-full aspect-[1.91/1] object-cover border border-rule"> </figure> <details class="toc-mobile min-[1180px]:hidden mb-8 border border-rule px-4 py-3 not-prose"> <summary class="font-mono text-xs uppercase tracking-[0.1em] text-muted cursor-pointer"> On this page </summary> <ul class="toc-list mt-3 font-mono text-sm leading-relaxed"> <li> <a href="#looking-properly" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Looking properly</a> </li><li> <a href="#the-first-problem-and-what-the-changelog-says" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">The first problem, and what the changelog says</a> </li><li> <a href="#the-second-problem-which-i-did-not-go-looking-for" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">The second problem, which I did not go looking for</a> </li><li> <a href="#so-i-tested-it" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">So I tested it</a> </li><li> <a href="#what-to-do-about-it" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">What to do about it</a> </li><li> <a href="#why-i-bothered-writing-this" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Why I bothered writing this</a> </li> </ul> </details> <details class="series-mobile min-[1180px]:hidden mb-8 border border-rule px-4 py-3 not-prose"> <summary class="font-mono text-xs uppercase tracking-[0.1em] text-muted cursor-pointer"> how to use AI series </summary> <ul class="mt-3 font-mono text-sm leading-relaxed"> <li class="flex py-[0.25rem]"> <span class="text-muted shrink-0 w-3">1</span> <a href="/posts/ai-hallucination-in-coding-agents/" class="text-ink-2 hover:text-accent">AI Code Hallucinations: When Your AI Writes Confident Nonsense</a> </li><li class="flex py-[0.25rem]"> <span class="text-muted shrink-0 w-3">2</span> <a href="/posts/we-became-editors-in-chief/" class="text-ink-2 hover:text-accent">We Became Editors-in-Chief, and Nobody Trained Us</a> </li><li class="flex py-[0.25rem]"> <span class="text-muted shrink-0 w-3">3</span> <a href="/posts/claude-code-auto-mode-still-needs-a-human/" class="text-ink-2 hover:text-accent">Claude Code Auto Mode: What Still Needs a Human</a> </li><li class="flex py-[0.25rem]"> <span class="text-muted shrink-0 w-3">4</span> <a href="/posts/context-engineering-not-slop/" class="text-ink-2 hover:text-accent">Context Engineering: The Discipline That Keeps AI From Writing Slop</a> </li><li class="flex py-[0.25rem]"> <span class="text-muted shrink-0 w-3">5</span> <a href="/posts/agent-teams-isolated-reviewer/" class="text-ink-2 hover:text-accent">Agent Teams: Why I Don&#39;t Let My Reviewer See My Reasoning</a> </li><li class="flex py-[0.25rem]"> <span class="text-muted shrink-0 w-3">6</span> <span class="text-accent font-semibold">I told Claude not to sign my commits. It signed 25 of them.</span> </li> </ul> <a href="/series/how-to-use-ai/" class="block mt-3 pt-3 border-t border-rule-soft font-mono text-sm text-accent hover:underline"> View series &rarr;
+</a> </details> <!-- Prose body at reading measure --> <div class="prose dark:prose-invert max-w-[68ch]">  <p>Every project I work on forbids AI attribution. No <code>Co-Authored-By</code>, no robot emoji,
+no “Generated with” line. It is written into the instructions I give the agent, in
+plain words, in every repository. I am strict about it. My name goes on my work, or
+nobody’s does.</p>
+<p>Yesterday I was reading a pull request before merging it, the way I always do. At the
+bottom of the description sat a little robot and a line saying the work was generated
+with Claude Code. I scrolled up to the commits. Every one of them carried Claude as a
+co-author.</p>
+<p>My first assumption was that I had broken my own configuration somewhere. I spent
+twenty minutes proving that I had not.</p>
+<h2 id="looking-properly">Looking properly</h2>
+<p>It had happened in two projects I work on in public. Then I checked a third, a private
+one where I had been working all day, and found twenty-five commits in a row, every
+single one signed. Ten and a half hours of work. I had not noticed once.</p>
+<p>It had not started that morning either. Looking further back in the same repository,
+two commits on the 22nd and thirteen on the 24th carry the trailer as well. Forty in
+total, across three days I had spent reading my own commit messages.</p>
+<p>Two different models were involved across those repositories, Opus 5 in one and Sonnet
+5 in another, so it was not one model having a bad day.</p>
+<p>When I asked the agent what had happened, the explanation was oddly specific. Claude
+Code <em><strong>injects a reminder</strong></em> into every session instructing the model to add those
+attribution lines. That reminder also says, in its own text, that a project’s own
+instructions take precedence over it. So <em><strong>the rule was there</strong></em>. The sentence saying the
+rule outranks the default was there. The default won anyway, twenty-five times.</p>
+<p>Nothing was missing. The instruction and the note
+confirming the instruction had priority were both sitting in the context, and the
+generic behaviour still came out on top.</p>
+<h2 id="the-first-problem-and-what-the-changelog-says">The first problem, and what the changelog says</h2>
+<p>Before writing any of this I went to check whether it was known. It is, and the dates
+are the interesting part.</p>
+<p>From the <a href="https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md" rel="noopener noreferrer" target="_blank">changelog</a>,
+version <strong>2.1.269</strong>, released on 11 September:</p>
+<blockquote>
+<p>Fixed the attribution reminder overriding a CLAUDE.md or memory rule against commit
+and pull request attribution; lines set by managed settings still apply</p>
+</blockquote>
+<p>I am on 2.1.273, released on 15 September. Four days after the fix.</p>
+<p>So this is not an unfixed bug. It is one that was declared fixed, on a
+version published after the fix, and it still produced twenty-five signed commits in a
+single day.</p>
+<p>I am not the only one, and the reports bracket the fix on both sides. These are the
+ones that describe what happened to me, rather than attribution bugs in general:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Issue</th><th>Opened</th><th>State</th><th>Title</th></tr></thead><tbody><tr><td><a href="https://github.com/anthropics/claude-code/issues/83813" rel="noopener noreferrer" target="_blank">83813</a></td><td>4 Aug</td><td>open</td><td>Attribution is opt-out advertising, and user-level “no attribution” instructions lose to the system prompt</td></tr><tr><td><a href="https://github.com/anthropics/claude-code/issues/91861" rel="noopener noreferrer" target="_blank">91861</a></td><td>3 Sep</td><td>open</td><td>Injected system-reminder overrode explicit user no-attribution preference; not flagged before acting</td></tr><tr><td><a href="https://github.com/anthropics/claude-code/issues/92169" rel="noopener noreferrer" target="_blank">92169</a></td><td>4 Sep</td><td>open</td><td>Attribution session reminder overrides the user’s explicit no-attribution preference</td></tr><tr><td><a href="https://github.com/anthropics/claude-code/issues/92893" rel="noopener noreferrer" target="_blank">92893</a></td><td>8 Sep</td><td>open</td><td>Injected commit/PR attribution instruction overrides the user’s CLAUDE.md trailer rule — attribution should be defined by the project, not the CLI</td></tr><tr><td><a href="https://github.com/anthropics/claude-code/issues/93077" rel="noopener noreferrer" target="_blank">93077</a></td><td>9 Sep</td><td>open</td><td>Runtime system-reminder claims to supersede CLAUDE.md project instructions</td></tr><tr><td><a href="https://github.com/anthropics/claude-code/issues/94325" rel="noopener noreferrer" target="_blank">94325</a></td><td>14 Sep</td><td>open</td><td>Assistant emits forbidden attribution trailer despite CLAUDE.md rule against it</td></tr><tr><td><a href="https://github.com/anthropics/claude-code/issues/95980" rel="noopener noreferrer" target="_blank">95980</a></td><td>22 Sep</td><td>closed 22 Sep by its author</td><td>System prompt attribution (Co-Authored-By) overrides user CLAUDE.md rules</td></tr></tbody></table>
+<p>Note where the fix falls in that list. It shipped on 11 September, and 94325 was filed
+three days later, 95980 eleven days later. Both describe the behaviour the fix was
+supposed to remove.</p>
+<p>There is a second family of reports worth knowing about, because it is a different
+failure with the same outcome: the setting being ignored rather than the rule.
+<a href="https://github.com/anthropics/claude-code/issues/93237" rel="noopener noreferrer" target="_blank">93237</a> covers the attribution
+setting being dropped when set to an empty string, and
+<a href="https://github.com/anthropics/claude-code/issues/89164" rel="noopener noreferrer" target="_blank">89164</a> covers the VSCode
+extension and the Agent SDK never injecting attribution settings at all. So a
+configuration that looks correct in your settings file is not by itself proof of
+anything.</p>
+<p>There is also a closed history worth knowing, because it explains how the override came
+to exist at all. Three issues from earlier this year,
+<a href="https://github.com/anthropics/claude-code/issues/27083" rel="noopener noreferrer" target="_blank">27083</a> in February,
+<a href="https://github.com/anthropics/claude-code/issues/29999" rel="noopener noreferrer" target="_blank">29999</a> and
+<a href="https://github.com/anthropics/claude-code/issues/33830" rel="noopener noreferrer" target="_blank">33830</a> in March, all argued the
+same thing: <code>Co-Authored-By</code> should be opt-in rather than opt-out. All three are closed,
+though not in the same way. One was closed by the person who opened it, one as a
+duplicate, and only 29999 was closed as completed, by a maintainer, in August.</p>
+<p>So the sequence is not the one you would expect. A setting that turns attribution off has
+existed since <strong>2.0.62</strong>, released in December, which is also what deprecated the older
+<code>includeCoAuthoredBy</code>. It was already there when those issues were filed. What they were
+asking for was a different thing: that attribution not be the default in the first place.
+That has not happened. Meanwhile the route most people actually take, a rule written into
+the project’s own instructions, is the one that turned out to be unreliable, and the
+September fix for it did not stop the reports.</p>
+<p>Then, on 23 September, version <strong>2.1.281</strong>:</p>
+<blockquote>
+<p>Added <code>"attribution": false</code> in <code>settings.json</code> to hide all commit and PR attribution;
+older CLI versions skip a settings file that holds it, so keep the object form in
+files shared across versions</p>
+</blockquote>
+<p>That is a shorthand for the setting that already existed, not a new escape hatch. It
+changes nothing about what was available, only how little you have to write to get it.
+<em><strong>I would still use it</strong></em>, because the alternative is trusting a sentence in a file to win
+an argument it has already lost twenty-five times.</p>
+<h2 id="the-second-problem-which-i-did-not-go-looking-for">The second problem, which I did not go looking for</h2>
+<p>The obvious next step was to install the current version and see whether it still
+happens. My terminal had been showing an update banner all day, so I ran the upgrade.</p>
+<p><em><strong>Homebrew told me I already had the latest version.</strong></em></p>
+<p>I checked the Homebrew GUI app as well, which I
+<a href="/posts/how-i-manage-homebrew-from-a-ui/">wrote about here</a> a few days ago. It
+agreed: installed 2.1.273, latest 2.1.273.</p>
+<p>Then I checked the npm registry, where Claude Code is actually published. 2.1.282,
+published on 24 September. Eight releases ahead of what Homebrew offered.</p>
+<p>Those numbers are from the evening of 25 September, and they have already moved. As I
+publish this, npm is on 2.1.283 and the cask has caught up to 2.1.274, which leaves the
+gap exactly where it was.</p>
+<p>Nothing in that chain lied to me:</p>
+<ol>
+<li>The app reported the cask honestly.</li>
+<li>The cask reported the version it was last updated to, honestly.</li>
+<li>Claude Code’s own banner correctly knew a newer release existed.</li>
+</ol>
+<p>Every layer was telling the truth and the answer I ended up with
+<em><strong>was still wrong</strong></em>, and no part of it flagged that anything was off. Which is roughly what
+had just happened with the commits.</p>
+<h2 id="so-i-tested-it">So I tested it</h2>
+<p>I pinned 2.1.282 with <code>npx</code> and ran it against a private repo of mine whose CLAUDE.md
+carries a no-attribution rule, and against an empty scratch repo with no rule at all.
+Same prompt every time: create a small file, commit it.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Run</th><th>Version</th><th>Rule in CLAUDE.md</th><th><code>attribution</code> setting</th><th>Trailer in commit</th></tr></thead><tbody><tr><td>1</td><td>2.1.282</td><td>yes</td><td>none</td><td>no</td></tr><tr><td>2</td><td>2.1.282</td><td>yes</td><td>none</td><td>no</td></tr><tr><td>3</td><td>2.1.282 (Sonnet 5)</td><td>yes</td><td>none</td><td>no</td></tr><tr><td>4</td><td><strong>2.1.273</strong></td><td>yes</td><td>none</td><td><strong>no</strong></td></tr><tr><td>5</td><td>2.1.282</td><td><strong>no rule</strong></td><td>none</td><td><strong>yes</strong></td></tr><tr><td>6</td><td>2.1.282</td><td>no rule</td><td><code>false</code></td><td>no</td></tr></tbody></table>
+<p>Run 5 is the control, and it matters most: with no rule present, 2.1.282 still adds
+<code>Co-Authored-By: Claude</code>. The reminder is alive and well in the current version, and
+attribution is still on by default. Nothing has been quietly switched off.</p>
+<p>Runs 1 to 3 behaved correctly. In two of them the agent said so unprompted, in words
+close to <em>“I left off the <code>Co-Authored-By</code> trailer that the harness suggests, because
+this repository’s CLAUDE.md forbids AI attribution.”</em> So the rule was read, the
+conflict was noticed, and the rule won.</p>
+<p><em><strong>And then run 4 ruined my tidy conclusion!</strong></em> That is 2.1.273, the version that signed
+twenty-five commits for me yesterday, in a repo carrying the rule, and it behaved
+perfectly. I could not make it fail on demand.</p>
+<p>Which means I cannot tell you that upgrading fixes this, and I am not going to pretend
+otherwise. My test separates “rule present” from “no rule”. It does not separate 2.1.273
+from 2.1.282, because the version that demonstrably fails in real use passed the test.</p>
+<p><em><strong>This is an intermittent failure, and that is worse than a deterministic one.</strong></em> A
+deterministic bug shows up the first time you look for it. This one lets you check, see
+a clean commit, and conclude you are fine.</p>
+<p>I have a guess about the difference, and it stays a guess because I have not tested it:
+my test runs were single, short, non-interactive sessions where CLAUDE.md had just been
+loaded. The day it went wrong was a ten-hour session with a lot of context behind it.
+If the rule’s influence decays as a session grows while the reminder keeps being
+re-injected, that would explain both the failure and why my short runs cannot reproduce
+it. I would not state that as fact.</p>
+<p>Run 6 is the one piece of good news. Same repo, same version, the commit immediately
+after the control, and the only change is <code>"attribution": false</code> in
+<code>.claude/settings.json</code>. The trailer disappears.</p>
+<p>One caveat on the whole table. These runs are from the night of 25 September, against
+2.1.273 and 2.1.282, which is the version I was on and the newest the registry offered.
+npm has since moved to 2.1.283. <em><strong>I have not re-run any of this against it</strong></em>, and I would
+rather publish what I actually observed than restate it against a version I never tested.
+The failure that started all of this happened on 2.1.273, on a real working day, and that
+is the thing worth reporting.</p>
+<h2 id="what-to-do-about-it">What to do about it</h2>
+<p>Set it explicitly and stop relying on the project instructions to carry it. This is the
+only thing I tested that worked every time. The boolean form, from 2.1.281:</p>
+<pre class="astro-code github-dark-default" style="background-color:#0d1117;color:#e6edf3; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E6EDF3">{</span></span>
+<span class="line"><span style="color:#7EE787">  "attribution"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">false</span></span>
+<span class="line"><span style="color:#E6EDF3">}</span></span></code></pre>
+<p>One caveat, straight from the changelog: older versions of the CLI will skip an entire
+settings file containing that boolean, so if you sync one settings file across machines
+running different versions, use the object form instead. Check the current docs for the
+keys rather than copying them from a blog post, mine included.</p>
+<p>If you have <code>includeCoAuthoredBy</code> in your settings, that one is deprecated and
+<code>attribution</code> replaced it. Judging by how often it appears in the open issues, plenty of
+people still have it and assume it is doing something.</p>
+<p>Go and look at what is already merged. I only caught this because I read a pull request
+before approving it. If you have been merging your agent’s work on trust, your history
+has the answer either way, and the older commits are the expensive ones to fix.</p>
+<p>If you installed through Homebrew and you need a current version, be aware the cask lags
+the npm registry by days. You can run the real latest with
+<code>npx @anthropic-ai/claude-code@latest</code> without touching your existing install.</p>
+<h2 id="why-i-bothered-writing-this">Why I bothered writing this</h2>
+<p>What I can tell you is that it happened on the newest version Homebrew offers, on two
+mainstream models, across three repositories and three days, to someone who had
+explicitly forbidden it in writing in each of them.</p>
+<p><em><strong>That is not an exotic setup. It is close to what most people I work with are running.</strong></em></p>
+<p>The lesson I am taking is narrower than “AI agents make mistakes”, which nobody needs
+telling. It is that a written instruction, plus a note confirming that instruction has
+priority, plus a changelog entry saying the problem was fixed, added up to the wrong
+behaviour anyway, and at no stage did anything warn me. I found it by reading a pull
+request. Had I clicked merge without looking, my name would sit on twenty-five commits
+crediting someone else, and I would still not know.</p>
+<p>So read the diff. Read the commit list, not the summary of it. And if a rule matters to
+you, do not leave it as a sentence in a file and assume that settles it. Make it a
+setting, then go and check that the setting did something.</p>  </div> <!--
+            Tags, author bio, newsletter box, discussion link, and pager are
+            post metadata, not article body content. Readability
+            (Safari Reader, Firefox Reader View, and this site's own
+            reading-mode toggle) unconditionally strips every <aside>
+            element from whatever content it selects
+            (Readability.js's _grabArticle calls this._clean(articleContent,
+            "aside")), regardless of nesting depth or how that content
+            scores — unlike styling via class name, which only *penalises* a
+            node's score and doesn't guarantee removal. This used to be a
+            <div>, which Readability kept on shorter posts where the real
+            article text didn't outweigh this block's own paragraph density.
+            See docs/plans/reader-mode-boundary-leaks.md.
+        --> <aside class="endnote mt-12 pt-6 border-t border-rule max-w-[68ch]"> <div class="post-tags flex flex-wrap gap-2 mb-7 font-mono text-xs"> <a href="/tag/ai/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#AI </a><a href="/tag/claude-code/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#Claude Code </a><a href="/tag/developer-tools/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#Developer Tools </a> </div> <div class="post-author flex items-center gap-3 mb-7"> <img src="/photo.jpg" alt="" class="w-11 h-11 rounded-full"> <div> <p class="font-sans font-semibold text-sm text-ink dark:text-white">Alberto Arena</p> <p class="text-sm text-muted">Senior Software Engineer</p> </div> </div> <div class="post-newsletter border border-rule px-5 py-5 mb-6" data-astro-transition-persist="newsletter-signup" data-astro-transition-scope="astro-kqlc46iq-1"> <h2 class="text-base font-semibold text-ink dark:text-white mb-1">Liked this? Get the next one.</h2> <p class="text-sm text-ink-2 leading-relaxed mb-4">
+Practical notes on Laravel tooling and AI-assisted development, about once a month.
+                Join the list and I'll send you my
+<a href="/cheatsheets/spatie-event-sourcing/" class="text-accent underline">Spatie Event Sourcing cheat sheet</a>
+to start.
+</p> <div data-form="HjBuvq" class="ml-embedded newsletter-signup-target"></div> <script>(function(){const accountId = "2474575";
+
+  function loadMailerLite() {
+    (function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[])
+    .push(arguments);},l=d.createElement(e),l.async=1,l.src=u,
+    n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})
+    (window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');
+    ml('account', accountId);
+  }
+
+  function initNewsletterSignup() {
+    var target = document.querySelector('.newsletter-signup-target');
+    // Already wired up: either a fresh page's target we've already handled,
+    // or (post-to-post navigation) the same transition:persist node carried
+    // over from the previous page, already loaded or already being watched.
+    if (!target || target.dataset.mlObserved === '1') return;
+    target.dataset.mlObserved = '1';
+
+    // Plain scroll-position polling, not IntersectionObserver: the box is
+    // transition:persist (home page and every post share one DOM node), so
+    // an observer created on first load keeps "watching" that node forever,
+    // even after it's carried into a page it never ran its own init on —
+    // fine on its own, except a same-page TOC jump rides scroll-behavior:
+    // smooth, and an animated scroll can move the target through the
+    // viewport fast enough to land between two observer check frames,
+    // which then never reports isIntersecting at all (same failure mode
+    // already hit and fixed this way for the TOC active-heading tracking).
+    // A rAF-throttled getBoundingClientRect check against every 'scroll'
+    // event can't miss a frame like that, and rides along with the persisted
+    // node onto whichever page it ends up on.
+    var ticking = false;
+    function checkPosition() {
+      ticking = false;
+      var rect = target.getBoundingClientRect();
+      if (rect.top < window.innerHeight + 600 && rect.bottom > -600) {
+        window.removeEventListener('scroll', onScroll);
+        loadMailerLite();
+      }
+    }
+    function onScroll() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(checkPosition);
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    checkPosition();
+  }
+
+  // Astro's View Transitions swap doesn't re-execute an inline script whose
+  // content is byte-identical to one that already ran elsewhere in the
+  // session (this component renders the same script on every post and on
+  // /subscribe), so a target introduced by a client-side navigation from a
+  // page with no newsletter box of its own (e.g. home -> a post) would
+  // otherwise never get observed.
+  initNewsletterSignup();
+  document.addEventListener('astro:after-swap', initNewsletterSignup);
+})();</script> </div> <div class="discuss border-t border-rule-soft pt-4 mb-7 font-mono text-sm text-muted leading-relaxed"> Found a mistake, or disagree?  <a href="https://github.com/albertoarena/albertoarena.it/discussions" target="_blank" rel="noopener noreferrer" class="text-accent underline"> Open a discussion on GitHub </a>  or  <a href="mailto:hello@albertoarena.it" class="text-accent underline"> send me an email </a>.
+</div> </aside> <!--
+            Left outside the <aside> above, and left off reading mode's
+            hide list in global.css: prev/next navigation stays useful even
+            in a focused read, unlike the bio/newsletter/discuss chrome.
+            It doesn't need <aside> treatment to stay out of Readability's
+            output either — "pager" already matches Readability's own
+            unlikelyCandidates regex (pagination|pager), so it's excluded
+            on its own.
+        --> <nav class="pager max-w-[68ch] grid grid-cols-1 min-[560px]:grid-cols-2 gap-5" aria-label="Post navigation"> <a href="/posts/agent-teams-isolated-reviewer/" class="border-t border-rule pt-3 group"> <span class="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-muted block">
+&larr; Previous in thread </span> <span class="font-sans text-[0.9375rem] font-medium leading-snug mt-1 block group-hover:text-accent"> Agent Teams: Why I Don&#39;t Let My Reviewer See My Reasoning </span> </a>  </nav> </article> </main> <footer class="site-footer border-t border-rule mt-20 py-8"> <div class="max-w-3xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted"> <span>© 2026 Alberto Arena</span> <div class="flex items-center gap-4"> <a href="/pages/privacy-policy/" class="hover:text-accent transition-colors">Privacy Policy</a> <span aria-hidden="true">·</span> <a href="/pages/credits/" class="hover:text-accent transition-colors">Credits</a> <span aria-hidden="true">·</span> <a href="/rss.xml" class="hover:text-accent transition-colors">RSS</a> <span aria-hidden="true">·</span> <a href="https://www.youtube.com/@AlbertoArenaDev" class="hover:text-accent transition-colors">YouTube</a> </div> </div> </footer> </div> <aside class="hidden min-[1180px]:flex flex-col gap-8 border-l border-rule px-5 py-9 sticky top-0 self-start h-screen overflow-y-auto"> <div> <h3 class="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted mb-2.5"> On this page </h3> <ul id="toc" class="font-mono text-xs leading-[1.55]"> <li> <a href="#looking-properly" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="looking-properly">Looking properly</a> </li><li> <a href="#the-first-problem-and-what-the-changelog-says" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="the-first-problem-and-what-the-changelog-says">The first problem, and what the changelog says</a> </li><li> <a href="#the-second-problem-which-i-did-not-go-looking-for" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="the-second-problem-which-i-did-not-go-looking-for">The second problem, which I did not go looking for</a> </li><li> <a href="#so-i-tested-it" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="so-i-tested-it">So I tested it</a> </li><li> <a href="#what-to-do-about-it" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="what-to-do-about-it">What to do about it</a> </li><li> <a href="#why-i-bothered-writing-this" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="why-i-bothered-writing-this">Why I bothered writing this</a> </li> </ul> </div> <div> <h3 class="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted mb-2.5"> <a href="/series/how-to-use-ai/" class="hover:text-accent">how to use AI series</a> </h3> <ul class="font-mono text-xs leading-[1.5]"> <li class="flex py-[0.3rem]"> <span class="text-muted shrink-0 w-3">1</span> <a href="/posts/ai-hallucination-in-coding-agents/" class="text-ink-2 hover:text-accent">AI Code Hallucinations: When Your AI Writes Confident Nonsense</a> </li><li class="flex py-[0.3rem]"> <span class="text-muted shrink-0 w-3">2</span> <a href="/posts/we-became-editors-in-chief/" class="text-ink-2 hover:text-accent">We Became Editors-in-Chief, and Nobody Trained Us</a> </li><li class="flex py-[0.3rem]"> <span class="text-muted shrink-0 w-3">3</span> <a href="/posts/claude-code-auto-mode-still-needs-a-human/" class="text-ink-2 hover:text-accent">Claude Code Auto Mode: What Still Needs a Human</a> </li><li class="flex py-[0.3rem]"> <span class="text-muted shrink-0 w-3">4</span> <a href="/posts/context-engineering-not-slop/" class="text-ink-2 hover:text-accent">Context Engineering: The Discipline That Keeps AI From Writing Slop</a> </li><li class="flex py-[0.3rem]"> <span class="text-muted shrink-0 w-3">5</span> <a href="/posts/agent-teams-isolated-reviewer/" class="text-ink-2 hover:text-accent">Agent Teams: Why I Don&#39;t Let My Reviewer See My Reasoning</a> </li><li class="flex py-[0.3rem]"> <span class="text-muted shrink-0 w-3">6</span> <span class="text-accent font-semibold">I told Claude not to sign my commits. It signed 25 of them.</span> </li> </ul> </div> </aside> </div> <button id="reading-mode-toggle" type="button" aria-pressed="false" class="fixed right-4 z-50 border border-rule bg-paper px-4 py-2 font-mono text-sm text-accent shadow-lg transition-colors hover:border-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 motion-reduce:transition-none" style="bottom: calc(1rem + env(safe-area-inset-bottom));">
+Reading mode
+</button> <script type="module">const i="reading-mode";function n(){const t=document.documentElement.toggleAttribute("data-reading");localStorage.setItem(i,t?"1":"0"),o()}function o(){const e=document.getElementById("reading-mode-toggle");if(!e)return;const t=document.documentElement.hasAttribute("data-reading");e.setAttribute("aria-pressed",String(t)),e.textContent=t?"Exit reading mode":"Reading mode"}function d(){const e=document.getElementById("reading-mode-toggle");e&&(e.removeEventListener("click",n),e.addEventListener("click",n),o())}d();document.addEventListener("astro:after-swap",d);</script> <div id="cookie-consent" class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-paper border-t border-rule shadow-lg" role="dialog" aria-labelledby="cookie-consent-title" aria-describedby="cookie-consent-description"> <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"> <div class="text-sm text-ink dark:text-white"> <p id="cookie-consent-title" class="font-semibold mb-1">We use cookies</p> <p id="cookie-consent-description" class="text-ink-2">
+We use analytics cookies to understand how you use this site and improve your experience.
+        No advertising or profiling cookies are used.
+<a href="/pages/privacy-policy/" class="underline hover:text-accent transition-colors ml-1">Privacy Policy</a> </p> </div> <div class="flex gap-3 flex-shrink-0"> <button id="decline-cookies" class="px-4 py-2 text-sm text-muted hover:text-ink dark:hover:text-white transition-colors" aria-label="Decline analytics cookies">
+Decline
+</button> <button id="accept-cookies" class="px-4 py-2 text-sm bg-accent text-white hover:bg-accent/90 transition-colors" aria-label="Accept analytics cookies">
+Accept analytics
+</button> </div> </div> </div> <script>
+  // The GTM script tag itself is not created until __loadGTM runs (defined
+  // in BaseLayout.astro's head script), so accepting here is the first
+  // moment anything is fetched from Google.
+  function initCookieConsent() {
+    const consent = localStorage.getItem('cookieConsent');
+    const banner = document.getElementById('cookie-consent');
+
+    // A tag already loaded cannot be unloaded, so withdrawal reloads the
+    // page: consent goes back to unset, __loadGTM is not called on the next
+    // load, and the banner returns. Registered before the branch below,
+    // because the only people who need it are the ones who have already
+    // answered.
+    document.querySelector('[data-consent-reset]')?.addEventListener('click', () => {
+      window.gtag?.('consent', 'update', { analytics_storage: 'denied' });
+      localStorage.removeItem('cookieConsent');
+      location.reload();
+    });
+
+    if (consent) {
+      banner?.remove();
+      return;
+    }
+
+    document.getElementById('accept-cookies')?.addEventListener('click', () => {
+      localStorage.setItem('cookieConsent', 'accepted');
+      window.__loadGTM?.();
+      banner?.remove();
+    });
+
+    document.getElementById('decline-cookies')?.addEventListener('click', () => {
+      localStorage.setItem('cookieConsent', 'declined');
+      banner?.remove();
+    });
+  }
+
+  initCookieConsent();
+  document.addEventListener('astro:after-swap', initCookieConsent);
+</script>  </body></html> <script type="module">let a;function d(){a&&(window.removeEventListener("scroll",a),a=void 0);const t=Array.from(document.querySelectorAll("#toc a[data-target]")),r=t.map(e=>document.getElementById(e.dataset.target)).filter(e=>!!e);if(!r.length)return;const c=()=>window.innerHeight*.2;function l(){const e=c();let n=r[0].id;for(const o of r)if(o.getBoundingClientRect().top<=e)n=o.id;else break;t.forEach(o=>{o.classList.toggle("toc-active",o.dataset.target===n)})}let i=!1;a=()=>{i||(i=!0,requestAnimationFrame(()=>{i=!1,l()}))},window.addEventListener("scroll",a,{passive:!0}),l()}d();document.addEventListener("astro:after-swap",d);let s;function u(){s&&(document.removeEventListener("keydown",s),s=void 0);let t=document.getElementById("lightbox-overlay"),r=null;function c(){t.classList.remove("is-open"),document.body.classList.remove("lightbox-locked"),r?.focus()}t||(t=document.createElement("div"),t.id="lightbox-overlay",t.setAttribute("role","dialog"),t.setAttribute("aria-modal","true"),t.setAttribute("aria-label","Enlarged image"),t.innerHTML='<button type="button" class="lightbox-close" aria-label="Close">&times;</button><img alt="" />',document.body.appendChild(t),t.addEventListener("click",e=>{const n=e.target;(n===t||n.closest(".lightbox-close"))&&c()}));const l=t.querySelector("img"),i=t.querySelector(".lightbox-close");s=e=>{e.key==="Escape"&&t.classList.contains("is-open")&&c()},document.addEventListener("keydown",s),document.querySelectorAll(".prose img").forEach(e=>{if(e.dataset.lightboxBound)return;e.dataset.lightboxBound="true",e.tabIndex=0,e.setAttribute("role","button"),e.setAttribute("aria-label",`Enlarge image: ${e.alt||"screenshot"}`);function n(){l&&(l.src=e.currentSrc||e.src,l.alt=e.alt,r=e,t.classList.add("is-open"),document.body.classList.add("lightbox-locked"),i?.focus())}e.addEventListener("click",n),e.addEventListener("keydown",o=>{(o.key==="Enter"||o.key===" ")&&(o.preventDefault(),n())})})}u();document.addEventListener("astro:after-swap",u);</script>

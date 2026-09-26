@@ -1,0 +1,340 @@
+<!DOCTYPE html><html lang="en" class="light"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="canonical" href="https://albertoarena.it/posts/erd-for-filament-without-customer-data/"><link rel="sitemap" href="/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="A blog by Alberto Arena" href="/rss.xml"><!-- Preload the body serif and the mono weight actually used at first paint --><link rel="preload" as="font" type="font/woff2" href="/_astro/source-serif-4-latin-wght-normal.D9elroTD.woff2" crossorigin="anonymous"><link rel="preload" as="font" type="font/woff2" href="/_astro/ibm-plex-mono-latin-400-normal.DMJ8VG8y.woff2" crossorigin="anonymous"><title>ER diagrams for Filament, without a single row of customer data</title><meta name="description" content="filament-truss brings Truss's live entity relationship diagram (ERD) into a Filament panel: structure only, properly gated, themed to match automatically, no build step."><meta name="author" content="Alberto Arena"><!-- Open Graph / Facebook --><meta property="og:type" content="article"><meta property="og:url" content="https://albertoarena.it/posts/erd-for-filament-without-customer-data/"><meta property="og:title" content="ER diagrams for Filament, without a single row of customer data"><meta property="og:description" content="filament-truss brings Truss's live entity relationship diagram (ERD) into a Filament panel: structure only, properly gated, themed to match automatically, no build step."><meta property="og:image" content="https://albertoarena.it/images/posts/erd-for-filament-without-customer-data/cover.jpg"><meta property="og:site_name" content="A blog by Alberto Arena"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:url" content="https://albertoarena.it/posts/erd-for-filament-without-customer-data/"><meta name="twitter:title" content="ER diagrams for Filament, without a single row of customer data"><meta name="twitter:description" content="filament-truss brings Truss's live entity relationship diagram (ERD) into a Filament panel: structure only, properly gated, themed to match automatically, no build step."><meta name="twitter:image" content="https://albertoarena.it/images/posts/erd-for-filament-without-customer-data/cover.jpg"><meta name="twitter:creator" content="@alberto_arena"><!-- Structured data --><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://albertoarena.it/#person","name":"Alberto Arena","url":"https://albertoarena.it/pages/about/","image":"https://albertoarena.it/photo.jpg","jobTitle":"Senior Software Engineer","sameAs":["https://x.com/alberto_arena","https://www.linkedin.com/in/alberto-arena-ba44a624/","https://github.com/albertoarena","https://www.youtube.com/@AlbertoArenaDev"]},{"@type":"WebSite","@id":"https://albertoarena.it/#website","name":"A blog by Alberto Arena","url":"https://albertoarena.it","publisher":{"@id":"https://albertoarena.it/#person"}}]}</script><!-- Theme color, kept in sync with the --accent token per theme --><meta name="theme-color" content="#0b5fd0"><!-- Theme script (prevent flash) --><script>
+      const THEME_COLOR = { light: '#0b5fd0', dark: '#5eb3ff' };
+
+      function setThemeColorMeta(theme) {
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', THEME_COLOR[theme]);
+      }
+
+      function applyTheme() {
+        const theme = (() => {
+          if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+            return localStorage.getItem('theme');
+          }
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
+          }
+          return 'light';
+        })();
+
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+        } else {
+          document.documentElement.classList.add('light');
+          document.documentElement.classList.remove('dark');
+        }
+        setThemeColorMeta(theme);
+      }
+
+      // Apply theme immediately
+      applyTheme();
+
+      // Re-apply after View Transitions swap
+      document.addEventListener('astro:after-swap', applyTheme);
+
+      // Also handle before swap to prevent flash
+      document.addEventListener('astro:before-swap', (event) => {
+        const theme = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        event.newDocument.documentElement.classList.toggle('dark', theme === 'dark');
+        event.newDocument.documentElement.classList.toggle('light', theme === 'light');
+      });
+
+      // Reflect an in-page toggle click immediately, no swap involved
+      document.addEventListener('theme-changed', (event) => setThemeColorMeta(event.detail.theme));
+    </script><!-- Reading mode script (prevent flash, post pages only) --><script>
+      function applyReadingMode() {
+        const onPost = location.pathname.startsWith('/posts/');
+        if (onPost && localStorage.getItem('reading-mode') === '1') {
+          document.documentElement.setAttribute('data-reading', '');
+        } else {
+          document.documentElement.removeAttribute('data-reading');
+        }
+      }
+
+      // Apply immediately
+      applyReadingMode();
+
+      // Re-apply after View Transitions swap
+      document.addEventListener('astro:after-swap', applyReadingMode);
+
+      // Also handle before swap to prevent flash
+      document.addEventListener('astro:before-swap', (event) => {
+        const onPost = event.to.pathname.startsWith('/posts/');
+        const on = onPost && localStorage.getItem('reading-mode') === '1';
+        event.newDocument.documentElement.toggleAttribute('data-reading', on);
+      });
+    </script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CDGfc0hd.js"></script><!--
+      Google Consent Mode v2 defaults, plus the GTM loader itself.
+      Nothing is fetched from Google until __loadGTM runs, which happens only
+      on an "Accept" click (CookieConsent.astro) or, for a returning visitor,
+      once here below when prior consent is read back from storage. Consent
+      Mode alone would suppress the cookie while still loading the tag; this
+      withholds the request too, which is what the privacy policy promises.
+    --><script>(function(){const gtmId = "GTM-PDQBJBL3";
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      // define:vars wraps this whole script in an IIFE, so gtag is not
+      // global by default — CookieConsent.astro's withdrawal control needs
+      // to reach it from outside this closure.
+      window.gtag = gtag;
+
+      gtag('consent', 'default', {
+        analytics_storage: 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+      });
+
+      window.__loadGTM = function() {
+        if (!gtmId || window._gtmLoaded) return;
+        window._gtmLoaded = true;
+
+        gtag('consent', 'update', { analytics_storage: 'granted' });
+
+        (function(w,d,s,l,i){
+          w[l]=w[l]||[];
+          w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+          var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s), dl=l!='dataLayer'?'&l='+l:'';
+          j.async=true;
+          j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+          f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer',gtmId);
+
+        // Push page_view on each SPA navigation (View Transitions) — registered once
+        document.addEventListener('astro:after-swap', function() {
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            event: 'page_view',
+            page_location: window.location.href,
+            page_path: window.location.pathname,
+            page_title: document.title,
+          });
+        });
+      };
+
+      if (localStorage.getItem('cookieConsent') === 'accepted') {
+        window.__loadGTM();
+      }
+    })();</script><link rel="stylesheet" href="/_astro/index.C-XXyCZs.css">
+<style>@keyframes astroFadeInOut{0%{opacity:1}to{opacity:0}}@keyframes astroFadeIn{0%{opacity:0;mix-blend-mode:plus-lighter}to{opacity:1;mix-blend-mode:plus-lighter}}@keyframes astroFadeOut{0%{opacity:1;mix-blend-mode:plus-lighter}to{opacity:0;mix-blend-mode:plus-lighter}}@keyframes astroSlideFromRight{0%{transform:translate(100%)}}@keyframes astroSlideFromLeft{0%{transform:translate(-100%)}}@keyframes astroSlideToRight{to{transform:translate(100%)}}@keyframes astroSlideToLeft{to{transform:translate(-100%)}}@media(prefers-reduced-motion){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}[data-astro-transition-scope]{animation:none!important}}
+</style><style>[data-astro-transition-scope="astro-kqlc46iq-1"] { view-transition-name: newsletter-signup; }@layer astro { ::view-transition-old(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(newsletter-signup) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-kqlc46iq-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-kqlc46iq-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-kqlc46iq-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-kqlc46iq-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-kqlc46iq-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-kqlc46iq-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-kqlc46iq-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-kqlc46iq-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head> <body class="min-h-screen"> <a href="#main-content" class="skip-to-content">Skip to content</a>   <div class="post-shell min-[900px]:grid min-[900px]:grid-cols-[14rem_minmax(0,1fr)] min-[1180px]:grid-cols-[14rem_minmax(0,1fr)_15rem] max-w-[82rem] mx-auto"> <aside class="border-b min-[900px]:border-b-0 min-[900px]:border-r border-rule
+    flex flex-row min-[900px]:flex-col flex-wrap min-[900px]:flex-nowrap
+    items-start gap-x-7 gap-y-3 min-[900px]:gap-y-6
+    px-5 py-5 min-[900px]:pl-5 min-[900px]:pr-6 min-[900px]:pt-9 min-[900px]:pb-8
+    min-[900px]:sticky min-[900px]:top-0 min-[900px]:self-start
+    min-[900px]:h-screen min-[900px]:w-56 min-[900px]:shrink-0
+    print:hidden"> <div class="w-full min-[900px]:w-auto"> <a href="/" class="font-sans font-semibold text-base leading-tight tracking-tight text-ink dark:text-white hover:text-accent transition-colors"> Alberto Arena </a> <div class="font-mono text-[0.6875rem] uppercase tracking-[0.11em] text-muted mt-1.5"> Senior Software Engineer </div> </div> <nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Reading"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> read </div> <a href="/writing/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>writing </a><a href="/series/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>series </a><a href="/cheatsheets/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>cheatsheets </a> </nav><nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Projects"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> build </div> <a href="https://trussphp.com/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=site-nav" target="_blank" rel="noopener noreferrer" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>truss </a><a href="https://cogway.dev/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=site-nav" target="_blank" rel="noopener noreferrer" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>cogway </a><a href="/projects/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>projects </a><a href="https://www.youtube.com/@AlbertoArenaDev" target="_blank" rel="noopener noreferrer" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>videos </a> </nav><nav class="flex flex-row min-[900px]:flex-col flex-wrap gap-x-4 gap-y-0.5 items-baseline min-[900px]:items-stretch" aria-label="Work with me"> <div class="hidden min-[900px]:block font-mono text-xs uppercase tracking-[0.16em] text-muted/75 mb-1" aria-hidden="true"> work </div> <a href="/pages/consulting/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>consulting </a><a href="/subscribe/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>subscribe </a><a href="/pages/about/" class="font-mono text-[0.8125rem] py-[0.18rem] flex gap-[0.5ch] transition-colors text-ink-2 dark:text-ink-2 hover:text-accent"> <span class="text-muted" aria-hidden="true">/</span>about </a> </nav> <div class="w-full min-[900px]:w-auto min-[900px]:mt-auto font-mono text-[0.6875rem] leading-relaxed text-muted flex flex-col gap-1"> <span>Sicily, Italy</span> <span class="flex items-center gap-1.5"> <span class="inline-block w-[0.45rem] h-[0.45rem] rounded-full bg-ok shrink-0" aria-hidden="true"></span>
+Available for freelance
+</span>  </div> </aside> <div class="post-shell-main min-w-0 min-[900px]:col-start-2"> <div class="flex justify-end px-6 pt-6 min-[900px]:px-8 min-[900px]:pt-8"> <button data-theme-toggle type="button" class="p-2 text-muted hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent" aria-label="Toggle dark mode"> <!-- Sun icon (shown in dark mode to switch to light) --> <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path> </svg> <!-- Moon icon (shown in light mode to switch to dark) --> <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path> </svg> </button> <script type="module">function t(){const e=document.documentElement.classList.contains("dark"),c=e?"light":"dark";e?(document.documentElement.classList.remove("dark"),document.documentElement.classList.add("light"),localStorage.setItem("theme","light")):(document.documentElement.classList.add("dark"),document.documentElement.classList.remove("light"),localStorage.setItem("theme","dark")),document.dispatchEvent(new CustomEvent("theme-changed",{detail:{theme:c}}))}function n(){document.querySelectorAll("[data-theme-toggle]").forEach(e=>{e.removeEventListener("click",t),e.addEventListener("click",t)})}n();document.addEventListener("astro:after-swap",n);</script> </div> <main id="main-content" class="px-6 pb-12 min-[900px]:px-8 min-[900px]:pb-16"> <article class="post-content"> <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"ER diagrams for Filament, without a single row of customer data","description":"filament-truss brings Truss's live entity relationship diagram (ERD) into a Filament panel: structure only, properly gated, themed to match automatically, no build step.","image":"https://albertoarena.it/images/posts/erd-for-filament-without-customer-data/cover.jpg","datePublished":"2026-09-18T10:00:00.000Z","author":{"@id":"https://albertoarena.it/#person"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://albertoarena.it/posts/erd-for-filament-without-customer-data/"}}</script> <header class="mb-8 max-w-[68ch]"> <p class="eyebrow font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-accent mb-3"> Laravel </p> <h1 class="font-sans text-[clamp(1.75rem,3.4vw,2.5rem)] leading-[1.15] tracking-[-0.025em] font-[660] mb-4 max-w-[26ch] text-ink dark:text-white"> ER diagrams for Filament, without a single row of customer data </h1> <p class="standfirst text-lg text-ink-2 mb-6 max-w-[60ch]"> filament-truss brings Truss&#39;s live entity relationship diagram (ERD) into a Filament panel: structure only, properly gated, themed to match automatically, no build step. </p> <div class="meta font-mono text-xs text-muted flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-b border-rule py-3"> <time datetime="2026-09-18T10:00:00.000Z">September 18, 2026</time> <span>5 min read</span>   </div> </header>  <figure class="mb-10"> <img src="/images/posts/erd-for-filament-without-customer-data/cover.jpg" alt="A blue architectural cross-section blueprint of a multi-storey building, showing staircases, doors and room outlines with no readable labels" width="1200" height="628" loading="eager" fetchpriority="high" class="w-full aspect-[1.91/1] object-cover border border-rule"> </figure> <details class="toc-mobile min-[1180px]:hidden mb-8 border border-rule px-4 py-3 not-prose"> <summary class="font-mono text-xs uppercase tracking-[0.1em] text-muted cursor-pointer"> On this page </summary> <ul class="toc-list mt-3 font-mono text-sm leading-relaxed"> <li> <a href="#what-it-does" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">What it does</a> </li><li> <a href="#it-only-shows-what-a-diagram-needs" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">It only shows what a diagram needs</a> </li><li> <a href="#getting-access-control-right-not-just-working" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Getting access control right, not just working</a> </li><li> <a href="#requirements" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Requirements</a> </li><li> <a href="#accessibility" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Accessibility</a> </li><li> <a href="#get-started" class="block py-[0.25rem] pl-3 border-l-2 border-rule-soft text-ink-2 hover:text-ink hover:border-muted transition-colors">Get started</a> </li> </ul> </details>  <!-- Prose body at reading measure --> <div class="prose dark:prose-invert max-w-[68ch]">  <p>Most admin panels are one careless query away from showing more than they should. A resource that lists customers, a relation manager that previews orders, a widget somebody added to answer one Slack question and never removed: it is easy to build a dashboard that quietly exposes real data to anyone who can log in. <a href="https://github.com/albertoarena/filament-truss" rel="noopener noreferrer" target="_blank">filament-truss</a> adds an entity relationship diagram (ERD) to your Filament panel that cannot do that, because it never reads a row in the first place. It draws tables, columns, indexes and foreign keys: structure only, never data.</p>
+<h2 id="what-it-does">What it does</h2>
+<p>filament-truss wraps <a href="https://trussphp.com/?utm_source=albertoarena.it&#x26;utm_medium=referral&#x26;utm_campaign=filament-truss" rel="noopener noreferrer" target="_blank">Truss</a>, the Laravel schema viewer, as a first-class page inside a Filament panel.</p>
+<ul>
+<li><strong>A native panel page.</strong> The diagram sits in your panel’s own navigation, not behind a separate route you have to remember exists.</li>
+<li><strong>Structure only.</strong> Tables, columns, indexes, foreign keys and column defaults. No row data is read to build the page, and none can be reached from it.</li>
+<li><strong>Open a resource already focused on its own table.</strong> A resource can link straight into the diagram with its table isolated and its neighbours highlighted, and the link removes itself rather than greying out on a table the diagram cannot show.</li>
+<li><strong>Themed automatically, no build step.</strong> The diagram follows your panel’s own colours and corner radius, and switches with light and dark, with nothing to configure.</li>
+</ul>
+<h2 id="it-only-shows-what-a-diagram-needs">It only shows what a diagram needs</h2>
+<p>The page calls <code>Truss::payload()</code> and hands the result straight to Truss’s own frontend. There is no second renderer, and no schema endpoint of its own to keep in sync with the one Truss already has.</p>
+<p>Truss also keeps framework plumbing out of the diagram by design. On its own demo database that is 16 tables with 8 excluded, so the default footer reads <code>8 of 16 tables</code> rather than presenting a filtered diagram as if it were the whole schema. If you need to see the excluded tables too, that stays an explicit operator decision, not something a viewer can toggle on themselves.</p>
+<p>Below is that same page from the demo application that ships with the plugin. This is the unfiltered schema, inside the demo panel’s own navigation, with the footer reading <code>8 of 16 tables</code>:</p>
+<img src="/images/posts/erd-for-filament-without-customer-data/panel-establishing-light.webp" alt="The filament-truss diagram page in light mode, inside the Marginalia Books demo panel&#x27;s sidebar and navigation, showing the unfiltered schema and the footer reading 8 of 16 tables" class="block dark:hidden rounded-lg border border-white-cloud">
+<img src="/images/posts/erd-for-filament-without-customer-data/panel-establishing-dark.webp" alt="The same filament-truss diagram page in dark mode, the panel&#x27;s own colours carried through automatically" class="hidden dark:block rounded-lg border border-dark-cloud">
+<p>And here is <code>books</code> and its <code>publishers</code> foreign key up close, the same unfiltered schema just panned and zoomed in, footer still reading <code>8 of 16 tables</code>:</p>
+<img src="/images/posts/erd-for-filament-without-customer-data/panel-detail-light.webp" alt="The books table and its publishers foreign key close up, columns, primary key and foreign key clearly labelled, footer reading 8 of 16 tables" class="block dark:hidden rounded-lg border border-white-cloud">
+<img src="/images/posts/erd-for-filament-without-customer-data/panel-detail-dark.webp" alt="The same books and publishers detail in dark mode" class="hidden dark:block rounded-lg border border-dark-cloud">
+<h2 id="getting-access-control-right-not-just-working">Getting access control right, not just working</h2>
+<p>The obvious way to wire a package’s own page into someone else’s panel is to let the panel handle “can this user see this page” and stop there. That is wrong in both directions. It is too permissive if the application has switched Truss off entirely, and it is too strict in local, where Truss is deliberately open and a page consulting the shipped allow-list would simply be missing for a developer on their own machine.</p>
+<p>So the page asks Truss’s own <code>Authorize</code> logic the same four questions Truss asks itself everywhere else: is the feature enabled, is this environment local, is a gate even bound, and does the user pass the <code>viewTruss</code> gate. Panels can authenticate against a guard of their own, so that last question is asked about the panel’s own user, not whatever the default guard happens to resolve.</p>
+<p>That parity matters past the page itself. Truss serves its stylesheet, its script and Mermaid from routes gated the same way, so a viewer who is let onto the page but refused by the gate does not get a polite message, they get a blank frame and a handful of failed requests. Access control here is not only about the page loading, it is about the page working at all once it has.</p>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li>PHP 8.2 or newer</li>
+<li>Laravel 12 or 13</li>
+<li>Filament 5 (Filament 4 is not supported)</li>
+<li><code>albertoarena/laravel-truss</code> ^1.13.1</li>
+</ul>
+<pre class="astro-code github-dark-default" style="background-color:#0d1117;color:#e6edf3; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#FFA657">composer</span><span style="color:#A5D6FF"> require</span><span style="color:#A5D6FF"> albertoarena/filament-truss</span></span></code></pre>
+<h2 id="accessibility">Accessibility</h2>
+<p>The diagram is keyboard operable and has been tested with VoiceOver, and axe-core runs against it in CI. That is a real bar, and it is the one being claimed here: not WCAG conformance, which is a separate, formal thing this has not been measured against.</p>
+<h2 id="get-started">Get started</h2>
+<p>The package is on <a href="https://github.com/albertoarena/filament-truss" rel="noopener noreferrer" target="_blank">GitHub</a> today, and it has been submitted to the official Filament plugins directory and is awaiting approval. If you are already running <a href="https://trussphp.com/?utm_source=albertoarena.it&#x26;utm_medium=referral&#x26;utm_campaign=filament-truss" rel="noopener noreferrer" target="_blank">Truss</a> and Filament in the same app, this is the shortest path from “I have a schema viewer” to “I have a schema viewer where my team already works.”</p>
+<p>Feedback welcome, as always.</p>  </div> <!--
+            Tags, author bio, newsletter box, discussion link, and pager are
+            post metadata, not article body content. Readability
+            (Safari Reader, Firefox Reader View, and this site's own
+            reading-mode toggle) unconditionally strips every <aside>
+            element from whatever content it selects
+            (Readability.js's _grabArticle calls this._clean(articleContent,
+            "aside")), regardless of nesting depth or how that content
+            scores — unlike styling via class name, which only *penalises* a
+            node's score and doesn't guarantee removal. This used to be a
+            <div>, which Readability kept on shorter posts where the real
+            article text didn't outweigh this block's own paragraph density.
+            See docs/plans/reader-mode-boundary-leaks.md.
+        --> <aside class="endnote mt-12 pt-6 border-t border-rule max-w-[68ch]"> <div class="post-tags flex flex-wrap gap-2 mb-7 font-mono text-xs"> <a href="/tag/php/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#PHP </a><a href="/tag/laravel/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#Laravel </a><a href="/tag/filament/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#Filament </a><a href="/tag/developer-tools/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#Developer Tools </a><a href="/tag/database/" class="border border-rule text-muted px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+#Database </a> </div> <div class="post-author flex items-center gap-3 mb-7"> <img src="/photo.jpg" alt="" class="w-11 h-11 rounded-full"> <div> <p class="font-sans font-semibold text-sm text-ink dark:text-white">Alberto Arena</p> <p class="text-sm text-muted">Senior Software Engineer</p> </div> </div> <div class="post-newsletter border border-rule px-5 py-5 mb-6" data-astro-transition-persist="newsletter-signup" data-astro-transition-scope="astro-kqlc46iq-1"> <h2 class="text-base font-semibold text-ink dark:text-white mb-1">Liked this? Get the next one.</h2> <p class="text-sm text-ink-2 leading-relaxed mb-4">
+Practical notes on Laravel tooling and AI-assisted development, about once a month.
+                Join the list and I'll send you my
+<a href="/cheatsheets/spatie-event-sourcing/" class="text-accent underline">Spatie Event Sourcing cheat sheet</a>
+to start.
+</p> <div data-form="HjBuvq" class="ml-embedded newsletter-signup-target"></div> <script>(function(){const accountId = "2474575";
+
+  function loadMailerLite() {
+    (function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[])
+    .push(arguments);},l=d.createElement(e),l.async=1,l.src=u,
+    n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})
+    (window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');
+    ml('account', accountId);
+  }
+
+  function initNewsletterSignup() {
+    var target = document.querySelector('.newsletter-signup-target');
+    // Already wired up: either a fresh page's target we've already handled,
+    // or (post-to-post navigation) the same transition:persist node carried
+    // over from the previous page, already loaded or already being watched.
+    if (!target || target.dataset.mlObserved === '1') return;
+    target.dataset.mlObserved = '1';
+
+    // Plain scroll-position polling, not IntersectionObserver: the box is
+    // transition:persist (home page and every post share one DOM node), so
+    // an observer created on first load keeps "watching" that node forever,
+    // even after it's carried into a page it never ran its own init on —
+    // fine on its own, except a same-page TOC jump rides scroll-behavior:
+    // smooth, and an animated scroll can move the target through the
+    // viewport fast enough to land between two observer check frames,
+    // which then never reports isIntersecting at all (same failure mode
+    // already hit and fixed this way for the TOC active-heading tracking).
+    // A rAF-throttled getBoundingClientRect check against every 'scroll'
+    // event can't miss a frame like that, and rides along with the persisted
+    // node onto whichever page it ends up on.
+    var ticking = false;
+    function checkPosition() {
+      ticking = false;
+      var rect = target.getBoundingClientRect();
+      if (rect.top < window.innerHeight + 600 && rect.bottom > -600) {
+        window.removeEventListener('scroll', onScroll);
+        loadMailerLite();
+      }
+    }
+    function onScroll() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(checkPosition);
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    checkPosition();
+  }
+
+  // Astro's View Transitions swap doesn't re-execute an inline script whose
+  // content is byte-identical to one that already ran elsewhere in the
+  // session (this component renders the same script on every post and on
+  // /subscribe), so a target introduced by a client-side navigation from a
+  // page with no newsletter box of its own (e.g. home -> a post) would
+  // otherwise never get observed.
+  initNewsletterSignup();
+  document.addEventListener('astro:after-swap', initNewsletterSignup);
+})();</script> </div> <div class="discuss border-t border-rule-soft pt-4 mb-7 font-mono text-sm text-muted leading-relaxed"> Found a mistake, or disagree?  <a href="https://github.com/albertoarena/filament-truss/discussions" target="_blank" rel="noopener noreferrer" class="text-accent underline"> Open a discussion on GitHub </a>  or  <a href="mailto:hello@albertoarena.it" class="text-accent underline"> send me an email </a>.
+</div> </aside> <!--
+            Left outside the <aside> above, and left off reading mode's
+            hide list in global.css: prev/next navigation stays useful even
+            in a focused read, unlike the bio/newsletter/discuss chrome.
+            It doesn't need <aside> treatment to stay out of Readability's
+            output either — "pager" already matches Readability's own
+            unlikelyCandidates regex (pagination|pager), so it's excluded
+            on its own.
+        --> <nav class="pager max-w-[68ch] grid grid-cols-1 min-[560px]:grid-cols-2 gap-5" aria-label="Post navigation"> <a href="/posts/agent-teams-isolated-reviewer/" class="border-t border-rule pt-3 group"> <span class="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-muted block">
+&larr; Previous post </span> <span class="font-sans text-[0.9375rem] font-medium leading-snug mt-1 block group-hover:text-accent"> Agent Teams: Why I Don&#39;t Let My Reviewer See My Reasoning </span> </a> <a href="/posts/i-thought-jev-was-fuzzy-logic/" class="border-t border-rule pt-3 text-right group"> <span class="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-muted block"> Next post &rarr;
+</span> <span class="font-sans text-[0.9375rem] font-medium leading-snug mt-1 block group-hover:text-accent"> I thought Jev was fuzzy logic. I was wrong. </span> </a> </nav> </article> </main> <footer class="site-footer border-t border-rule mt-20 py-8"> <div class="max-w-3xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted"> <span>© 2026 Alberto Arena</span> <div class="flex items-center gap-4"> <a href="/pages/privacy-policy/" class="hover:text-accent transition-colors">Privacy Policy</a> <span aria-hidden="true">·</span> <a href="/pages/credits/" class="hover:text-accent transition-colors">Credits</a> <span aria-hidden="true">·</span> <a href="/rss.xml" class="hover:text-accent transition-colors">RSS</a> <span aria-hidden="true">·</span> <a href="https://www.youtube.com/@AlbertoArenaDev" class="hover:text-accent transition-colors">YouTube</a> </div> </div> </footer> </div> <aside class="hidden min-[1180px]:flex flex-col gap-8 border-l border-rule px-5 py-9 sticky top-0 self-start h-screen overflow-y-auto"> <div> <h3 class="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted mb-2.5"> On this page </h3> <ul id="toc" class="font-mono text-xs leading-[1.55]"> <li> <a href="#what-it-does" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="what-it-does">What it does</a> </li><li> <a href="#it-only-shows-what-a-diagram-needs" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="it-only-shows-what-a-diagram-needs">It only shows what a diagram needs</a> </li><li> <a href="#getting-access-control-right-not-just-working" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="getting-access-control-right-not-just-working">Getting access control right, not just working</a> </li><li> <a href="#requirements" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="requirements">Requirements</a> </li><li> <a href="#accessibility" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="accessibility">Accessibility</a> </li><li> <a href="#get-started" class="toc-link block py-[0.3rem] pl-3 text-muted hover:text-ink transition-colors" data-target="get-started">Get started</a> </li> </ul> </div>  </aside> </div> <button id="reading-mode-toggle" type="button" aria-pressed="false" class="fixed right-4 z-50 border border-rule bg-paper px-4 py-2 font-mono text-sm text-accent shadow-lg transition-colors hover:border-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 motion-reduce:transition-none" style="bottom: calc(1rem + env(safe-area-inset-bottom));">
+Reading mode
+</button> <script type="module">const i="reading-mode";function n(){const t=document.documentElement.toggleAttribute("data-reading");localStorage.setItem(i,t?"1":"0"),o()}function o(){const e=document.getElementById("reading-mode-toggle");if(!e)return;const t=document.documentElement.hasAttribute("data-reading");e.setAttribute("aria-pressed",String(t)),e.textContent=t?"Exit reading mode":"Reading mode"}function d(){const e=document.getElementById("reading-mode-toggle");e&&(e.removeEventListener("click",n),e.addEventListener("click",n),o())}d();document.addEventListener("astro:after-swap",d);</script> <div id="cookie-consent" class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-paper border-t border-rule shadow-lg" role="dialog" aria-labelledby="cookie-consent-title" aria-describedby="cookie-consent-description"> <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"> <div class="text-sm text-ink dark:text-white"> <p id="cookie-consent-title" class="font-semibold mb-1">We use cookies</p> <p id="cookie-consent-description" class="text-ink-2">
+We use analytics cookies to understand how you use this site and improve your experience.
+        No advertising or profiling cookies are used.
+<a href="/pages/privacy-policy/" class="underline hover:text-accent transition-colors ml-1">Privacy Policy</a> </p> </div> <div class="flex gap-3 flex-shrink-0"> <button id="decline-cookies" class="px-4 py-2 text-sm text-muted hover:text-ink dark:hover:text-white transition-colors" aria-label="Decline analytics cookies">
+Decline
+</button> <button id="accept-cookies" class="px-4 py-2 text-sm bg-accent text-white hover:bg-accent/90 transition-colors" aria-label="Accept analytics cookies">
+Accept analytics
+</button> </div> </div> </div> <script>
+  // The GTM script tag itself is not created until __loadGTM runs (defined
+  // in BaseLayout.astro's head script), so accepting here is the first
+  // moment anything is fetched from Google.
+  function initCookieConsent() {
+    const consent = localStorage.getItem('cookieConsent');
+    const banner = document.getElementById('cookie-consent');
+
+    // A tag already loaded cannot be unloaded, so withdrawal reloads the
+    // page: consent goes back to unset, __loadGTM is not called on the next
+    // load, and the banner returns. Registered before the branch below,
+    // because the only people who need it are the ones who have already
+    // answered.
+    document.querySelector('[data-consent-reset]')?.addEventListener('click', () => {
+      window.gtag?.('consent', 'update', { analytics_storage: 'denied' });
+      localStorage.removeItem('cookieConsent');
+      location.reload();
+    });
+
+    if (consent) {
+      banner?.remove();
+      return;
+    }
+
+    document.getElementById('accept-cookies')?.addEventListener('click', () => {
+      localStorage.setItem('cookieConsent', 'accepted');
+      window.__loadGTM?.();
+      banner?.remove();
+    });
+
+    document.getElementById('decline-cookies')?.addEventListener('click', () => {
+      localStorage.setItem('cookieConsent', 'declined');
+      banner?.remove();
+    });
+  }
+
+  initCookieConsent();
+  document.addEventListener('astro:after-swap', initCookieConsent);
+</script>  </body></html> <script type="module">let a;function d(){a&&(window.removeEventListener("scroll",a),a=void 0);const t=Array.from(document.querySelectorAll("#toc a[data-target]")),r=t.map(e=>document.getElementById(e.dataset.target)).filter(e=>!!e);if(!r.length)return;const c=()=>window.innerHeight*.2;function l(){const e=c();let n=r[0].id;for(const o of r)if(o.getBoundingClientRect().top<=e)n=o.id;else break;t.forEach(o=>{o.classList.toggle("toc-active",o.dataset.target===n)})}let i=!1;a=()=>{i||(i=!0,requestAnimationFrame(()=>{i=!1,l()}))},window.addEventListener("scroll",a,{passive:!0}),l()}d();document.addEventListener("astro:after-swap",d);let s;function u(){s&&(document.removeEventListener("keydown",s),s=void 0);let t=document.getElementById("lightbox-overlay"),r=null;function c(){t.classList.remove("is-open"),document.body.classList.remove("lightbox-locked"),r?.focus()}t||(t=document.createElement("div"),t.id="lightbox-overlay",t.setAttribute("role","dialog"),t.setAttribute("aria-modal","true"),t.setAttribute("aria-label","Enlarged image"),t.innerHTML='<button type="button" class="lightbox-close" aria-label="Close">&times;</button><img alt="" />',document.body.appendChild(t),t.addEventListener("click",e=>{const n=e.target;(n===t||n.closest(".lightbox-close"))&&c()}));const l=t.querySelector("img"),i=t.querySelector(".lightbox-close");s=e=>{e.key==="Escape"&&t.classList.contains("is-open")&&c()},document.addEventListener("keydown",s),document.querySelectorAll(".prose img").forEach(e=>{if(e.dataset.lightboxBound)return;e.dataset.lightboxBound="true",e.tabIndex=0,e.setAttribute("role","button"),e.setAttribute("aria-label",`Enlarge image: ${e.alt||"screenshot"}`);function n(){l&&(l.src=e.currentSrc||e.src,l.alt=e.alt,r=e,t.classList.add("is-open"),document.body.classList.add("lightbox-locked"),i?.focus())}e.addEventListener("click",n),e.addEventListener("keydown",o=>{(o.key==="Enter"||o.key===" ")&&(o.preventDefault(),n())})})}u();document.addEventListener("astro:after-swap",u);</script>
