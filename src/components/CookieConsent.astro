@@ -37,32 +37,26 @@
   </div>
 </div>
 
-<script>
-  function gtag(...args: unknown[]) {
-    (window as Window & { dataLayer?: unknown[] }).dataLayer = (window as Window & { dataLayer?: unknown[] }).dataLayer || [];
-    ((window as Window & { dataLayer?: unknown[] }).dataLayer as unknown[]).push(args);
-  }
-
+<script is:inline>
+  // The GTM script tag itself is not created until __loadGTM runs (defined
+  // in BaseLayout.astro's head script), so accepting here is the first
+  // moment anything is fetched from Google.
   function initCookieConsent() {
     const consent = localStorage.getItem('cookieConsent');
     const banner = document.getElementById('cookie-consent');
 
     if (consent) {
       banner?.remove();
-      if (consent === 'accepted') {
-        gtag('consent', 'update', { analytics_storage: 'granted' });
-      }
       return;
     }
 
     document.getElementById('accept-cookies')?.addEventListener('click', () => {
-      gtag('consent', 'update', { analytics_storage: 'granted' });
       localStorage.setItem('cookieConsent', 'accepted');
+      window.__loadGTM?.();
       banner?.remove();
     });
 
     document.getElementById('decline-cookies')?.addEventListener('click', () => {
-      gtag('consent', 'update', { analytics_storage: 'denied' });
       localStorage.setItem('cookieConsent', 'declined');
       banner?.remove();
     });

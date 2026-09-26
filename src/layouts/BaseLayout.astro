@@ -189,25 +189,31 @@ const jsonLdGraph = {
 
     {!noViewTransitions && <ViewTransitions />}
 
-    <!-- Google Consent Mode v2 defaults -->
-    <script is:inline>
+    <!--
+      Google Consent Mode v2 defaults, plus the GTM loader itself.
+      Nothing is fetched from Google until __loadGTM runs, which happens only
+      on an "Accept" click (CookieConsent.astro) or, for a returning visitor,
+      once here below when prior consent is read back from storage. Consent
+      Mode alone would suppress the cookie while still loading the tag; this
+      withholds the request too, which is what the privacy policy promises.
+    -->
+    <script is:inline define:vars={{ gtmId: siteConfig.gtmContainerId }}>
       window.dataLayer = window.dataLayer || [];
       function gtag(){ dataLayer.push(arguments); }
-      // Restore prior consent immediately so returning users aren't blocked
-      var _priorConsent = localStorage.getItem('cookieConsent');
+
       gtag('consent', 'default', {
-        analytics_storage: _priorConsent === 'accepted' ? 'granted' : 'denied',
+        analytics_storage: 'denied',
         ad_storage: 'denied',
         ad_user_data: 'denied',
         ad_personalization: 'denied',
-        wait_for_update: _priorConsent ? 0 : 500,
       });
-    </script>
 
-    <!-- Google Tag Manager -->
-    <script is:inline define:vars={{ gtmId: siteConfig.gtmContainerId }}>
-      if (gtmId && !window._gtmLoaded) {
+      window.__loadGTM = function() {
+        if (!gtmId || window._gtmLoaded) return;
         window._gtmLoaded = true;
+
+        gtag('consent', 'update', { analytics_storage: 'granted' });
+
         (function(w,d,s,l,i){
           w[l]=w[l]||[];
           w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
@@ -228,21 +234,14 @@ const jsonLdGraph = {
             page_title: document.title,
           });
         });
+      };
+
+      if (localStorage.getItem('cookieConsent') === 'accepted') {
+        window.__loadGTM();
       }
     </script>
   </head>
   <body class="min-h-screen">
-    <!-- Google Tag Manager (noscript) -->
-    {siteConfig.gtmContainerId && (
-      <noscript>
-        <iframe
-          src={`https://www.googletagmanager.com/ns.html?id=${siteConfig.gtmContainerId}`}
-          height="0" width="0"
-          style="display:none;visibility:hidden"
-        ></iframe>
-      </noscript>
-    )}
-
     <a href="#main-content" class="skip-to-content">Skip to content</a>
     
     <slot />
