@@ -31,10 +31,10 @@ function stubMatchMedia(window: Window): void {
     ({ matches: false, addEventListener() {}, removeEventListener() {} }) as unknown as MediaQueryList) as unknown as typeof window.matchMedia;
 }
 
-function mount(prior: string | null = null): Promise<Window> {
+function mount(prior: string | null = null, page: string = html, url = 'https://albertoarena.it/'): Promise<Window> {
   return new Promise((resolveMount) => {
-    const dom = new JSDOM(html, {
-      url: 'https://albertoarena.it/',
+    const dom = new JSDOM(page, {
+      url,
       runScripts: 'dangerously',
       beforeParse(window) {
         stubMatchMedia(window as unknown as Window);
@@ -139,6 +139,31 @@ describe('declining', () => {
 
     expect(window.localStorage.getItem('cookieConsent')).toBe('declined');
     expect(banner(window)).toBeNull();
+  });
+});
+
+describe('withdrawing', () => {
+  // Withdrawing has to be as easy as giving consent, and "clear your browser
+  // cookies" was not that. The control lives on the privacy page, next to
+  // the sentence that describes what it undoes.
+  it('is offered on the privacy page as a control, not as an instruction', () => {
+    expect(privacyHtml).toContain('data-consent-reset');
+  });
+
+  it('signals denial and clears the stored choice', async () => {
+    const window = await mount('accepted', privacyHtml, 'https://albertoarena.it/pages/privacy-policy/');
+
+    window.document.querySelector<HTMLButtonElement>('[data-consent-reset]')!.click();
+
+    expect(window.localStorage.getItem('cookieConsent')).toBeNull();
+
+    const dataLayer = (window as Window & { dataLayer?: unknown[] }).dataLayer ?? [];
+    const lastConsentEntry = [...dataLayer]
+      .reverse()
+      .map((entry) => Array.from(entry as ArrayLike<unknown>))
+      .find(([command]) => command === 'consent');
+
+    expect(lastConsentEntry).toEqual(['consent', 'update', { analytics_storage: 'denied' }]);
   });
 });
 

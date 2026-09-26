@@ -45,6 +45,17 @@
     const consent = localStorage.getItem('cookieConsent');
     const banner = document.getElementById('cookie-consent');
 
+    // A tag already loaded cannot be unloaded, so withdrawal reloads the
+    // page: consent goes back to unset, __loadGTM is not called on the next
+    // load, and the banner returns. Registered before the branch below,
+    // because the only people who need it are the ones who have already
+    // answered.
+    document.querySelector('[data-consent-reset]')?.addEventListener('click', () => {
+      window.gtag?.('consent', 'update', { analytics_storage: 'denied' });
+      localStorage.removeItem('cookieConsent');
+      location.reload();
+    });
+
     if (consent) {
       banner?.remove();
       return;

@@ -200,6 +200,10 @@ const jsonLdGraph = {
     <script is:inline define:vars={{ gtmId: siteConfig.gtmContainerId }}>
       window.dataLayer = window.dataLayer || [];
       function gtag(){ dataLayer.push(arguments); }
+      // define:vars wraps this whole script in an IIFE, so gtag is not
+      // global by default — CookieConsent.astro's withdrawal control needs
+      // to reach it from outside this closure.
+      window.gtag = gtag;
 
       gtag('consent', 'default', {
         analytics_storage: 'denied',
