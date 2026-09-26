@@ -28,7 +28,7 @@ Analytics data is collected via **Google Analytics 4 (GA4)**, loaded through **G
 
 ## Legal basis
 
-Data is processed on the basis of your **consent** (GDPR Art. 6(1)(a)). You can withdraw consent at any time by clicking "Decline" in the cookie banner, which appears when you clear your browser cookies and revisit the site.
+Data is processed on the basis of your **consent** (GDPR Art. 6(1)(a)). You can withdraw consent at any time using the button below.
 
 ## Data retention
 
@@ -55,8 +55,10 @@ Under GDPR you have the right to:
 - **Access** the data held about you
 - **Rectification** of inaccurate data
 - **Erasure** of your data
-- **Withdraw consent** at any time — clear your browser cookies to reset the cookie banner, then click "Decline"
+- **Withdraw consent** at any time using the button below
 - **Lodge a complaint** with your local data protection authority
+
+<button data-consent-reset class="px-4 py-2 text-sm text-muted border border-rule hover:text-ink hover:border-accent dark:hover:text-white transition-colors not-prose">Withdraw analytics consent</button>
 
 ## Contact
 

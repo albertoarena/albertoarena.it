@@ -37,32 +37,37 @@
   </div>
 </div>
 
-<script>
-  function gtag(...args: unknown[]) {
-    (window as Window & { dataLayer?: unknown[] }).dataLayer = (window as Window & { dataLayer?: unknown[] }).dataLayer || [];
-    ((window as Window & { dataLayer?: unknown[] }).dataLayer as unknown[]).push(args);
-  }
-
+<script is:inline>
+  // The GTM script tag itself is not created until __loadGTM runs (defined
+  // in BaseLayout.astro's head script), so accepting here is the first
+  // moment anything is fetched from Google.
   function initCookieConsent() {
     const consent = localStorage.getItem('cookieConsent');
     const banner = document.getElementById('cookie-consent');
 
+    // A tag already loaded cannot be unloaded, so withdrawal reloads the
+    // page: consent goes back to unset, __loadGTM is not called on the next
+    // load, and the banner returns. Registered before the branch below,
+    // because the only people who need it are the ones who have already
+    // answered.
+    document.querySelector('[data-consent-reset]')?.addEventListener('click', () => {
+      window.gtag?.('consent', 'update', { analytics_storage: 'denied' });
+      localStorage.removeItem('cookieConsent');
+      location.reload();
+    });
+
     if (consent) {
       banner?.remove();
-      if (consent === 'accepted') {
-        gtag('consent', 'update', { analytics_storage: 'granted' });
-      }
       return;
     }
 
     document.getElementById('accept-cookies')?.addEventListener('click', () => {
-      gtag('consent', 'update', { analytics_storage: 'granted' });
       localStorage.setItem('cookieConsent', 'accepted');
+      window.__loadGTM?.();
       banner?.remove();
     });
 
     document.getElementById('decline-cookies')?.addEventListener('click', () => {
-      gtag('consent', 'update', { analytics_storage: 'denied' });
       localStorage.setItem('cookieConsent', 'declined');
       banner?.remove();
     });
