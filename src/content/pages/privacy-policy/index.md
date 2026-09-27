@@ -44,8 +44,8 @@ No other third-party analytics, advertising, or tracking services are used.
 
 | Cookie | Purpose | Expiry |
 |--------|---------|--------|
-| `_ga` | Distinguishes unique users | 2 years |
-| `_ga_PJGZWDSK4K` | Stores session state for GA4 | 2 years |
+| `blog_ga` | Distinguishes unique users | 2 years |
+| `blog_ga_PJGZWDSK4K` | Stores session state for GA4 | 2 years |
 | `cookieConsent` | Stores your consent choice (first-party, never shared) | Persistent |
 
 ## Your rights
@@ -66,4 +66,4 @@ For any privacy-related request, contact: [hello@albertoarena.it](mailto:hello@a
 
 ---
 
-*Last updated: May 2026*
+*Last updated: September 2026*
