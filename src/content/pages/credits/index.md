@@ -38,6 +38,7 @@ Cover images for some posts are sourced from **[Unsplash](https://unsplash.com)*
 | [10,000 downloads](/posts/laravel-event-sourcing-generator-10k/) | Sparkler burning at night on a beach | [Tim Collins](https://unsplash.com/@timcollinsphoto) on Unsplash |
 | [Beyond the Bastion](/posts/beyond-the-bastion-aws-ssm-laravel-artisan/) | Dark server racks with LED lights | [Matthieu Beaumont](https://unsplash.com/@matthieubeaumont) on Unsplash |
 | [Create a domain using Spatie event sourcing](/posts/domain-using-spatie-event-sourcing/) | Metal scaffolding on an orange building against a blue sky | [Jackson Allan](https://unsplash.com/@artbyjackson) on Unsplash |
+| [The Effort Was the Filter](/posts/the-effort-was-the-filter/) | A hand holding a circular camera lens filter up against a city skyline | [Eugene Chystiakov](https://unsplash.com/@eugenechystiakov) on Unsplash |
 | [Event Sourcing with a Little Help from AI](/posts/ai-laravel-event-sourcing/) | Circuit board shaped as a human brain on a colourful grid | [Steve A Johnson](https://unsplash.com/@steve_j) on Unsplash |
 | [Introducing Codemetry](/posts/introducing-codemetry/) | Magnifying glass resting on a laptop keyboard | [Agence Olloweb](https://unsplash.com/@olloweb) on Unsplash |
 | [Claude's Working Memory Is Smaller Than You Think](/posts/claudes-working-memory-is-smaller-than-you-think/) | Street performer juggling three balls | [Yi Liu](https://unsplash.com/@stevenliuyi) on Unsplash |
