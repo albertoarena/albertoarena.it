@@ -1,6 +1,6 @@
 ---
 title: "The Effort Was the Filter"
-date: "2026-10-03T10:00:00.000Z"
+date: "2026-09-28T10:00:00.000Z"
 template: "post"
 draft: false
 slug: "the-effort-was-the-filter"
