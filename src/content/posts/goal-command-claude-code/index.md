@@ -16,7 +16,7 @@ coverAlt: "Claude Code /goal vs /loop: Stop Typing, Keep Going"
 series:
   slug: "claude-goal-loop"
   order: 1
-pinned: true
+pinned: false
 ---
 
 If you've spent any real time with Claude Code, you've been through this loop. You give it a meaningful task, something like refactoring a service layer or wiring up a new set of endpoints. It works for one turn, produces solid output, and then hands control back to you. So you type "keep going." It does another round. Stops again. You re-prompt. Another round. Another stop. An hour later you've typed "keep going" more times than you've typed actual code, and the irony of manually babysitting your autonomous coding agent starts to sting.

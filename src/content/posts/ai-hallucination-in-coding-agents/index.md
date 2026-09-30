@@ -13,6 +13,7 @@ description: "AI coding agents hallucinate: they invent APIs, fabricate packages
 socialImage: "/images/posts/ai-hallucination-in-coding-agents/cover.jpg"
 cover: "ai-hallucination-in-coding-agents/thumbnail.webp"
 coverAlt: "Abstract iridescent digital swirl distortion"
+pinned: true
 series:
   slug: "how-to-use-ai"
   order: 1
