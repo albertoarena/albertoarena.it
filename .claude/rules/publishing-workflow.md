@@ -18,6 +18,13 @@ not a direct push to master:
       tweaks, version bumps, promo box updates, and edits to already-published
       posts (see `updating-posts.md`) — this restriction is specifically about
       the act of publishing new content
+- [ ] **That direct-to-master allowance is for markdown-only changes**
+      (post frontmatter/body, page content). A change that touches anything
+      else — `.astro` components, `.ts`/`.js`, config, `package.json` — needs
+      a branch and a PR even for something small like a version bump or a
+      visual fix, no direct push. Confirmed 2026-09-30 alongside the
+      pinned-post swap (`content/posts/*/index.md` only, so that one shipped
+      direct).
 - [ ] **Whenever a post's PR is merged (pushed to master), re-check its `date`
       frontmatter against the actual day of the merge, and fix it if the PR
       sat longer or shorter than planned.** A date set when the branch was
