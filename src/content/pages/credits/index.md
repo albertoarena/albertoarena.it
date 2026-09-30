@@ -26,6 +26,7 @@ Cover images for some posts are sourced from **[Unsplash](https://unsplash.com)*
 
 | Post | Photo | Photographer |
 |------|-------|--------------|
+| [Prompt Injection Is a Laravel Problem Now](/posts/prompt-injection-is-a-laravel-problem-now/) | A toy horse peeking through a grate to watch a crowd of other toy figures who haven't noticed it | [Dan Counsell](https://unsplash.com/@dancounsell) on Unsplash |
 | [I told Claude not to sign my commits. It signed 25 of them.](/posts/i-told-claude-not-to-sign-my-commits/) | A university degree certificate with a red seal and two handwritten signatures | [Lewis Keegan](https://unsplash.com/@skillscouter) on Unsplash |
 | [How I Manage Homebrew From a UI](/posts/how-i-manage-homebrew-from-a-ui/) | A row of beer taps sitting on top of a bar | [Dawn Agran](https://unsplash.com/@dawnagran) on Unsplash |
 | [Will Open Source Survive the Agents That Replaced It?](/posts/will-open-source-survive-the-agents-that-replaced-it/) | A vintage typewriter with paper loaded, next to a modern MacBook, shot from above on a wooden desk | [Glenn Carstens-Peters](https://unsplash.com/@glenncarstenspeters) on Unsplash |
