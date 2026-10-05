@@ -26,6 +26,11 @@ the rule file with the detail; this is the flat list to actually check off.
 - [ ] **No em dashes** anywhere in the post (body, description, title).
       Signals AI-written content; replace with commas, colons, or
       parentheses.
+- [ ] **Sentence-level clarity pass.** See `sentence-clarity.md` — reread
+      every sentence for repeated words, redundant synonym pairs, stacked
+      negatives, and bundled contrasts that need a second read to parse.
+      Triple-asterisk emphasis is left as written; it's a deliberate device
+      and no clarity or formatting pass flattens it.
 - [ ] **Every temporal claim is checked against real history, not
       estimated.** Any specific duration or date ("for two years", "since
       2019", "for months") about a project, package, or codebase must be
