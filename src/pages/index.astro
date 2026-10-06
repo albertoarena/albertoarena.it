@@ -27,8 +27,8 @@ const featuredCover = featured.data.cover
 	: featured.data.socialImage;
 ---
 
-<Layout title={siteConfig.title}>
-	<section class="mb-12 pb-10 border-b border-rule">
+<Layout title={siteConfig.title} wide>
+	<section class="mb-9 pb-8 border-b-[3px] border-double border-rule">
 		<h1 class="font-sans text-2xl font-semibold text-ink dark:text-white leading-snug mb-3">
 			Senior software engineer.
 		</h1>
@@ -41,114 +41,102 @@ const featuredCover = featured.data.cover
 		</p>
 	</section>
 
-	<section class="mb-12">
-		<div class="flex items-baseline justify-between gap-4 border-b border-rule pb-2 mb-5">
-			<h2 class="font-mono text-xs uppercase tracking-[0.14em] text-ink dark:text-white font-semibold">Current project</h2>
-			<a href="https://trussphp.com/?utm_source=albertoarena.it&amp;utm_medium=referral&amp;utm_campaign=home" target="_blank" rel="noopener noreferrer" class="font-mono text-xs text-muted hover:text-accent transition-colors">trussphp.com &rarr;</a>
-		</div>
-		<TrussPromo />
-	</section>
-
-	<section class="mb-12">
-		<div class="flex items-baseline justify-between gap-4 border-b border-rule pb-2 mb-5">
-			<h2 class="font-mono text-xs uppercase tracking-[0.14em] text-ink dark:text-white font-semibold">Also building</h2>
-			<a href="https://cogway.dev/?utm_source=albertoarena.it&amp;utm_medium=referral&amp;utm_campaign=home" target="_blank" rel="noopener noreferrer" class="font-mono text-xs text-muted hover:text-accent transition-colors">cogway.dev &rarr;</a>
-		</div>
-		<p class="text-ink-2 max-w-[60ch]"><strong class="font-semibold text-ink dark:text-white">Cogway</strong>  Interactive explainers for Laravel and PHP, one mechanism at a time.</p>
-	</section>
-
-	<section class="mb-12">
-		<div class="flex items-baseline justify-between gap-4 border-b border-rule pb-2 mb-5">
-			<h2 class="font-mono text-xs uppercase tracking-[0.14em] text-ink dark:text-white font-semibold">Writing</h2>
-			<a href="/archive/" class="font-mono text-xs text-muted hover:text-accent transition-colors whitespace-nowrap">all {sortedPosts.length} posts by year &rarr;</a>
+	<!--
+		Ledger identity, two-lane layout (.impeccable/surfaces/site.md): Building
+		and Writing run side by side instead of stacking, the only direction of
+		the three compared that actually shortens the page. Collapses to one
+		column below 1360px — comfortably before either lane gets too narrow for
+		Truss's link row or the post list's metadata to read well — with Building
+		first in document order, so Truss keeps top billing at every width.
+	-->
+	<section class="grid grid-cols-1 min-[1360px]:grid-cols-2 gap-10 mb-11 items-start">
+		<div>
+			<div class="flex items-baseline justify-between gap-4 border-b border-rule pb-2 mb-5">
+				<h2 class="font-mono text-xs uppercase tracking-[0.14em] text-ink dark:text-white font-semibold">Building</h2>
+			</div>
+			<TrussPromo />
+			<div class="border border-rule px-5 py-4 mt-5 flex flex-wrap items-baseline justify-between gap-3">
+				<p class="text-ink-2 max-w-[44ch]"><strong class="font-semibold text-ink dark:text-white">Cogway:</strong> interactive explainers for Laravel and PHP, one mechanism at a time.</p>
+				<a href="https://cogway.dev/?utm_source=albertoarena.it&amp;utm_medium=referral&amp;utm_campaign=home" target="_blank" rel="noopener noreferrer" class="font-mono text-sm text-accent hover:underline whitespace-nowrap">cogway.dev &rarr;</a>
+			</div>
 		</div>
 
-		<a href={`/posts/${featuredSlug}/`} class="group grid grid-cols-1 min-[560px]:grid-cols-[13rem_minmax(0,1fr)] gap-5 items-start mb-8">
-			{featuredCover ? (
-				<img
-					src={featuredCover}
-					alt={featured.data.coverAlt ?? featured.data.title}
-					width="1200"
-					height="628"
-					loading="lazy"
-					class="w-full aspect-[1.91/1] object-cover border border-rule"
-				/>
-			) : (
-				<div class="w-full aspect-[1.91/1] border border-rule bg-surface flex items-center justify-center font-mono text-[0.6rem] text-muted text-center px-2">
-					{featured.data.title}
+		<div>
+			<div class="flex items-baseline justify-between gap-4 border-b border-rule pb-2 mb-5">
+				<h2 class="font-mono text-xs uppercase tracking-[0.14em] text-ink dark:text-white font-semibold">Writing</h2>
+				<a href="/archive/" class="font-mono text-xs text-muted hover:text-accent transition-colors whitespace-nowrap">all {sortedPosts.length} posts by year &rarr;</a>
+			</div>
+
+			<a href={`/posts/${featuredSlug}/`} class="group grid grid-cols-1 min-[560px]:grid-cols-[13rem_minmax(0,1fr)] gap-5 items-start mb-8">
+				{featuredCover ? (
+					<img
+						src={featuredCover}
+						alt={featured.data.coverAlt ?? featured.data.title}
+						width="1200"
+						height="628"
+						loading="lazy"
+						class="w-full aspect-[1.91/1] object-cover border border-rule"
+					/>
+				) : (
+					<div class="w-full aspect-[1.91/1] border border-rule flex items-center justify-center font-mono text-[0.6rem] text-muted text-center px-2">
+						{featured.data.title}
+					</div>
+				)}
+				<div class="min-w-0">
+					<p class="font-mono text-xs uppercase tracking-[0.14em] text-accent mb-1.5">&#9733; Latest</p>
+					<h3 class="font-sans text-lg font-semibold text-ink dark:text-white group-hover:text-accent transition-colors mb-1.5">
+						{featured.data.title}
+					</h3>
+					{featured.data.description && (
+						<p class="text-ink-2 mb-2 max-w-[52ch]">{featured.data.description}</p>
+					)}
+					<p class="font-mono text-xs text-muted flex flex-wrap items-center gap-x-2">
+						<span>
+							{featured.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+							{featured.data.category && <> &middot; {featured.data.category}</>}
+							&middot; {featuredReadTime}
+						</span>
+						{featured.data.sourcesVerified && <span class="stamp">&#10003; Sources checked</span>}
+					</p>
+				</div>
+			</a>
+
+			{pinnedPosts.length > 0 && (
+				<div class="mb-8">
+					<p class="font-mono text-xs uppercase tracking-widest text-muted mb-3">&#9733; Pinned</p>
+					<ul class="border-t border-rule">
+						{pinnedPosts.map((post) => (
+							<PostListRow post={post} seriesMarker={getSeriesMarker(post, seriesTotals)} pinned />
+						))}
+					</ul>
 				</div>
 			)}
-			<div class="min-w-0">
-				<p class="font-mono text-xs uppercase tracking-[0.14em] text-accent mb-1.5">&#9733; Latest</p>
-				<h3 class="font-sans text-lg font-semibold text-ink dark:text-white group-hover:text-accent transition-colors mb-1.5">
-					{featured.data.title}
-				</h3>
-				{featured.data.description && (
-					<p class="text-ink-2 mb-2 max-w-[52ch]">{featured.data.description}</p>
-				)}
-				<p class="font-mono text-xs text-muted">
-					{featured.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-					{featured.data.category && <> &middot; {featured.data.category}</>}
-					&middot; {featuredReadTime}
-				</p>
-			</div>
-		</a>
 
-		{pinnedPosts.length > 0 && (
-			<div class="mb-8">
-				<p class="font-mono text-xs uppercase tracking-widest text-muted mb-3">&#9733; Pinned</p>
-				<ul class="border-t border-rule">
-					{pinnedPosts.map((post) => (
-						<PostListRow post={post} seriesMarker={getSeriesMarker(post, seriesTotals)} pinned />
-					))}
-				</ul>
-			</div>
-		)}
-
-		<ul class="border-t border-rule">
-			{listPosts.map((post) => (
-				<PostListRow post={post} seriesMarker={getSeriesMarker(post, seriesTotals)} />
-			))}
-		</ul>
-	</section>
-
-	<section class="mb-12">
-		<div class="flex items-baseline justify-between gap-4 border-b border-rule pb-2 mb-5">
-			<h2 class="font-mono text-xs uppercase tracking-[0.14em] text-ink dark:text-white font-semibold">Cheat sheets</h2>
-		</div>
-		<div class="border border-rule px-5 py-4 flex flex-wrap items-baseline justify-between gap-3">
-			<p class="text-ink-2 max-w-[44ch]">Dense, printable references for the tools I use daily. Spatie event sourcing is the first one, with a one-page PDF.</p>
-			<a href="/cheatsheets/" class="font-mono text-sm text-accent hover:underline whitespace-nowrap">Browse cheat sheets &rarr;</a>
+			<ul class="border-t border-rule">
+				{listPosts.map((post) => (
+					<PostListRow post={post} seriesMarker={getSeriesMarker(post, seriesTotals)} />
+				))}
+			</ul>
 		</div>
 	</section>
 
-	<section class="mb-12">
-		<div class="flex items-baseline justify-between gap-4 border-b border-rule pb-2 mb-5">
-			<h2 class="font-mono text-xs uppercase tracking-[0.14em] text-ink dark:text-white font-semibold">Other projects</h2>
-		</div>
-		<div class="flex flex-wrap items-baseline justify-between gap-3">
-			<p class="text-ink-2 max-w-[52ch]">An event sourcing generator with 10,000+ installs, a Claude Code skill for designing event sourced domains, env validation for pipelines, and deploys for Netsons servers.</p>
-			<a href="/projects/" class="font-mono text-sm text-accent hover:underline whitespace-nowrap">See all projects &rarr;</a>
-		</div>
-	</section>
-
-	<section class="mb-12">
-		<div class="flex items-baseline justify-between gap-4 border-b border-rule pb-2 mb-5">
-			<h2 class="font-mono text-xs uppercase tracking-[0.14em] text-ink dark:text-white font-semibold">Working with me</h2>
-			<a href="/pages/consulting/" class="font-mono text-xs text-muted hover:text-accent transition-colors whitespace-nowrap">availability &rarr;</a>
-		</div>
-		<div class="grid grid-cols-1 min-[640px]:grid-cols-3 gap-6">
+	<!-- Closing band: three teasers in one row instead of three full-width stacked sections -->
+	<section class="border-t-[3px] border-double border-rule pt-8 mb-11">
+		<div class="grid grid-cols-1 min-[640px]:grid-cols-3 gap-8">
 			<div>
-				<h3 class="font-mono text-xs uppercase tracking-[0.08em] text-muted mb-1.5">Event sourcing</h3>
-				<p class="text-ink-2">Modelling aggregates and events for a domain that has to survive replays, audits and real production load.</p>
+				<h2 class="font-mono text-xs uppercase tracking-[0.14em] text-ink dark:text-white font-semibold mb-2">Cheat sheets</h2>
+				<p class="text-ink-2 mb-2">Dense, printable references for the tools I use daily. Spatie event sourcing is the first one, with a one-page PDF.</p>
+				<a href="/cheatsheets/" class="font-mono text-sm text-accent hover:underline whitespace-nowrap">Browse &rarr;</a>
 			</div>
 			<div>
-				<h3 class="font-mono text-xs uppercase tracking-[0.08em] text-muted mb-1.5">Laravel codebases</h3>
-				<p class="text-ink-2">Adding structure to an app that grew fast, without selling you a rewrite you do not need.</p>
+				<h2 class="font-mono text-xs uppercase tracking-[0.14em] text-ink dark:text-white font-semibold mb-2">Other projects</h2>
+				<p class="text-ink-2 mb-2">An event sourcing generator with 10,000+ installs, a Claude Code skill for designing event sourced domains, env validation for pipelines, and deploys for Netsons servers.</p>
+				<a href="/projects/" class="font-mono text-sm text-accent hover:underline whitespace-nowrap">See all &rarr;</a>
 			</div>
 			<div>
-				<h3 class="font-mono text-xs uppercase tracking-[0.08em] text-muted mb-1.5">Tooling and CI</h3>
-				<p class="text-ink-2">Tests, schema checks and env validation that fail the build instead of the deploy.</p>
+				<h2 class="font-mono text-xs uppercase tracking-[0.14em] text-ink dark:text-white font-semibold mb-2">Working with me</h2>
+				<p class="text-ink-2 mb-2">Event sourcing, Laravel codebases, tooling and CI, scoped to what the project actually needs.</p>
+				<a href="/pages/consulting/" class="font-mono text-sm text-accent hover:underline whitespace-nowrap">Availability &rarr;</a>
 			</div>
 		</div>
 	</section>
