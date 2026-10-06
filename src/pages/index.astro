@@ -104,7 +104,7 @@ const featuredCover = featured.data.cover
 			{pinnedPosts.length > 0 && (
 				<div class="mb-8">
 					<p class="font-mono text-xs uppercase tracking-widest text-muted mb-3">&#9733; Pinned</p>
-					<ul class="border-t border-rule">
+					<ul>
 						{pinnedPosts.map((post) => (
 							<PostListRow post={post} seriesMarker={getSeriesMarker(post, seriesTotals)} pinned />
 						))}

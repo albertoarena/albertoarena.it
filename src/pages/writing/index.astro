@@ -37,7 +37,7 @@ const pagePosts = regularPosts.slice(0, postsLimit);
   {pinnedPosts.length > 0 && (
     <div class="mb-8">
       <p class="font-mono text-xs uppercase tracking-widest text-muted mb-3">&#9733; Pinned</p>
-      <ul class="border-t border-rule">
+      <ul>
         {pinnedPosts.map((post) => {
           const slug = getPostSlug(post);
           const cover = getCover(post);
