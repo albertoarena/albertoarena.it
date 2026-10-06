@@ -1,13 +1,16 @@
 ---
 /*
-  Redesign home page's one filled block (redesign-plan.md §3, §9.2): the
-  only element on the page allowed to use --surface as a background. The
-  plan's no-icon-set rule (§1) otherwise stands, so the links below stay
-  plain mono text matching every other link row built so far (post tags,
-  endnote, etc) — the one exception is the Truss mark next to the heading,
-  a deliberate, single amendment to §1, see redesign-plan.md §1 and the
-  `.project-mark` class in global.css for the size every future mark has
-  to match.
+  Ledger identity (.impeccable/surfaces/site.md): no filled background.
+  The old --surface "one filled block" rule (redesign-plan.md §3, §9.2) is
+  superseded — a full-height tinted rail tried during this same redesign
+  read as a dated dashboard sidebar, and keeping Truss's own box filled
+  while the rest of the identity moved to rule-only surfaces would have
+  made the two treatments fight each other. The box stays distinct through
+  density, the Shipped stamp, and the double rule instead. The no-icon-set
+  rule still stands, so the links below stay plain mono text matching
+  every other link row (post tags, endnote, etc) — the one exception is
+  the Truss mark next to the heading, see the `.project-mark` class in
+  global.css for the size every future mark has to match.
 
   Version comes from the same project-stats.json cache /projects reads
   (scripts/fetch-project-stats.mjs, Phase 7), with this hardcoded string as
@@ -30,7 +33,7 @@ const trussSeries = trussSeriesData.map((entry) => ({
 }));
 ---
 
-<div class="border border-rule bg-surface px-6 py-5">
+<div class="border border-rule px-6 py-5">
 	<div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-2.5">
 		<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="project-mark text-ink dark:text-white" aria-hidden="true">
 			<path d="M16 5 L27 26 H5 Z" />
@@ -43,7 +46,7 @@ const trussSeries = trussSeriesData.map((entry) => ({
 			<circle cx="16" cy="17" r="1.4" fill="currentColor" stroke="none" />
 		</svg>
 		<h2 class="font-sans text-xl font-semibold text-ink dark:text-white">Laravel Truss</h2>
-		<span class="font-mono text-xs text-accent border border-accent px-1.5 py-0.5">{TRUSS_VERSION}</span>
+		<span class="stamp">&#10003; Shipped {TRUSS_VERSION}</span>
 	</div>
 	<p class="text-ink-2 max-w-[48ch] mb-5">
 		A live, zoomable ER diagram of your Laravel app's actual database schema, safe to run in production. <strong class="font-semibold text-ink dark:text-white">Structure only, never data.</strong> Now speaks MCP, so a coding agent can read your live schema instead of a stale paste. A companion plugin, filament-truss, brings the same diagram into a Filament panel.
@@ -60,13 +63,13 @@ const trussSeries = trussSeriesData.map((entry) => ({
 		<a href="https://github.com/albertoarena/filament-truss" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">Filament plugin</a>
 		<a href="https://ko-fi.com/albertoarena" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">Support on Ko-fi</a>
 	</div>
-	<div class="pt-4 border-t border-rule">
+	<div class="pt-4 border-t-[3px] border-double border-rule">
 		<h3 class="font-mono text-xs uppercase tracking-[0.14em] text-muted mb-2">How it got here</h3>
 		<ol class="font-mono text-sm">
 			{trussSeries.map((post, i) => (
 				<li class="flex items-baseline justify-between gap-2 py-1">
 					<span class="min-w-0">
-						<span class="text-muted mr-2">{i + 1}</span>
+						<span class="ledger-idx">{i + 1}</span>
 						<a href={`/posts/${post.slug}/`} class="text-ink-2 hover:text-accent transition-colors">
 							{post.title}
 						</a>

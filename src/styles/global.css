@@ -45,6 +45,15 @@
   --color-accent: #0b5fd0;
   --color-accent-soft: #eaf2fd;
   --color-ok: #1c7a4c;
+  /*
+    Ledger identity (.impeccable/surfaces/site.md): reserved for the
+    "Sources checked" stamp and FROM/TO routing marks only, never for
+    ordinary links or decoration. #991b1b on white is ~7.3:1 (Tailwind
+    red-800); the dark-mode value is lighter for the same reason every
+    other --color- token below gets its own dark variant instead of being
+    inverted mechanically.
+  */
+  --color-stamp: #991b1b;
 
   /*
     Override Tailwind v4's OKLCH default palette with HSL for the colours we
@@ -142,6 +151,7 @@
     --color-accent: #5eb3ff;
     --color-accent-soft: #132437;
     --color-ok: #4fc98a;
+    --color-stamp: #f87171;
   }
 
   /* time element in dark mode */
@@ -667,4 +677,61 @@ html[data-reading] .post-content pre {
   border-left-color: var(--color-accent);
   color: var(--color-accent);
   font-weight: 600;
+}
+
+/*
+  Ledger identity (.impeccable/surfaces/site.md). Shared reading measure
+  for the post article, its header, prose body, endnote aside, and pager,
+  defined once so the clamp only needs updating here. Replaces the old
+  fixed max-w-[68ch], which stayed the same width regardless of viewport.
+*/
+.post-measure {
+  max-width: clamp(44rem, 58vw, 58rem);
+}
+
+/*
+  A ledger page's edge index: a tick every 22px down the rail. Decorative
+  only (aria-hidden on the element that uses it); replaces a filled
+  background, which read as a dated dashboard sidebar in review.
+*/
+.rail-ticks {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--color-rule) 0,
+    var(--color-rule) 1px,
+    transparent 1px,
+    transparent 22px
+  );
+}
+
+/*
+  The "Sources checked" / "Shipped" stamp: a rotated, bordered mono badge,
+  never a filled background, so it reads as ink stamped on paper rather
+  than a UI chip. --color-stamp is reserved for exactly this and the
+  FROM/TO pager glyphs, nothing else.
+*/
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1.5px solid var(--color-stamp);
+  color: var(--color-stamp);
+  padding: 0.125rem 0.4375rem;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transform: rotate(-3deg);
+  border-radius: 2px;
+}
+
+/* Ledger row index column, used by the Truss "How it got here" list and every post-series box. */
+.ledger-idx {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  width: 1.4rem;
+  display: inline-block;
+  text-align: right;
+  margin-right: 0.625rem;
 }

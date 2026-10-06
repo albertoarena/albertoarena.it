@@ -2,17 +2,23 @@
 import { siteConfig } from '@/utils/config';
 ---
 
-<footer class="site-footer border-t border-rule mt-20 py-8">
-  <div class="max-w-3xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted">
+<footer class="site-footer border-t-[3px] border-double border-rule mt-20 py-8">
+  <div class="px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted">
     <span>© {new Date().getFullYear()} Alberto Arena</span>
-    <div class="flex items-center gap-4">
-      <a href="/pages/privacy-policy/" class="hover:text-accent transition-colors">Privacy Policy</a>
+    <div class="flex flex-wrap items-center justify-center gap-4">
+      <a href={`https://github.com/${siteConfig.author.contacts.github}`} target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">GitHub</a>
       <span aria-hidden="true">·</span>
-      <a href="/pages/credits/" class="hover:text-accent transition-colors">Credits</a>
+      <a href={`https://x.com/${siteConfig.author.contacts.twitter}`} target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">X</a>
+      <span aria-hidden="true">·</span>
+      <a href={`https://www.linkedin.com/in/${siteConfig.author.contacts.linkedin}/`} target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">LinkedIn</a>
       <span aria-hidden="true">·</span>
       <a href={siteConfig.author.contacts.rss} class="hover:text-accent transition-colors">RSS</a>
       <span aria-hidden="true">·</span>
       <a href={`https://www.youtube.com/@${siteConfig.author.contacts.youtube}`} class="hover:text-accent transition-colors">YouTube</a>
+      <span aria-hidden="true">·</span>
+      <a href="/pages/privacy-policy/" class="hover:text-accent transition-colors">Privacy Policy</a>
+      <span aria-hidden="true">·</span>
+      <a href="/pages/credits/" class="hover:text-accent transition-colors">Credits</a>
     </div>
   </div>
 </footer>
