@@ -562,10 +562,19 @@ html[data-reading] .discuss {
   own grid-template-columns (set by Tailwind) still reserves their tracks,
   which would leave two empty gutters either side of the article. Collapse
   to one column and narrow to the reading measure instead.
+
+  margin-inline: auto is required here now, not just inherited: the ledger
+  identity (.impeccable/surfaces/site.md) removed .post-shell's own mx-auto
+  in the base (non-reading) state on purpose, so the shell hugs the rail
+  instead of centering with a symmetric gap. Reading mode hides the rail
+  entirely, so centering has to be re-asserted for this state specifically
+  or the capped box just sits flush left (caught 2026-10-06, compared
+  against live).
 */
 html[data-reading] .post-shell {
   grid-template-columns: minmax(0, 1fr);
   max-width: 46rem;
+  margin-inline: auto;
 }
 
 /*
