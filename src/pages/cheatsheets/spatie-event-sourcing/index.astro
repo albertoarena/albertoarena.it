@@ -87,8 +87,14 @@ const faqSchema = gotchasSection?.entries?.some((e) => e.question)
   <script type="application/ld+json" set:html={JSON.stringify(techArticleSchema)} />
   {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
 
-  <!-- Shell B, three column (redesign-plan.md §5): rail | article | aside -->
-  <div class="cheatsheet-shell min-[900px]:grid min-[900px]:grid-cols-[14rem_minmax(0,1fr)] min-[1180px]:grid-cols-[14rem_minmax(0,1fr)_15rem] max-w-[82rem] mx-auto">
+  <!--
+    Shell B, three column (redesign-plan.md §5): rail | article | aside. No
+    outer ceiling, matching PostLayout.astro's own fix (ledger identity,
+    .impeccable/surfaces/site.md) — this page deliberately mirrors that shell
+    ("one design system instead of two", see the file-level comment above),
+    so it inherits the same width fix.
+  -->
+  <div class="cheatsheet-shell min-[900px]:grid min-[900px]:grid-cols-[14rem_minmax(0,1fr)] min-[1180px]:grid-cols-[14rem_minmax(0,1fr)_15rem]">
     <Rail />
     <div class="min-w-0 min-[900px]:col-start-2">
       <div class="print-hide flex justify-end px-6 pt-6 min-[900px]:px-8 min-[900px]:pt-8">
@@ -96,7 +102,7 @@ const faqSchema = gotchasSection?.entries?.some((e) => e.question)
       </div>
       <main id="main-content" class="px-6 pb-12 min-[900px]:px-8 min-[900px]:pb-16">
         <article>
-          <header class="cheatsheet-header mb-10 max-w-[68ch]">
+          <header class="cheatsheet-header mb-10 ledger-measure">
             <p class="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-accent mb-3">Cheat sheet</p>
             <h1 class="font-sans text-[clamp(1.75rem,3.4vw,2.5rem)] leading-[1.15] tracking-[-0.025em] font-[660] mb-4 text-ink dark:text-white">
               {spatieEventSourcingCheatsheet.title}

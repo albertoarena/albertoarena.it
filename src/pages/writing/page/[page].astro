@@ -32,7 +32,8 @@ export async function getStaticPaths() {
 const { pagePosts, seriesTotals, currentPage, totalPages } = Astro.props;
 ---
 
-<Layout title={`Writing, page ${currentPage} — ${siteConfig.title}`} noindex>
+<Layout title={`Writing, page ${currentPage} — ${siteConfig.title}`} noindex wide>
+  <div class="ledger-measure">
   <div class="flex items-baseline justify-between gap-4 mb-8">
     <h1 class="font-sans text-3xl font-bold text-ink dark:text-white">Writing</h1>
     <a href="/archive/" class="font-mono text-xs text-muted hover:text-accent transition-colors whitespace-nowrap">
@@ -47,4 +48,5 @@ const { pagePosts, seriesTotals, currentPage, totalPages } = Astro.props;
   </ul>
 
   <Pagination currentPage={currentPage} totalPages={totalPages} basePath="/writing" />
+  </div>
 </Layout>

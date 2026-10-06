@@ -175,12 +175,15 @@ const blogPostingSchema = {
     hreflangIt={hreflangIt}
 >
   <!--
-    Shell B, three column (redesign-plan.md §5): rail | article | aside.
-    Outer ceiling widened for the ledger identity (.impeccable/surfaces/site.md)
-    so ledger-measure's clamp (below) actually has room to grow on large screens
-    instead of sitting at the same width regardless of viewport.
+    Shell B, three column (redesign-plan.md §5): rail | article | aside. No
+    outer ceiling (ledger identity, .impeccable/surfaces/site.md): the grid
+    fills the viewport so ledger-measure's clamp below is the only width
+    governor left, same reasoning as Layout.astro's main. A capped, centered
+    outer shell on a very wide monitor left matching margins on both sides
+    of rail+article+aside as a group, on top of article's own clamp slack,
+    which is what read as "not filling the width."
   -->
-  <div class="post-shell min-[900px]:grid min-[900px]:grid-cols-[14rem_minmax(0,1fr)] min-[1180px]:grid-cols-[14rem_minmax(0,1fr)_15rem] max-w-[100rem] mx-auto">
+  <div class="post-shell min-[900px]:grid min-[900px]:grid-cols-[14rem_minmax(0,1fr)] min-[1180px]:grid-cols-[14rem_minmax(0,1fr)_15rem]">
     <Rail />
     <div class="post-shell-main min-w-0 min-[900px]:col-start-2">
       <div class="flex justify-end px-6 pt-6 min-[900px]:px-8 min-[900px]:pt-8">

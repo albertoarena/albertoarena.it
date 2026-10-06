@@ -17,7 +17,10 @@ const regularEntries = entries.filter((entry) => !entry.pinned);
 <Layout
   title="Series"
   description="Posts grouped into a deliberate reading order, where one exists."
+  wide
 >
+  <!-- Reading measure matches post pages (ledger identity, .impeccable/surfaces/site.md): this page was still on the old narrow Layout default. -->
+  <div class="ledger-measure">
   <h1 class="font-sans text-3xl font-bold text-ink dark:text-white mb-3">Series</h1>
   <p class="text-ink-2 mb-10 max-w-[60ch]">
     Most posts stand alone. These are the ones that don't: a deliberate order worth reading in sequence.
@@ -63,4 +66,5 @@ const regularEntries = entries.filter((entry) => !entry.pinned);
       </li>
     ))}
   </ul>
+  </div>
 </Layout>

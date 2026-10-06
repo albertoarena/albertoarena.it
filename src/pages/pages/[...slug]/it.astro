@@ -28,8 +28,9 @@ const italianPath = `/pages/${slug}/it/`;
     lang="it"
     hreflangEn={`${siteConfig.url}${englishPath}`}
     hreflangIt={`${siteConfig.url}${italianPath}`}
+    wide
 >
-    <article class="prose dark:prose-invert max-w-none">
+    <article class="prose dark:prose-invert ledger-measure">
         <h1 class="font-sans text-3xl font-bold text-ink dark:text-white mb-3">{page.data.title}</h1>
         <div class="meta font-mono text-xs text-muted border-t border-b border-rule py-3 mb-6 not-prose">
             <PostLangSwitch lang="it" englishUrl={englishPath} italianUrl={italianPath} />

@@ -24,7 +24,9 @@ const totalPages = Math.ceil(regularPosts.length / postsLimit);
 const pagePosts = regularPosts.slice(0, postsLimit);
 ---
 
-<Layout title={`Writing — ${siteConfig.title}`} description="Every post, newest first.">
+<Layout title={`Writing — ${siteConfig.title}`} description="Every post, newest first." wide>
+  <!-- Reading measure matches post pages (ledger identity, .impeccable/surfaces/site.md): this page was still on the old narrow Layout default. -->
+  <div class="ledger-measure">
   <div class="flex items-baseline justify-between gap-4 mb-8">
     <h1 class="font-sans text-3xl font-bold text-ink dark:text-white">Writing</h1>
     <a href="/archive/" class="font-mono text-xs text-muted hover:text-accent transition-colors whitespace-nowrap">
@@ -92,4 +94,5 @@ const pagePosts = regularPosts.slice(0, postsLimit);
   </ul>
 
   <Pagination currentPage={1} totalPages={totalPages} basePath="/writing" />
+  </div>
 </Layout>
