@@ -684,8 +684,20 @@ html[data-reading] .post-content pre {
   for the post article, its header, prose body, endnote aside, and pager,
   defined once so the clamp only needs updating here. Replaces the old
   fixed max-w-[68ch], which stayed the same width regardless of viewport.
+
+  Named `ledger-measure`, not `post-measure`: the obvious name broke
+  tests/reader-eligibility.test.ts on short posts. Mozilla Readability's
+  `_getClassWeight()` adds a positive score to any element whose className
+  matches /post|article|body|content|entry|main|page|...(etc)/i — putting
+  "post" in a shared class name on the endnote `<aside>` was enough to tip
+  it into Readability's sibling-merge heuristic on short articles, which
+  clones content in as plain `<div>`s *before* the later `_clean(...,
+  "aside")` pass that's supposed to strip it, so the usual protection never
+  ran. Avoid "post", "article", "content", "body", "entry", "main", "page",
+  "blog", "story", or "text" in any class name that ends up on or inside
+  endnote/aside-type elements on a post page.
 */
-.post-measure {
+.ledger-measure {
   max-width: clamp(44rem, 58vw, 58rem);
 }
 
