@@ -26,9 +26,18 @@
       >
         Decline
       </button>
+      <!--
+        bg-accent's dark-mode value (#5eb3ff, tuned for readable body text
+        and links) gives white text only 2.24:1 here, failing AA
+        (tests/accessibility.test.ts, caught 2026-10-06). --color-dark and
+        --color-white-cloud are deliberately NOT redefined per theme (same
+        reasoning as --color-code-label in global.css), so this pairing
+        stays a safe ~14:1 in both themes instead of needing a dark:
+        variant that could reintroduce the same bug.
+      -->
       <button
         id="accept-cookies"
-        class="px-4 py-2 text-sm bg-accent text-white hover:bg-accent/90 transition-colors"
+        class="px-4 py-2 text-sm bg-dark text-white-cloud hover:bg-dark/90 transition-colors"
         aria-label="Accept analytics cookies"
       >
         Accept analytics

@@ -32,14 +32,22 @@ const { title, description, image, article = false, lang = 'en', hreflangEn, hre
   noViewTransitions={noViewTransitions}
   noindex={noindex}
 >
-  <!-- Shell A, two column (redesign-plan.md §5): rail | main -->
-  <div class="min-[900px]:grid min-[900px]:grid-cols-[14rem_minmax(0,1fr)] max-w-[82rem] mx-auto">
+  <!--
+    Shell A, two column (redesign-plan.md §5): rail | main. No outer ceiling:
+    the grid column fills the viewport, and `main`'s own max-width is the only
+    governor, left-aligned (no mx-auto) so it hugs the rail and only ever
+    shows slack on the right, never a symmetric gap on both sides — the same
+    pattern PostLayout's article already uses. `wide` existed before the
+    ledger identity (.impeccable/surfaces/site.md) but nothing passed it;
+    index.astro is the first caller, for the homepage's two-lane grid.
+  -->
+  <div class="min-[900px]:grid min-[900px]:grid-cols-[14rem_minmax(0,1fr)]">
     <Rail hreflangEn={hreflangEn} hreflangIt={hreflangIt} />
     <div class="min-w-0 min-[900px]:col-start-2">
       <div class="flex justify-end px-6 pt-6 min-[900px]:px-8 min-[900px]:pt-8">
         <ThemeSwitcher />
       </div>
-      <main id="main-content" class:list={[wide ? 'max-w-5xl' : 'max-w-3xl', 'mx-auto px-6 pb-12 animate-fade-in']}>
+      <main id="main-content" class:list={[wide ? 'max-w-[88rem]' : 'max-w-3xl', 'px-6 pb-12 animate-fade-in']}>
         <slot />
       </main>
       <Footer />

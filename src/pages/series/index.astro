@@ -17,7 +17,10 @@ const regularEntries = entries.filter((entry) => !entry.pinned);
 <Layout
   title="Series"
   description="Posts grouped into a deliberate reading order, where one exists."
+  wide
 >
+  <!-- Reading measure matches post pages (ledger identity, .impeccable/surfaces/site.md): this page was still on the old narrow Layout default. -->
+  <div class="ledger-measure">
   <h1 class="font-sans text-3xl font-bold text-ink dark:text-white mb-3">Series</h1>
   <p class="text-ink-2 mb-10 max-w-[60ch]">
     Most posts stand alone. These are the ones that don't: a deliberate order worth reading in sequence.
@@ -26,9 +29,9 @@ const regularEntries = entries.filter((entry) => !entry.pinned);
   {pinnedEntries.length > 0 && (
     <div class="mb-8">
       <p class="font-mono text-xs uppercase tracking-widest text-muted mb-3">&#9733; Pinned</p>
-      <ul class="border-t border-rule">
+      <ul>
         {pinnedEntries.map((entry) => (
-          <li class="border-b border-rule py-5 bg-accent-soft px-3 -mx-3">
+          <li class="border-b border-b-rule py-5 border-l-2 border-l-accent pl-3">
             <a href={`/series/${entry.slug}/`} class="group flex items-baseline justify-between gap-4">
               <span>
                 <span class="font-sans text-lg font-semibold text-ink dark:text-white group-hover:text-accent transition-colors">
@@ -63,4 +66,5 @@ const regularEntries = entries.filter((entry) => !entry.pinned);
       </li>
     ))}
   </ul>
+  </div>
 </Layout>

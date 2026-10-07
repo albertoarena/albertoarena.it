@@ -6,7 +6,10 @@ import { cheatsheets } from '@/data/cheatsheets/registry';
 <Layout
   title="Cheat sheets"
   description="Dense, printable reference sheets for the tools and patterns I use."
+  wide
 >
+  <!-- Reading measure matches post pages (ledger identity, .impeccable/surfaces/site.md): this page was still on the old narrow Layout default. -->
+  <div class="ledger-measure">
   <h1 class="font-sans text-3xl font-bold text-ink dark:text-white mb-3">Cheat sheets</h1>
   <p class="text-ink-2 mb-10 max-w-[60ch]">
     Dense, printable references, free to read, PDF included. More coming as I write them.
@@ -27,4 +30,5 @@ import { cheatsheets } from '@/data/cheatsheets/registry';
       </li>
     ))}
   </ul>
+  </div>
 </Layout>

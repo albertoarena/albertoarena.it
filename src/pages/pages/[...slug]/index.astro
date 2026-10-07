@@ -38,8 +38,10 @@ const italianPath = `/pages/${slug}/it/`;
     lang="en"
     hreflangEn={hasItalian ? `${siteConfig.url}${englishPath}` : undefined}
     hreflangIt={hasItalian ? `${siteConfig.url}${italianPath}` : undefined}
+    wide
 >
-    <article class="prose dark:prose-invert max-w-none">
+    <!-- Reading measure matches post pages (ledger identity, .impeccable/surfaces/site.md): this page was still on the old narrow Layout default. -->
+    <article class="prose dark:prose-invert ledger-measure">
         <h1 class="font-sans text-3xl font-bold text-ink dark:text-white mb-3">{page.data.title}</h1>
         {hasItalian && (
             <div class="meta font-mono text-xs text-muted border-t border-b border-rule py-3 mb-6 not-prose">

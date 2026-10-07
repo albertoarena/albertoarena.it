@@ -40,11 +40,20 @@
     and still far quieter than the code text itself at 11.86:1.
   */
   --color-code-label: #9ca8b4;
-  --color-rule: #e2e8ee;
+  --color-rule: #c7d0da;
   --color-rule-soft: #eef2f6;
   --color-accent: #0b5fd0;
   --color-accent-soft: #eaf2fd;
   --color-ok: #1c7a4c;
+  /*
+    Ledger identity (.impeccable/surfaces/site.md): reserved for the
+    "Sources checked" stamp and FROM/TO routing marks only, never for
+    ordinary links or decoration. #991b1b on white is ~7.3:1 (Tailwind
+    red-800); the dark-mode value is lighter for the same reason every
+    other --color- token below gets its own dark variant instead of being
+    inverted mechanically.
+  */
+  --color-stamp: #991b1b;
 
   /*
     Override Tailwind v4's OKLCH default palette with HSL for the colours we
@@ -137,11 +146,12 @@
     --color-ink: #e7ecf2;
     --color-ink-2: #c2ccd8;
     --color-muted: #8b97a5;
-    --color-rule: #232c37;
+    --color-rule: #2d3847;
     --color-rule-soft: #1b222b;
     --color-accent: #5eb3ff;
     --color-accent-soft: #132437;
     --color-ok: #4fc98a;
+    --color-stamp: #f87171;
   }
 
   /* time element in dark mode */
@@ -172,9 +182,17 @@
     height: auto;
   }
 
-  /* Scrollbar */
+  /*
+    Scrollbar. `height` matters as much as `width` here: customizing
+    ::-webkit-scrollbar at all opts WebKit out of its default rendering, and
+    any dimension left unset collapses to 0 rather than falling back to the
+    browser default. Without an explicit height, every horizontally
+    scrolling element (code blocks, the doc-scroll cheat sheet rows) got an
+    invisible scrollbar in Chrome/Safari, scrollable with no visible
+    affordance that it was.
+  */
   ::-webkit-scrollbar {
-    @apply w-2;
+    @apply w-2 h-2;
   }
 
   ::-webkit-scrollbar-track {
@@ -552,10 +570,19 @@ html[data-reading] .discuss {
   own grid-template-columns (set by Tailwind) still reserves their tracks,
   which would leave two empty gutters either side of the article. Collapse
   to one column and narrow to the reading measure instead.
+
+  margin-inline: auto is required here now, not just inherited: the ledger
+  identity (.impeccable/surfaces/site.md) removed .post-shell's own mx-auto
+  in the base (non-reading) state on purpose, so the shell hugs the rail
+  instead of centering with a symmetric gap. Reading mode hides the rail
+  entirely, so centering has to be re-asserted for this state specifically
+  or the capped box just sits flush left (caught 2026-10-06, compared
+  against live).
 */
 html[data-reading] .post-shell {
   grid-template-columns: minmax(0, 1fr);
   max-width: 46rem;
+  margin-inline: auto;
 }
 
 /*
@@ -667,4 +694,100 @@ html[data-reading] .post-content pre {
   border-left-color: var(--color-accent);
   color: var(--color-accent);
   font-weight: 600;
+}
+
+/*
+  Ledger identity (.impeccable/surfaces/site.md). Shared reading measure
+  for the post article, its header, prose body, endnote aside, and pager,
+  defined once so the clamp only needs updating here. Replaces the old
+  fixed max-w-[68ch], which stayed the same width regardless of viewport.
+
+  Named `ledger-measure`, not `post-measure`: the obvious name broke
+  tests/reader-eligibility.test.ts on short posts. Mozilla Readability's
+  `_getClassWeight()` adds a positive score to any element whose className
+  matches /post|article|body|content|entry|main|page|...(etc)/i — putting
+  "post" in a shared class name on the endnote `<aside>` was enough to tip
+  it into Readability's sibling-merge heuristic on short articles, which
+  clones content in as plain `<div>`s *before* the later `_clean(...,
+  "aside")` pass that's supposed to strip it, so the usual protection never
+  ran. Avoid "post", "article", "content", "body", "entry", "main", "page",
+  "blog", "story", or "text" in any class name that ends up on or inside
+  endnote/aside-type elements on a post page.
+*/
+.ledger-measure {
+  max-width: clamp(44rem, 58vw, 58rem);
+}
+
+/*
+  Code blocks break out of the reading measure to the article's full width,
+  same width the cover image already gets by sitting outside .prose
+  entirely. A breakout grid, not a negative-margin/100vw trick, because
+  .post-content has no width cap of its own (ledger-measure is opted into
+  per-element, not inherited) — the grid's second track is simply whatever
+  space .prose's container already has up to the aside/viewport edge.
+  Higher specificity than .ledger-measure alone (two classes) so header,
+  endnote, and the pager, which use ledger-measure without .prose, are
+  untouched. Scroll remains the overflow strategy for any single line
+  still too long even at this width (feedback_code_block_wrap_vs_scroll).
+*/
+.prose.ledger-measure {
+  display: grid;
+  grid-template-columns: minmax(0, clamp(44rem, 58vw, 58rem)) 1fr;
+  max-width: none;
+}
+
+.prose.ledger-measure > * {
+  grid-column: 1;
+}
+
+.prose.ledger-measure > pre {
+  grid-column: 1 / -1;
+  max-width: 100%;
+}
+
+/*
+  A ledger page's edge index: a tick every 22px down the rail. Decorative
+  only (aria-hidden on the element that uses it); replaces a filled
+  background, which read as a dated dashboard sidebar in review.
+*/
+.rail-ticks {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--color-rule) 0,
+    var(--color-rule) 1px,
+    transparent 1px,
+    transparent 22px
+  );
+}
+
+/*
+  The "Sources checked" / "Shipped" stamp: a rotated, bordered mono badge,
+  never a filled background, so it reads as ink stamped on paper rather
+  than a UI chip. --color-stamp is reserved for exactly this and the
+  FROM/TO pager glyphs, nothing else.
+*/
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1.5px solid var(--color-stamp);
+  color: var(--color-stamp);
+  padding: 0.125rem 0.4375rem;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transform: rotate(-3deg);
+  border-radius: 2px;
+}
+
+/* Ledger row index column, used by the Truss "How it got here" list and every post-series box. */
+.ledger-idx {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  width: 1.4rem;
+  display: inline-block;
+  text-align: right;
+  margin-right: 0.625rem;
 }

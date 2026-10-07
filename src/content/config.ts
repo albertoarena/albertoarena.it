@@ -35,6 +35,15 @@ const postsCollection = defineCollection({
       siteConfig.discussionRepo (the blog's own repo).
     */
     discussion: z.string().optional(),
+    /*
+      Ledger identity's "Sources checked" stamp (impeccable surface brief,
+      .impeccable/surfaces/site.md). Set manually, only once the
+      quote-sourcing-standard pass on this specific post is actually done —
+      never inferred from link count. Unset or false renders no stamp,
+      which is correct for posts with nothing to source; nothing is
+      retroactively flagged on existing posts.
+    */
+    sourcesVerified: z.boolean().optional(),
   })
 });
 

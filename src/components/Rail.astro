@@ -22,7 +22,7 @@ const currentIsEnglish = hreflangEn ? new URL(hreflangEn).pathname === currentPa
 ---
 
 <aside
-  class="border-b min-[900px]:border-b-0 min-[900px]:border-r border-rule
+  class="relative border-b min-[900px]:border-b-0 min-[900px]:border-r border-rule
     flex flex-row min-[900px]:flex-col flex-wrap min-[900px]:flex-nowrap
     items-start gap-x-7 gap-y-3 min-[900px]:gap-y-6
     px-5 py-5 min-[900px]:pl-5 min-[900px]:pr-6 min-[900px]:pt-9 min-[900px]:pb-8
@@ -30,7 +30,9 @@ const currentIsEnglish = hreflangEn ? new URL(hreflangEn).pathname === currentPa
     min-[900px]:h-screen min-[900px]:w-56 min-[900px]:shrink-0
     print:hidden"
 >
-  <div class="w-full min-[900px]:w-auto">
+  <div class="rail-ticks hidden min-[900px]:block absolute left-0 top-0 bottom-0 w-1.5" aria-hidden="true"></div>
+
+  <div class="w-full min-[900px]:w-auto min-[900px]:border-b-[3px] min-[900px]:border-double min-[900px]:border-rule min-[900px]:pb-2.5">
     <a
       href="/"
       class="font-sans font-semibold text-base leading-tight tracking-tight text-ink dark:text-white hover:text-accent transition-colors"
@@ -77,9 +79,14 @@ const currentIsEnglish = hreflangEn ? new URL(hreflangEn).pathname === currentPa
 
   <div class="w-full min-[900px]:w-auto min-[900px]:mt-auto font-mono text-[0.6875rem] leading-relaxed text-muted flex flex-col gap-1">
     <span>Sicily, Italy</span>
-    <span class="flex items-center gap-1.5">
+    <span class="flex items-center gap-1.5 mb-1.5">
       <span class="inline-block w-[0.45rem] h-[0.45rem] rounded-full bg-ok shrink-0" aria-hidden="true"></span>
       Available for freelance
+    </span>
+    <span class="flex items-center gap-2.5 border-t border-rule pt-1.5">
+      <a href={`https://github.com/${siteConfig.author.contacts.github}`} target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">GitHub</a>
+      <a href={`https://x.com/${siteConfig.author.contacts.twitter}`} target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">X</a>
+      <a href={`https://www.linkedin.com/in/${siteConfig.author.contacts.linkedin}/`} target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">LinkedIn</a>
     </span>
     {hreflangEn && hreflangIt && (
       <span>

@@ -32,3 +32,11 @@ CLAUDE.local.md
 
 # local docs
 .docs/
+
+# impeccable: per-developer config override, and live-mode session/crash-recovery
+# state ("not project source", per reference/live.md) — .impeccable/config.json and
+# .impeccable/live/config.json are the shared, committed files
+.impeccable/config.local.json
+.impeccable/live/sessions/
+.impeccable/live/inject-journal.json
+.impeccable/live/roots.json

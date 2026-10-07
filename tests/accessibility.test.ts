@@ -101,8 +101,17 @@ interface PageResult {
   other: { id: string; impact: string; help: string; nodes: number }[];
 }
 
-async function auditPage(browser: Browser, axeSource: string, path: string): Promise<PageResult> {
+async function auditPage(browser: Browser, axeSource: string, path: string, colorScheme: 'light' | 'dark'): Promise<PageResult> {
   const page = await browser.newPage();
+  // Without this, the crawl only ever sees whatever prefers-color-scheme
+  // the launched browser happens to default to — normally light, so dark
+  // mode went unchecked in practice. That's exactly how the CookieConsent
+  // "Accept analytics" button's dark-mode contrast bug (bg-accent/white,
+  // 2.24:1) sat undetected until a run happened to land on a dark-mode
+  // system (2026-10-06). Explicit emulation makes both themes
+  // deterministic, not dependent on the time of day or OS the suite
+  // happens to run on.
+  await page.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: colorScheme }]);
   await page.setRequestInterception(true);
   page.on('request', (request) => {
     const url = request.url();
@@ -145,7 +154,7 @@ async function auditPage(browser: Browser, axeSource: string, path: string): Pro
     v.impact === 'serious' || v.impact === 'critical' || FORCE_FAIL_RULES.includes(v.id);
 
   return {
-    path,
+    path: `${path} [${colorScheme}]`,
     seriousOrCritical: violations
       .filter(isFailing)
       .map((v) => ({ id: v.id, impact: v.impact, help: v.help, nodes: v.nodes.length })),
@@ -176,15 +185,20 @@ describe('WCAG 2.1 AA — full-site axe-core crawl', () => {
     results = [];
     const errors: { path: string; error: unknown }[] = [];
     const CONCURRENCY = 8;
-    const queue = [...pages];
+    // Both color schemes, explicitly — see the comment on auditPage for
+    // why relying on the launched browser's default isn't enough.
+    const queue: { path: string; colorScheme: 'light' | 'dark' }[] = pages.flatMap((path) => [
+      { path, colorScheme: 'light' as const },
+      { path, colorScheme: 'dark' as const },
+    ]);
     await Promise.all(
       Array.from({ length: CONCURRENCY }, async () => {
-        let path: string | undefined;
-        while ((path = queue.shift())) {
+        let job: { path: string; colorScheme: 'light' | 'dark' } | undefined;
+        while ((job = queue.shift())) {
           try {
-            results.push(await auditPage(browser, axeSource, path));
+            results.push(await auditPage(browser, axeSource, job.path, job.colorScheme));
           } catch (error) {
-            errors.push({ path, error });
+            errors.push({ path: `${job.path} [${job.colorScheme}]`, error });
           }
         }
       }),

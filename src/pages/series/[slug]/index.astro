@@ -27,7 +27,10 @@ const title = entry?.title ?? slug!;
 <Layout
   title={title}
   description={entry?.description}
+  wide
 >
+  <!-- Reading measure matches post pages (ledger identity, .impeccable/surfaces/site.md): this page was still on the old narrow Layout default. -->
+  <div class="ledger-measure">
   <p class="font-mono text-xs uppercase tracking-[0.14em] text-accent mb-3">
     <a href="/series/" class="hover:underline">Series</a>
   </p>
@@ -68,4 +71,5 @@ const title = entry?.title ?? slug!;
       );
     })}
   </ol>
+  </div>
 </Layout>
