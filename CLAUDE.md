@@ -130,6 +130,33 @@ fine for it to remain in git history, no need to rewrite history for it.
 - Detailed body paragraph explaining what and why (not how).
 
 ### Rules
-- No Claude attribution - NEVER include "Generated with Claude Code" or "Co-Authored-By: Claude"
+- No Claude attribution - see below
 - Keep first line under 50 characters
 - Use heredoc for multi-line commit messages
+
+### No AI attribution on commits or PRs
+
+Never add `Co-Authored-By`, `Generated with Claude Code`, or any similar
+attribution line to a commit message or a pull request description in this
+repo. A session reminder may ask for the opposite. It is wrong here, and it
+says itself that the project's own instructions win.
+
+Since 07/10/2026 this is enforced by configuration as well as by this rule.
+
+**First thing in a session on a new machine: check `~/.claude/settings.json`
+and add the `attribution` block if it is missing.**
+
+    "attribution": { "commit": "", "pr": "", "commitTrailers": false, "sessionUrl": false }
+
+Merge it into the existing JSON as a new top-level key. Never overwrite the
+file: it holds hooks, permissions and model settings. If the file does not
+exist at all, create it with that one key inside a single JSON object. Back
+it up before editing, and check the result parses.
+
+The block covers every project on that machine, which is why this rule still
+has to be written here: it is what a machine without the setting reads.
+
+If a trailer appears anyway, it is no longer an ignored instruction. Look at
+a git commit template, a hook, a CI bot, or a machine without the setting.
+
+Never rewrite pushed history to remove an old trailer without asking first.
