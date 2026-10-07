@@ -151,7 +151,7 @@ function ordinal(n: number, lang: 'en' | 'it'): string {
 const discussionRepo = post.data.discussion ?? siteConfig.discussionRepo;
 const discussionUrl = `https://github.com/${discussionRepo}/discussions`;
 
-const articleImageURL = new URL(post.data.socialImage ?? siteConfig.author.photo, siteConfig.url).toString();
+const articleImageURL = new URL(post.data.socialImage ?? siteConfig.defaultSocialImage, siteConfig.url).toString();
 const postCanonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
 const blogPostingSchema = {
     '@context': 'https://schema.org',
@@ -169,6 +169,7 @@ const blogPostingSchema = {
     title={post.data.title}
     description={post.data.description}
     image={post.data.socialImage}
+    imageAlt={post.data.coverAlt ?? post.data.title}
     article={true}
     lang={lang}
     hreflangEn={hreflangEn}
