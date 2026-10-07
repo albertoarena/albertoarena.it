@@ -56,7 +56,14 @@ export const siteConfig = {
   ],
   mailerlite: {
     accountId: '2474575',
-    formId: 'HjBuvq',
+    // The numeric form ID the real <form action> submits to, not the
+    // short "HjBuvq" slug shown in MailerLite's dashboard URL / the old
+    // ml-embedded widget's data-form attribute — that slug only resolves
+    // a form's template via a separate lookup call the widget made before
+    // rendering (assets.mailerlite.com/jsonp/<account>/forms/HjBuvq),
+    // which NewsletterSignup.astro no longer does. Read directly off the
+    // real rendered form's action attribute on /subscribe/, 2026-10-07.
+    formId: '191438151619708478',
   },
   author: {
     name: 'Alberto Arena',

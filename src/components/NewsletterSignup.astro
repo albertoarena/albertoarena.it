@@ -1,65 +1,152 @@
 ---
+/*
+  Owned replacement for the MailerLite "universal.js" embed widget
+  (feedback from Alberto, 2026-10-07): that widget pulled in jQuery 3.7.1,
+  a jQuery inputmask plugin, webforms.min.js, and Google reCAPTCHA for a
+  single email field, rendered light-mode-only styles we couldn't touch,
+  and sometimes failed to render at all after a View Transitions page
+  swap (an external async script racing the widget's own render queue
+  against a freshly-appeared, non-persisted `.ml-embedded` target).
+
+  This POSTs straight to MailerLite's own public form-submission endpoint
+  (reverse-engineered from the widget's injected form: no API key, no
+  server, CORS-open, verified live against this account 2026-10-07) —
+  same account/form IDs already public in site config, nothing secret.
+  Spam mitigation is a honeypot field instead of reCAPTCHA, deliberately:
+  no added third-party script, double opt-in (if enabled on the account)
+  is the real backstop either way.
+*/
 import { siteConfig } from '@/utils/config';
 
 const { accountId, formId } = siteConfig.mailerlite;
 ---
 
-<div data-form={formId} class="ml-embedded newsletter-signup-target"></div>
+<form
+  class="newsletter-form relative"
+  data-account={accountId}
+  data-form={formId}
+  novalidate
+>
+  <div class="flex flex-col min-[480px]:flex-row gap-3">
+    <label for="newsletter-email" class="sr-only">Email</label>
+    <input
+      id="newsletter-email"
+      type="email"
+      name="email"
+      required
+      autocomplete="email"
+      placeholder="you@example.com"
+      data-lpignore="true"
+      data-1p-ignore="true"
+      data-bwignore="true"
+      data-protonpass-ignore="true"
+      class="flex-1 min-w-0 max-w-sm border border-rule bg-paper px-3 py-2 font-mono text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent"
+    />
+    <!--
+      Honeypot: off-screen, not display:none (some bots skip hidden
+      fields but still fill in anything with a plausible name), inert to
+      a real visitor via aria-hidden + tabindex=-1 + autocomplete=off.
+    -->
+    <div class="absolute w-px h-px -left-[9999px] overflow-hidden" aria-hidden="true">
+      <label for="newsletter-company">Leave this field empty</label>
+      <input id="newsletter-company" type="text" name="company" tabindex="-1" autocomplete="off" />
+    </div>
+    <!--
+      bg-accent's dark-mode value (#5eb3ff, tuned for readable body text
+      and links) gives white button text only 2.24:1, failing AA — same
+      bug and same fix as CookieConsent's "Accept analytics" button
+      (commit cec304ac). --color-dark/--color-white-cloud aren't redefined
+      per theme, so this pairing stays a safe ~14:1 in both themes without
+      a dark: variant that could reintroduce the same bug.
+    -->
+    <button
+      type="submit"
+      class="border border-dark bg-dark text-white-cloud font-mono text-sm uppercase tracking-wide px-5 py-2 whitespace-nowrap hover:bg-dark/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+    >
+      Subscribe
+    </button>
+  </div>
+  <p class="newsletter-status mt-2 font-mono text-xs min-h-[1em]" role="status" aria-live="polite"></p>
+  <p class="mt-2 font-mono text-xs text-muted">
+    Unsubscribe anytime. See the <a href="/pages/privacy-policy/" class="text-accent underline">privacy policy</a>.
+  </p>
+</form>
 
-<script is:inline define:vars={{ accountId }}>
-  function loadMailerLite() {
-    (function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[])
-    .push(arguments);},l=d.createElement(e),l.async=1,l.src=u,
-    n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})
-    (window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');
-    ml('account', accountId);
+<script is:inline>
+  function mlSubscribeUrl(account, form) {
+    return 'https://assets.mailerlite.com/jsonp/' + encodeURIComponent(account) + '/forms/' + encodeURIComponent(form) + '/subscribe';
   }
 
-  function initNewsletterSignup() {
-    var target = document.querySelector('.newsletter-signup-target');
-    // Already wired up: either a fresh page's target we've already handled,
-    // or (post-to-post navigation) the same transition:persist node carried
-    // over from the previous page, already loaded or already being watched.
-    if (!target || target.dataset.mlObserved === '1') return;
-    target.dataset.mlObserved = '1';
-
-    // Plain scroll-position polling, not IntersectionObserver: the box is
-    // transition:persist (home page and every post share one DOM node), so
-    // an observer created on first load keeps "watching" that node forever,
-    // even after it's carried into a page it never ran its own init on —
-    // fine on its own, except a same-page TOC jump rides scroll-behavior:
-    // smooth, and an animated scroll can move the target through the
-    // viewport fast enough to land between two observer check frames,
-    // which then never reports isIntersecting at all (same failure mode
-    // already hit and fixed this way for the TOC active-heading tracking).
-    // A rAF-throttled getBoundingClientRect check against every 'scroll'
-    // event can't miss a frame like that, and rides along with the persisted
-    // node onto whichever page it ends up on.
-    var ticking = false;
-    function checkPosition() {
-      ticking = false;
-      var rect = target.getBoundingClientRect();
-      if (rect.top < window.innerHeight + 600 && rect.bottom > -600) {
-        window.removeEventListener('scroll', onScroll);
-        loadMailerLite();
-      }
+  function setStatus(statusEl, text, kind) {
+    statusEl.textContent = text;
+    statusEl.classList.remove('text-muted', 'text-ok', 'text-red-700', 'dark:text-red-400');
+    if (kind === 'success') {
+      statusEl.classList.add('text-ok');
+    } else if (kind === 'error') {
+      statusEl.classList.add('text-red-700', 'dark:text-red-400');
+    } else {
+      statusEl.classList.add('text-muted');
     }
-    function onScroll() {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(checkPosition);
-      }
-    }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    checkPosition();
   }
 
-  // Astro's View Transitions swap doesn't re-execute an inline script whose
-  // content is byte-identical to one that already ran elsewhere in the
-  // session (this component renders the same script on every post and on
-  // /subscribe), so a target introduced by a client-side navigation from a
-  // page with no newsletter box of its own (e.g. home -> a post) would
-  // otherwise never get observed.
-  initNewsletterSignup();
-  document.addEventListener('astro:after-swap', initNewsletterSignup);
+  async function handleNewsletterSubmit(event) {
+    event.preventDefault();
+    var form = event.currentTarget;
+    var emailInput = form.querySelector('input[name="email"]');
+    var honeypot = form.querySelector('input[name="company"]');
+    var button = form.querySelector('button[type="submit"]');
+    var status = form.querySelector('.newsletter-status');
+
+    // Bot filled the honeypot: drop silently, no error shown (don't tip it off).
+    if (honeypot.value) return;
+
+    var email = emailInput.value.trim();
+    if (!email) return;
+
+    button.disabled = true;
+    setStatus(status, 'Subscribing…', 'pending');
+
+    var body = new URLSearchParams();
+    body.set('fields[email]', email);
+    body.set('ml-submit', '1');
+    body.set('anticsrf', 'true');
+
+    try {
+      var res = await fetch(mlSubscribeUrl(form.dataset.account, form.dataset.form), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString(),
+      });
+      var data = await res.json();
+      if (data && data.success) {
+        form.reset();
+        setStatus(status, "Thanks — you're on the list.", 'success');
+      } else {
+        var fieldErrors = data && data.errors && data.errors.fields;
+        var message = (fieldErrors && fieldErrors.email && fieldErrors.email[0]) || 'Something went wrong. Try again.';
+        setStatus(status, message, 'error');
+      }
+    } catch (err) {
+      setStatus(status, 'Network error — try again.', 'error');
+    } finally {
+      button.disabled = false;
+    }
+  }
+
+  function initNewsletterForms() {
+    var forms = document.querySelectorAll('.newsletter-form:not([data-ml-bound])');
+    forms.forEach(function (form) {
+      form.dataset.mlBound = '1';
+      form.addEventListener('submit', handleNewsletterSubmit);
+    });
+  }
+
+  // Same reasoning as the rest of this site's inline scripts: Astro's View
+  // Transitions swap doesn't re-execute a byte-identical inline script, so
+  // a form introduced by a client-side navigation needs an explicit
+  // astro:after-swap re-scan. Unlike the previous MailerLite embed, there's
+  // no external script load to race here — this form is interactive the
+  // instant its markup is in the DOM.
+  initNewsletterForms();
+  document.addEventListener('astro:after-swap', initNewsletterForms);
 </script>

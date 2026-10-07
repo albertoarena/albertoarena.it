@@ -14,18 +14,22 @@ const PORT = 4322;
 const DIST_DIR = join(process.cwd(), 'dist');
 const AXE_SOURCE_PATH = join(process.cwd(), 'node_modules', 'axe-core', 'axe.min.js');
 
-// Third-party embeds (Disqus comments, GTM, the MailerLite signup widget)
-// are outside this repo's control and would make the crawl slow, flaky,
-// and dependent on network access in CI. Block them so every page is
-// tested against what this codebase actually renders. Known gap this
-// currently hides: the MailerLite "Subscribe" button's white-on-#5c92ff
-// styling is ~2.99:1 (needs 4.5:1) — set in MailerLite's own dashboard
-// theme editor, not fixable here. See docs/plans/wcag-aa-accessibility-automation.md.
+// Third-party embeds (Disqus comments, GTM) are outside this repo's control
+// and would make the crawl slow, flaky, and dependent on network access in
+// CI. Block them so every page is tested against what this codebase
+// actually renders. See docs/plans/wcag-aa-accessibility-automation.md.
+//
+// assets.mailerlite.com used to be here too, for the old MailerLite
+// "universal.js" embed widget (whose own white-on-#5c92ff Subscribe button
+// styling, ~2.99:1, was a known gap this crawl couldn't see or fix). That
+// widget is gone (2026-10-07, NewsletterSignup.astro now POSTs to
+// MailerLite's public subscribe endpoint directly, no embed script), and
+// the crawl never submits a form during a passive page load, so there's
+// nothing left for this entry to block.
 const BLOCKED_HOST_FRAGMENTS = [
   'disqus.com',
   'googletagmanager.com',
   'google-analytics.com',
-  'assets.mailerlite.com',
 ];
 
 const MIME_TYPES: Record<string, string> = {
