@@ -5,7 +5,7 @@ export const siteConfig = {
   copyright: '© All rights reserved.',
   gtmContainerId: 'GTM-PDQBJBL3',
   googleAnalyticsId: 'G-PJGZWDSK4K', // managed via GTM, kept for reference
-  postsLimit: 6,
+  postsLimit: 8,
   /*
     Fallback "open a discussion" target (redesign-plan.md §11) for posts with
     no per-post `discussion` field. Discussions enabled 2026-08-09 specifically
