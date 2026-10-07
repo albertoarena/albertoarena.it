@@ -26,8 +26,8 @@ const formattedDate = post.data.date.toLocaleDateString('en-US', {
 ---
 
 <li class:list={[
-  'grid grid-cols-1 min-[640px]:grid-cols-[6.5rem_minmax(0,1fr)_auto] gap-x-4 gap-y-0.5 items-baseline py-3 border-b border-rule-soft',
-  pinned && 'bg-accent-soft px-3 -mx-3',
+  'grid grid-cols-1 min-[640px]:grid-cols-[6.5rem_minmax(0,1fr)_auto] gap-x-4 gap-y-0.5 items-baseline py-3 border-b border-b-rule-soft',
+  pinned && 'border-l-2 border-l-accent pl-3',
 ]}>
   <time datetime={post.data.date.toISOString()} class="font-mono text-xs text-muted whitespace-nowrap">
     {formattedDate}

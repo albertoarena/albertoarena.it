@@ -31,7 +31,7 @@ const regularEntries = entries.filter((entry) => !entry.pinned);
       <p class="font-mono text-xs uppercase tracking-widest text-muted mb-3">&#9733; Pinned</p>
       <ul>
         {pinnedEntries.map((entry) => (
-          <li class="border-b border-rule py-5 bg-accent-soft px-3 -mx-3">
+          <li class="border-b border-b-rule py-5 border-l-2 border-l-accent pl-3">
             <a href={`/series/${entry.slug}/`} class="group flex items-baseline justify-between gap-4">
               <span>
                 <span class="font-sans text-lg font-semibold text-ink dark:text-white group-hover:text-accent transition-colors">

@@ -49,7 +49,7 @@ const pagePosts = regularPosts.slice(0, postsLimit);
             day: 'numeric',
           });
           return (
-            <li class="flex gap-4 items-center py-3 border-b border-rule-soft bg-accent-soft px-3 -mx-3">
+            <li class="flex gap-4 items-center py-3 border-b border-b-rule-soft border-l-2 border-l-accent pl-3">
               <a href={`/posts/${slug}/`} class="shrink-0">
                 {cover ? (
                   <img
