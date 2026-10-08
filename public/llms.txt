@@ -11,6 +11,7 @@ Alberto Arena is a Senior Software Engineer based in Sicily, Italy, with a backg
 
 ## Posts
 
+- [The Last Man Who Could Read Code: A Short Story](https://albertoarena.it/posts/the-last-man-who-could-read-code/): A short tale: the model everybody depends on stops answering, and nobody left alive knows how to read or write code. Is it really that far from where we are now?
 - [The Sound of Silence: What Your AI Agent Does Not Tell You](https://albertoarena.it/posts/the-sound-of-silence/): Long AI conversations fail quietly. The agent drops part of what you asked and never says so. Here is why, and why a new chat is the fix.
 - [Prompt Injection Is a Laravel Problem Now](https://albertoarena.it/posts/prompt-injection-is-a-laravel-problem-now/): Laravel shipped an official AI SDK, and it comes with tool calling. An unscoped tool can hand a prompt-injected model your app's own database credentials.
 - [The Effort Was the Filter](https://albertoarena.it/posts/the-effort-was-the-filter/): AI didn't make building cheaper. It removed the question of whether building was worth it, and the question is the one part of the job that never got faster.
