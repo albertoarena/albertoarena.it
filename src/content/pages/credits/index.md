@@ -61,6 +61,7 @@ Cover images for some posts are sourced from **[Unsplash](https://unsplash.com)*
 | [Three ways to build a Laravel ERD, and what each one costs](/posts/three-ways-to-build-a-laravel-erd/) | Railway tracks converging at a switch, seen directly from above | [Mihai Lazăr](https://unsplash.com/@mihai14) on Unsplash |
 | [ER diagrams for Filament, without a single row of customer data](/posts/erd-for-filament-without-customer-data/) | A blue architectural cross-section blueprint of a multi-storey building | [Amsterdam City Archives](https://unsplash.com/@amsterdamcityarchives) on Unsplash |
 | [The Sound of Silence: What Your AI Agent Does Not Tell You](/posts/the-sound-of-silence/) | A dirt path fading into fog through a dense pine forest | [Nikita](https://unsplash.com/@kulikovniki) on Unsplash |
+| [The Last Man Who Could Read Code: A Short Story](/posts/the-last-man-who-could-read-code/) | A small wooden cabin glowing with light inside a bare, dark winter forest at dusk | [Andrew Ridley](https://unsplash.com/@aridley88) on Unsplash |
 
 ## Diagrams
 
