@@ -2,6 +2,16 @@ export const siteConfig = {
   title: 'A blog by Alberto Arena',
   url: 'https://albertoarena.it',
   subtitle: 'Senior Software Engineer.',
+  /*
+    Default og:image/twitter:image for the homepage and any other page that
+    doesn't set its own socialImage (post covers always do). Deliberately a
+    separate field from author.photo: that one is a 240x240 square avatar
+    for the Person JSON-LD image, while this one needs to be 1200x630
+    landscape. One field serving both aspect ratios was exactly the bug
+    (see .impeccable critique snapshot, 2026-10-07): the avatar got
+    force-cropped into the OG slot by each platform's own crop heuristic.
+  */
+  defaultSocialImage: '/social-default.jpg',
   copyright: '© All rights reserved.',
   gtmContainerId: 'GTM-PDQBJBL3',
   googleAnalyticsId: 'G-PJGZWDSK4K', // managed via GTM, kept for reference

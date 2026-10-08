@@ -9,6 +9,7 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  imageAlt?: string;
   article?: boolean;
   lang?: 'en' | 'it';
   hreflangEn?: string;
@@ -18,13 +19,14 @@ interface Props {
   wide?: boolean;
 }
 
-const { title, description, image, article = false, lang = 'en', hreflangEn, hreflangIt, noViewTransitions = false, noindex = false, wide = false } = Astro.props;
+const { title, description, image, imageAlt, article = false, lang = 'en', hreflangEn, hreflangIt, noViewTransitions = false, noindex = false, wide = false } = Astro.props;
 ---
 
 <BaseLayout
   title={title}
   description={description}
   image={image}
+  imageAlt={imageAlt}
   article={article}
   lang={lang}
   hreflangEn={hreflangEn}
