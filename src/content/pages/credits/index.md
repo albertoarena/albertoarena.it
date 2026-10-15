@@ -7,18 +7,18 @@ This page acknowledges the third-party tools, services, and assets used to build
 
 ## Framework & build tools
 
-- **[Astro](https://astro.build)** — static site generator
-- **[Tailwind CSS](https://tailwindcss.com)** — utility-first CSS framework
-- **[@tailwindcss/typography](https://github.com/tailwindlabs/tailwindcss-typography)** — prose styling plugin
+- **[Astro](https://astro.build)**: static site generator
+- **[Tailwind CSS](https://tailwindcss.com)**: utility-first CSS framework
+- **[@tailwindcss/typography](https://github.com/tailwindlabs/tailwindcss-typography)**: prose styling plugin
 
 ## Analytics & tag management
 
-- **[Google Analytics 4](https://marketingplatform.google.com/about/analytics/)** — privacy-respecting analytics, loaded only with consent
-- **[Google Tag Manager](https://marketingplatform.google.com/about/tag-manager/)** — tag management
+- **[Google Analytics 4](https://marketingplatform.google.com/about/analytics/)**: privacy-respecting analytics, loaded only with consent
+- **[Google Tag Manager](https://marketingplatform.google.com/about/tag-manager/)**: tag management
 
 ## Comments
 
-- **[Disqus](https://disqus.com)** — comment system
+- **[Disqus](https://disqus.com)**: comment system
 
 ## Photography
 

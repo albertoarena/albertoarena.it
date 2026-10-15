@@ -100,13 +100,13 @@ Use these import aliases (configured in tsconfig.json):
 ## Deployment triggers on push to master
 
 Pushing to `master` triggers the production deploy (CI builds and publishes
-to the `deploy` branch; the host pulls it within ~5 minutes — see
+to the `deploy` branch; the host pulls it within ~5 minutes, see
 `DEPLOYMENT.md`). There is no staging environment: every push to `master`
 is live. Always get explicit user approval before pushing to `master`,
-including for docs-only or seemingly low-risk changes — don't push
+including for docs-only or seemingly low-risk changes, don't push
 unprompted just because a change is finished and looks safe.
 
-Ask every time, right before running `git push` against `master` — never
+Ask every time, right before running `git push` against `master`, never
 infer approval from an instruction about the change itself (e.g. "fix it",
 "just do it") or from approval given earlier in the conversation for a
 different push. Confirming the edit is not confirming the push.
@@ -115,12 +115,12 @@ different push. Confirming the edit is not confirming the push.
 
 This repo is public. Never commit server/account IPs, cPanel usernames,
 hosting-account-identifying domains, credentials, or similar infra details
-to any tracked file (including `docs/plans/`) — not even in a plan doc's
+to any tracked file (including `docs/plans/`), not even in a plan doc's
 "here's what I found" notes. Use the gitignored `.docs/` folder instead for
 anything confidential tied to this site's engineering (e.g.
 `.docs/server-pull-deployment-infra.md`), and reference it generically
 ("see `.docs/` for the actual IP") from the public docs. If something
-confidential slips into a commit, remove it from the current file — it's
+confidential slips into a commit, remove it from the current file, it's
 fine for it to remain in git history, no need to rewrite history for it.
 
 ## Git Commit Conventions
