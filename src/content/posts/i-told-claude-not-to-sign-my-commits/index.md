@@ -79,7 +79,7 @@ ones that describe what happened to me, rather than attribution bugs in general:
 | [83813](https://github.com/anthropics/claude-code/issues/83813) | 4 Aug | open | Attribution is opt-out advertising, and user-level "no attribution" instructions lose to the system prompt |
 | [91861](https://github.com/anthropics/claude-code/issues/91861) | 3 Sep | open | Injected system-reminder overrode explicit user no-attribution preference; not flagged before acting |
 | [92169](https://github.com/anthropics/claude-code/issues/92169) | 4 Sep | open | Attribution session reminder overrides the user's explicit no-attribution preference |
-| [92893](https://github.com/anthropics/claude-code/issues/92893) | 8 Sep | open | Injected commit/PR attribution instruction overrides the user's CLAUDE.md trailer rule — attribution should be defined by the project, not the CLI |
+| [92893](https://github.com/anthropics/claude-code/issues/92893) | 8 Sep | open | Injected commit/PR attribution instruction overrides the user's CLAUDE.md trailer rule: attribution should be defined by the project, not the CLI |
 | [93077](https://github.com/anthropics/claude-code/issues/93077) | 9 Sep | open | Runtime system-reminder claims to supersede CLAUDE.md project instructions |
 | [94325](https://github.com/anthropics/claude-code/issues/94325) | 14 Sep | open | Assistant emits forbidden attribution trailer despite CLAUDE.md rule against it |
 | [95980](https://github.com/anthropics/claude-code/issues/95980) | 22 Sep | closed 22 Sep by its author | System prompt attribution (Co-Authored-By) overrides user CLAUDE.md rules |

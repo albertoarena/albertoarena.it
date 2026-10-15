@@ -1,12 +1,12 @@
 # albertoarena.it
 
-Personal blog and portfolio — live at **[albertoarena.it](https://albertoarena.it)**.
+Personal blog and portfolio, live at **[albertoarena.it](https://albertoarena.it)**.
 
 ## Stack
 
-- [Astro 5](https://astro.build) — static site generator with View Transitions and Content Layer
-- [Tailwind CSS v4](https://tailwindcss.com) — utility-first CSS, configured entirely in CSS via `@theme`
-- [@tailwindcss/typography](https://tailwindcss.com/docs/typography-plugin) — prose styling for Markdown content
+- [Astro 5](https://astro.build): static site generator with View Transitions and Content Layer
+- [Tailwind CSS v4](https://tailwindcss.com): utility-first CSS, configured entirely in CSS via `@theme`
+- [@tailwindcss/typography](https://tailwindcss.com/docs/typography-plugin): prose styling for Markdown content
 - Markdown / MDX content collections
 
 ## Development
@@ -25,12 +25,12 @@ src/
 ├── components/       # Astro components (Sidebar, PostCard, Feed, etc.)
 ├── content/
 │   ├── config.ts     # Content Layer collection definitions
-│   ├── posts/        # Blog posts — one directory per post
+│   ├── posts/        # Blog posts, one directory per post
 │   └── pages/        # Static pages (about, credits, privacy)
 ├── layouts/          # BaseLayout, PostLayout
 ├── pages/            # File-based routes
 ├── styles/
-│   └── global.css    # Tailwind v4 entry point — @theme tokens, dark mode, prose
+│   └── global.css    # Tailwind v4 entry point, @theme tokens, dark mode, prose
 └── utils/            # Config, helpers, slug utilities
 ```
 
@@ -49,7 +49,7 @@ Posts live in `src/content/posts/[slug]/index.md`. Frontmatter fields:
 | `description` | no | Used in post card and OG meta |
 | `socialImage` | no | OG image path (1200×630 px, < 1 MB) |
 | `lang` | no | `"en"` (default) or `"it"` |
-| `translationOf` | no | English post slug — links Italian translations |
+| `translationOf` | no | English post slug, links Italian translations |
 
 ### Images
 
