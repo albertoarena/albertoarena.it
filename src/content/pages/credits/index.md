@@ -62,6 +62,7 @@ Cover images for some posts are sourced from **[Unsplash](https://unsplash.com)*
 | [ER diagrams for Filament, without a single row of customer data](/posts/erd-for-filament-without-customer-data/) | A blue architectural cross-section blueprint of a multi-storey building | [Amsterdam City Archives](https://unsplash.com/@amsterdamcityarchives) on Unsplash |
 | [The Sound of Silence: What Your AI Agent Does Not Tell You](/posts/the-sound-of-silence/) | A dirt path fading into fog through a dense pine forest | [Nikita](https://unsplash.com/@kulikovniki) on Unsplash |
 | [The Last Man Who Could Read Code: A Short Story](/posts/the-last-man-who-could-read-code/) | A small wooden cabin glowing with light inside a bare, dark winter forest at dusk | [Andrew Ridley](https://unsplash.com/@aridley88) on Unsplash |
+| [What I Learned From My First Claude Code Cloud Sessions](/posts/what-i-learned-from-my-first-claude-code-cloud-sessions/) | The sun setting on the horizon above a wide sea of clouds | [Photoholgic](https://unsplash.com/@photoholgic) on Unsplash |
 
 ## Diagrams
 
