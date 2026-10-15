@@ -57,6 +57,17 @@ export const projects: Project[] = [
     year: '2026',
   },
   {
+    name: 'Sudo Play',
+    description:
+      'Small macOS menu bar app that picks today\'s Spotify playlist for you, based on the genre you pick and your developer mood, from Friday Deploy to Debugging. The pick is the same all day for everyone. No accounts, no analytics, no tracking.',
+    tech: ['NativePHP', 'Laravel', 'PHP', 'Vue', 'macOS'],
+    github: 'https://github.com/albertoarena/sudo-play',
+    url: 'https://sudoplay.dev/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=projects',
+    status: 'active',
+    featured: true,
+    year: '2026',
+  },
+  {
     name: 'Try Jev',
     description:
       'Interactive demo of TypeSafe AI\'s Jev: build your own yes/no, pick-one, and rating conditions and see the calibrated probability behind each answer, distribution and all, not just the label.',
