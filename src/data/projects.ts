@@ -46,6 +46,17 @@ export const projects: Project[] = [
     packagist: 'albertoarena/filament-truss',
   },
   {
+    name: 'Homebrew Truss',
+    description:
+      'Homebrew tap for the standalone Truss binary: one brew install puts the schema viewer, exporter, doctor and two-database diff on your PATH, with no Laravel app needed. The formula moves to every new Truss release through brew upgrade. Structure only, never data.',
+    tech: ['Homebrew', 'PHP', 'CLI', 'Database'],
+    github: 'https://github.com/albertoarena/homebrew-truss',
+    url: 'https://trussphp.com/binary/installation/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=projects',
+    status: 'active',
+    featured: true,
+    year: '2026',
+  },
+  {
     name: 'Cogway',
     description:
       'Interactive explainers for Laravel and PHP. Each page turns one hard-to-picture mechanism, queue retries, eager loading, nested transactions, into a state machine you can drive, scrub and break. Twelve of them, eight Laravel and four core PHP. Static site, no account, nothing running on a server.',
