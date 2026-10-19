@@ -79,6 +79,17 @@ export const projects: Project[] = [
     year: '2026',
   },
   {
+    name: 'PHP Lives',
+    description:
+      'A manifest of real things people shipped with PHP in the last 6 months. Each entry links to its own source and shows the date it shipped.',
+    tech: ['PHP', 'Community'],
+    github: 'https://github.com/albertoarena/phplives.dev',
+    url: 'https://phplives.dev/',
+    status: 'active',
+    featured: true,
+    year: '2026',
+  },
+  {
     name: 'Try Jev',
     description:
       'Interactive demo of TypeSafe AI\'s Jev: build your own yes/no, pick-one, and rating conditions and see the calibrated probability behind each answer, distribution and all, not just the label.',

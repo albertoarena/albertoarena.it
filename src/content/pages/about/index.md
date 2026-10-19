@@ -31,7 +31,7 @@ I'm particularly drawn to projects where technical rigor meets innovation, where
 Available remotely. Open to freelance projects, long-term collaborations, and consulting engagements.
 
 You can follow me on [X](https://x.com/alberto_arena), or view
-my [LinkedIn profile](https://www.linkedin.com/in/alberto-arena-ba44a624/), or
+my [LinkedIn profile](https://www.linkedin.com/in/alberto-arena-ba44a624/), or find me on [dev-null](https://dev-null.sh/@albertoarena), or
 reach out directly at [hello@albertoarena.it](mailto:hello@albertoarena.it).
 
 ## Background & interests
@@ -56,6 +56,7 @@ Outside of work I read a lot, play guitar, dabble in constructed languages, and 
 
 The full list of open-source tools and professional work is on [the projects page](/projects/); a shorter version also lives on [my LinkedIn profile](https://www.linkedin.com/in/alberto-arena-ba44a624/details/projects/).
 
-[Truss](https://trussphp.com/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=about) is a live ER diagram (ERD) viewer for Laravel, reading your app's actual database schema instead of migration files. **Structure only, never data.**
-
-[Cogway](https://cogway.dev/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=about) is a set of interactive explainers for Laravel and PHP: pages you drive instead of read, for mechanisms like nested transactions and eager loading.
+- [Truss](https://trussphp.com/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=about): a live ER diagram (ERD) viewer for Laravel, reading your app's actual database schema instead of migration files. **Structure only, never data.**
+- [Cogway](https://cogway.dev/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=about): a set of interactive explainers for Laravel and PHP, with pages you drive instead of read, for mechanisms like nested transactions and eager loading.
+- [Sudo Play](https://sudoplay.dev/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=about): a small macOS menu bar app that picks today's Spotify playlist for the genre you like and the mood you are coding in.
+- [PHP Lives](https://phplives.dev/): a manifest of real things people shipped with PHP in the last 6 months, each linking to its own source with the date it shipped.

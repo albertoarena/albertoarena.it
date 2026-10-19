@@ -83,10 +83,11 @@ const currentIsEnglish = hreflangEn ? new URL(hreflangEn).pathname === currentPa
       <span class="inline-block w-[0.45rem] h-[0.45rem] rounded-full bg-ok shrink-0" aria-hidden="true"></span>
       Available for freelance
     </span>
-    <span class="flex items-center gap-2.5 border-t border-rule pt-1.5">
-      <a href={`https://github.com/${siteConfig.author.contacts.github}`} target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">GitHub</a>
-      <a href={`https://x.com/${siteConfig.author.contacts.twitter}`} target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">X</a>
-      <a href={`https://www.linkedin.com/in/${siteConfig.author.contacts.linkedin}/`} target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">LinkedIn</a>
+    <span class="flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-rule pt-1.5">
+      <a href={`https://github.com/${siteConfig.author.contacts.github}`} target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors whitespace-nowrap">GitHub</a>
+      <a href={`https://x.com/${siteConfig.author.contacts.twitter}`} target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors whitespace-nowrap">X</a>
+      <a href={`https://www.linkedin.com/in/${siteConfig.author.contacts.linkedin}/`} target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors whitespace-nowrap">LinkedIn</a>
+      <a href={`https://dev-null.sh/@${siteConfig.author.contacts.devnull}`} target="_blank" rel="me noopener noreferrer" class="hover:text-accent transition-colors whitespace-nowrap">dev-null</a>
     </span>
     {hreflangEn && hreflangIt && (
       <span>

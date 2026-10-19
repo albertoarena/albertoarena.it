@@ -20,8 +20,9 @@
     "test:cheatsheet-pdf": "vitest run tests/cheatsheet-pdf.test.ts",
     "test:profile-readme": "vitest run tests/update-profile-readme.test.ts",
     "test:image-budget": "vitest run tests/image-budget.test.ts",
+    "test:site-links": "astro build && vitest run tests/site-links.test.ts",
     "test:newsletter": "astro build && vitest run tests/newsletter-signup.test.ts",
-    "test": "npm run test:consent && npm run test:eligibility && npm run test:seo-indexing && npm run test:geo-aeo && npm run test:accessibility && npm run test:accessibility-components && npm run test:cheatsheet-pdf && npm run test:profile-readme && npm run test:image-budget && npm run test:newsletter",
+    "test": "npm run test:consent && npm run test:eligibility && npm run test:seo-indexing && npm run test:geo-aeo && npm run test:accessibility && npm run test:accessibility-components && npm run test:cheatsheet-pdf && npm run test:profile-readme && npm run test:image-budget && npm run test:newsletter && npm run test:site-links",
     "pdf:cheatsheet": "node scripts/generate-cheatsheet-pdf.mjs",
     "covers:generate": "node scripts/generate-covers.mjs",
     "projects:fetch-stats": "node scripts/fetch-project-stats.mjs"
