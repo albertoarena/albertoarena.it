@@ -1,5 +1,5 @@
 ---
-title: "PHP is not dead. Here is what people shipped."
+title: "PHP is not dead. Here is what people shipped"
 date: "2026-10-19T11:17:00.000Z"
 template: "post"
 draft: false
