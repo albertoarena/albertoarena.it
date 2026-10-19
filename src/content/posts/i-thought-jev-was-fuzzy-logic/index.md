@@ -1,5 +1,5 @@
 ---
-title: "I thought Jev was fuzzy logic. I was wrong."
+title: "I thought Jev was fuzzy logic. I was wrong"
 date: "2026-09-19T10:00:00.000Z"
 template: "post"
 draft: false
