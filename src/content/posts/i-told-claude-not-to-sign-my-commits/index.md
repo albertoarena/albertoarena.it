@@ -1,5 +1,5 @@
 ---
-title: "I told Claude not to sign my commits. It signed 25 of them."
+title: "I told Claude not to sign my commits. It signed 25 of them"
 date: "2026-09-26T06:00:00.000Z"
 template: "post"
 draft: false
