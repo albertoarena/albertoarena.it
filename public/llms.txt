@@ -11,6 +11,7 @@ Alberto Arena is a Senior Software Engineer based in Sicily, Italy, with a backg
 
 ## Posts
 
+- [PHP is not dead. Here is what people shipped.](https://albertoarena.it/posts/php-is-not-dead-here-is-what-people-shipped/): Every few months someone writes that PHP is dead. After years in languages that most developers stopped talking about, here is how I check that claim: with installs, release dates and a community that is still shipping.
 - [What I Learned From My First Claude Code Cloud Sessions](https://albertoarena.it/posts/what-i-learned-from-my-first-claude-code-cloud-sessions/): I built a Laravel app in Claude Code cloud sessions with a $250 credit. What worked, what broke, and why I still prefer my laptop.
 - [The Last Man Who Could Read Code: A Short Story](https://albertoarena.it/posts/the-last-man-who-could-read-code/): A short tale: the model everybody depends on stops answering, and nobody left alive knows how to read or write code. Is it really that far from where we are now?
 - [The Sound of Silence: What Your AI Agent Does Not Tell You](https://albertoarena.it/posts/the-sound-of-silence/): Long AI conversations fail quietly. The agent drops part of what you asked and never says so. Here is why, and why a new chat is the fix.
