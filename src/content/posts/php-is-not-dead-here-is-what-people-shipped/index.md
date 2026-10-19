@@ -22,9 +22,9 @@ I have a reason to take the word "dead" seriously. My first program was on a Com
 
 Here is the test I use. In a living language, people ship new things. Existing tools keep getting new major versions. New developers arrive and ask questions, and the community argues about what comes next. When a language is dead, those things stop. Old code stays readable and old manuals stay online, but nobody starts something new with it.
 
-Delphi is a fair example. Embarcadero still maintains it, so I will not say that nobody uses it. But on social media I never see anyone talking about something new they built with Delphi. That is my idea of dead: the new work goes somewhere else, and you stop hearing about it.
+Delphi is a fair example. Embarcadero still maintains it, so I will not say that nobody uses it. But on social media I never see anyone talking about something new they built with Delphi. That is my idea of dead: the new work goes somewhere else, and you stop hearing about it. Now I can ask the same question about PHP, and I can answer it with numbers instead of mood.
 
-This post is not against Rust or Go. I do not use Rust. I understand why people are excited about it, and some developers say it is better than PHP. That is a fair opinion. Now I can ask the same question about PHP, and I can answer it with numbers instead of mood.
+This post is not against Rust or Go. I do not use Rust. I understand why people are excited about it, and some developers say it is better than PHP. That is a fair opinion.
 
 ## What the numbers say
 
