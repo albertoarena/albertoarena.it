@@ -40,3 +40,6 @@ CLAUDE.local.md
 .impeccable/live/sessions/
 .impeccable/live/inject-journal.json
 .impeccable/live/roots.json
+# impeccable: critique reports are point-in-time and embed absolute local paths
+# (target_identity), so they are not project source
+.impeccable/critique/
