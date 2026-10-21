@@ -110,6 +110,7 @@ const jsonLdGraph = {
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content={article ? 'article' : 'website'} />
+    {article && <meta name="fediverse:creator" content="@albertoarena@phpc.social" />}
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
