@@ -28,7 +28,7 @@ What I bring to a project:
 
 I'm particularly drawn to projects where technical rigor meets innovation, where good engineering decisions today prevent expensive problems tomorrow.
 
-Available remotely. Open to freelance projects, long-term collaborations, and consulting engagements.
+Open to work from November. I'm looking for Laravel or PHP roles, full-time or a few days a week, 100% remote from Italy. I'm also open to freelance projects, long-term collaborations, and consulting engagements.
 
 You can follow me on [X](https://x.com/alberto_arena), or view
 my [LinkedIn profile](https://www.linkedin.com/in/alberto-arena-ba44a624/), or find me on [dev-null](https://dev-null.sh/@albertoarena), or
