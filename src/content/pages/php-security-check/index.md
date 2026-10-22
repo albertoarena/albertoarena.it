@@ -12,7 +12,7 @@ Many hosts have already updated. But the version number does not always tell you
 
 - I check what your site shows about itself from the outside. Many sites hide their PHP version, and if yours does, I tell you so.
 - I tell you what to ask your hosting provider, and how to read their answer.
-- If you send me the PHP version from your hosting panel, I tell you whether it includes the fix.
+- If you send me what your hosting panel says about PHP, I help you read it, and tell you if you need to ask your host for confirmation.
 
 You don't need to give me any access for this.
 
@@ -22,4 +22,4 @@ If your site needs an update or a fix, I can do it as normal paid work. You deci
 
 ## How to reach me
 
-Email hello@albertoarena.it or send me a message on LinkedIn, with your site's address.
+Email hello@albertoarena.it or send me a message on [LinkedIn](https://www.linkedin.com/in/alberto-arena-ba44a624/), with your site's address.
