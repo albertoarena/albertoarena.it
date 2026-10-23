@@ -26,6 +26,7 @@ Cover images for some posts are sourced from **[Unsplash](https://unsplash.com)*
 
 | Post | Photo | Photographer |
 |------|-------|--------------|
+| [A job offer came from a recruiter who passed away years ago](/posts/a-job-offer-came-from-a-recruiter-who-passed-away-years-ago/) | A silver laptop with a dark screen on a wooden desk, with a cup, reading glasses, a phone and a model ship | [Salah Ait Mokhtar](https://unsplash.com/photos/-Px5V6LDxCo) on Unsplash |
 | [PHP is not dead. Here is what people shipped](/posts/php-is-not-dead-here-is-what-people-shipped/) | A herd of African elephants walking towards the camera along a dirt road, a calf at the left edge | [redcharlie](https://unsplash.com/@redcharlie) on Unsplash |
 | [Prompt Injection Is a Laravel Problem Now](/posts/prompt-injection-is-a-laravel-problem-now/) | A toy horse peeking through a grate to watch a crowd of other toy figures who haven't noticed it | [Dan Counsell](https://unsplash.com/@dancounsell) on Unsplash |
 | [I told Claude not to sign my commits. It signed 25 of them](/posts/i-told-claude-not-to-sign-my-commits/) | A university degree certificate with a red seal and two handwritten signatures | [Lewis Keegan](https://unsplash.com/@skillscouter) on Unsplash |
