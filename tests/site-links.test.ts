@@ -14,13 +14,19 @@ const buildItems = siteConfig.railNav.find((g) => g.label === 'build')!.items;
 const UTM = 'utm_source=albertoarena.it';
 
 describe('rail build section', () => {
-  it('lists truss, cogway, sudoplay, phplives in that order', () => {
-    expect(buildItems.slice(0, 4).map((i) => i.label)).toEqual([
+  it('lists truss, cogway, sudoplay, sudohire, phplives in that order', () => {
+    expect(buildItems.slice(0, 5).map((i) => i.label)).toEqual([
       'truss',
       'cogway',
       'sudoplay',
+      'sudohire',
       'phplives',
     ]);
+  });
+
+  it('leaves sudohire untagged', () => {
+    const item = buildItems.find((i) => i.label === 'sudohire')!;
+    expect(item.path).toBe('https://sudohire.dev/');
   });
 
   it('tags sudoplay with utm_source', () => {
@@ -36,8 +42,8 @@ describe('rail build section', () => {
     expect(item.path).not.toContain('utm_');
   });
 
-  it('renders both links in the built rail, opening externally', () => {
-    for (const host of ['sudoplay.dev', 'phplives.dev']) {
+  it('renders every link in the built rail, opening externally', () => {
+    for (const host of ['sudoplay.dev', 'sudohire.dev', 'phplives.dev']) {
       const a = doc.querySelector(`aside a[href^="https://${host}/"], nav a[href^="https://${host}/"]`);
       expect(a, host).not.toBeNull();
       expect(a!.getAttribute('target')).toBe('_blank');
