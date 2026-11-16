@@ -25,7 +25,7 @@ export const siteConfig = {
   discussionRepo: 'albertoarena/albertoarena.it',
   /*
     Grouped nav for the redesign rail (redesign-plan.md §6). Eight items was
-    the original cap; sudoplay and phplives took it to ten on 2026-10-19.
+    the original cap; sudoplay and phplives took it to ten on 2026-10-19, sudohire to eleven on 2026-11-16.
   */
   railNav: [
     {
@@ -51,6 +51,7 @@ export const siteConfig = {
         { label: 'truss', path: 'https://trussphp.com/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=site-nav' },
         { label: 'cogway', path: 'https://cogway.dev/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=site-nav' },
         { label: 'sudoplay', path: 'https://sudoplay.dev/?utm_source=albertoarena.it&utm_medium=referral&utm_campaign=site-nav' },
+        { label: 'sudohire', path: 'https://sudohire.dev/' },
         { label: 'phplives', path: 'https://phplives.dev/' },
         { label: 'projects', path: '/projects/' },
         { label: 'videos', path: 'https://www.youtube.com/@AlbertoArenaDev' },
