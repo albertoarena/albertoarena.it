@@ -79,6 +79,17 @@ export const projects: Project[] = [
     year: '2026',
   },
   {
+    name: 'Sudo Hire',
+    description:
+      'Small macOS menu bar app that finds PHP and Laravel jobs you can do from where you live. It reads where each job lets you work from, converts the salary and reads the contract type, then sends one short notification every few hours. No accounts, no server, no telemetry.',
+    tech: ['NativePHP', 'Laravel', 'PHP', 'Vue', 'macOS'],
+    github: 'https://github.com/albertoarena/sudo-hire',
+    url: 'https://sudohire.dev/',
+    status: 'active',
+    featured: true,
+    year: '2026',
+  },
+  {
     name: 'PHP Lives',
     description:
       'A manifest of real things people shipped with PHP in the last 6 months. Each entry links to its own source and shows the date it shipped.',
