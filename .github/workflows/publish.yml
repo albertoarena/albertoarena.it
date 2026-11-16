@@ -12,6 +12,8 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
+  actions: write
 
 concurrency:
   group: publish
@@ -65,13 +67,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
-      # Commit the refreshed stats back to master, only when they changed.
-      # Runs after the deploy branch is published, and ignores failures: it is
-      # bookkeeping, and master's required "test" check can reject a bot push.
-      # A push made with GITHUB_TOKEN does not start another workflow run, so
-      # this cannot loop.
-      - name: Commit project stats
+      # Send the refreshed stats to master through a pull request, only when
+      # they changed. master requires the "test" check, which rejects a direct
+      # bot push. A PR opened with GITHUB_TOKEN does not start the pull_request
+      # workflows, so the Test workflow is dispatched by hand on the branch:
+      # its "test" check lands on the PR head commit and satisfies the rule.
+      # Auto-merge then squashes the PR once that check passes. Runs after the
+      # deploy branch is published, and ignores failures: it is bookkeeping.
+      - name: Open PR with project stats
         continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           if git diff --quiet -- src/data/project-stats.json; then
             echo "No change to project stats."
@@ -79,9 +85,17 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b bot/project-stats
           git add src/data/project-stats.json
           git commit -m "chore: refresh project install stats"
-          git push origin HEAD:master
+          git push --force origin bot/project-stats
+          if [ -z "$(gh pr list --head bot/project-stats --state open --json number --jq '.[0].number')" ]; then
+            gh pr create --base master --head bot/project-stats \
+              --title "chore: refresh project install stats" \
+              --body "Automated refresh from the Publish workflow."
+          fi
+          gh workflow run test.yml --ref bot/project-stats
+          gh pr merge bot/project-stats --auto --squash
 
       # 📰 Push the latest posts into the profile README (albertoarena/albertoarena).
       # Reads dist/rss.xml, already built above, no network call to albertoarena.it.
