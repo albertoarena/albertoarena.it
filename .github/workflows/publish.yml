@@ -41,9 +41,10 @@ jobs:
           npm install @rollup/rollup-linux-x64-gnu --save-dev --force || true
 
       # Refresh install counts on every publish so the deployed /projects
-      # numbers are never older than the push. The result is committed back
-      # to master by the "Commit project stats" step below, so the repo keeps
-      # the numbers too.
+      # numbers are never older than the push. The result is not committed:
+      # direct pushes to master are blocked by the required check, and a PR
+      # per push for a few install counts is not worth it. The committed
+      # src/data/project-stats.json is updated by hand when needed.
       # A Packagist/npm outage must not fail a deploy, so errors are ignored
       # and the committed src/data/project-stats.json stays as the fallback.
       - name: Refresh project stats
@@ -64,24 +65,6 @@ jobs:
           git push -q --force "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" deploy
         env:
           GITHUB_TOKEN: ${{ github.token }}
-
-      # Commit the refreshed stats back to master, only when they changed.
-      # Runs after the deploy branch is published, and ignores failures: it is
-      # bookkeeping, and master's required "test" check can reject a bot push.
-      # A push made with GITHUB_TOKEN does not start another workflow run, so
-      # this cannot loop.
-      - name: Commit project stats
-        continue-on-error: true
-        run: |
-          if git diff --quiet -- src/data/project-stats.json; then
-            echo "No change to project stats."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add src/data/project-stats.json
-          git commit -m "chore: refresh project install stats"
-          git push origin HEAD:master
 
       # 📰 Push the latest posts into the profile README (albertoarena/albertoarena).
       # Reads dist/rss.xml, already built above, no network call to albertoarena.it.
