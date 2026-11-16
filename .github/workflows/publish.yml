@@ -40,6 +40,14 @@ jobs:
           npm install rollup@4.22.4 --save-dev --force
           npm install @rollup/rollup-linux-x64-gnu --save-dev --force || true
 
+      # Refresh install counts on every publish so the deployed /projects
+      # numbers are never older than the push. The result is not committed.
+      # A Packagist/npm outage must not fail a deploy, so errors are ignored
+      # and the committed src/data/project-stats.json stays as the fallback.
+      - name: Refresh project stats
+        run: npm run projects:fetch-stats
+        continue-on-error: true
+
       - name: Build Astro site
         run: npm run build
 
