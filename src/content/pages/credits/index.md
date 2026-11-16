@@ -66,6 +66,7 @@ Cover images for some posts are sourced from **[Unsplash](https://unsplash.com)*
 | [The Last Man Who Could Read Code: A Short Story](/posts/the-last-man-who-could-read-code/) | A small wooden cabin glowing with light inside a bare, dark winter forest at dusk | [Andrew Ridley](https://unsplash.com/@aridley88) on Unsplash |
 | [What I Learned From My First Claude Code Cloud Sessions](/posts/what-i-learned-from-my-first-claude-code-cloud-sessions/) | The sun setting on the horizon above a wide sea of clouds | [Photoholgic](https://unsplash.com/@photoholgic) on Unsplash |
 | [My Claude Code Output Style Needed Tests](/posts/my-claude-code-output-style-needed-tests/) | A brown teapot, a cup of tea and a closed notebook on a small round table | [Kelly Sikkema](https://unsplash.com/@kellysikkema) on Unsplash |
+| [Passing tests do not make an AI-built app safe](/posts/passing-tests-do-not-make-an-ai-built-app-safe/) | A black and white photo of a long, dim hotel corridor with doors along one side | [Marco Lastella](https://unsplash.com/photos/oDVujMBJGeU) on Unsplash |
 
 ## Diagrams
 
