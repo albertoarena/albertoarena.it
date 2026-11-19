@@ -11,6 +11,7 @@ Alberto Arena is a Senior Software Engineer based in Sicily, Italy, with a backg
 
 ## Posts
 
+- [What I learned at LaravelDay 2026](https://albertoarena.it/posts/what-i-learned-at-laravelday-2026/): I spent a day at LaravelDay 2026 in Verona. Here is what I learned from the talks, why I think going to conferences is worth it, and why PHP is still alive.
 - [Passing tests do not make an AI-built app safe](https://albertoarena.it/posts/passing-tests-do-not-make-an-ai-built-app-safe/): Researchers found AI-built apps handing private data to visitors who never logged in. Tests that only ask as the owner would not catch that. Here is the test that would.
 - [My Claude Code Output Style Needed Tests](https://albertoarena.it/posts/my-claude-code-output-style-needed-tests/): I wanted Claude Code to talk in a playful voice, so I built an output style. Then I wrote tests for the prompt, and they found bugs I could not see.
 - [I could not find music for my mood, so I built an app](https://albertoarena.it/posts/i-could-not-find-music-for-my-mood-so-i-built-an-app/): Why I built Sudo Play, a small open source Mac app that picks a Spotify playlist for your coding mood, and how you can add your own.
